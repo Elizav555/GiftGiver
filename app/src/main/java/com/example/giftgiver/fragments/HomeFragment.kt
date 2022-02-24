@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.giftgiver.R
+import com.example.giftgiver.user.User
 import com.example.giftgiver.utils.FriendsListState
 import com.example.giftgiver.utils.VKFriendsRequest
-import com.example.giftgiver.user.User
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.auth.VKAuthenticationResult
@@ -29,20 +29,29 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val activityLauncher =
-            registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
-                when (result) {
-                    is VKAuthenticationResult.Success -> {
-                        // User passed authorization
-                        val userId = VK.getUserId()
-                        makeToast(userId.toString())
-                        loadFriends()
+        if (VK.isLoggedIn()) {
+            loadFriends()
+        } else {
+            val activityLauncher =
+                registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
+                    when (result) {
+                        is VKAuthenticationResult.Success -> {
+                            // User passed authorization
+                            val userId = VK.getUserId()
+                            makeToast(userId.toString())
+                            loadFriends()
+                        }
+                        is VKAuthenticationResult.Failed -> makeToast("Authentication error")
                     }
-                    is VKAuthenticationResult.Failed -> makeToast("Authentication error")
                 }
-            }
-        activityLauncher.launch(arrayListOf(VKScope.FRIENDS))
+            activityLauncher.launch(
+                arrayListOf(
+                    VKScope.FRIENDS,
+                    VKScope.NOTIFICATIONS,
+                    VKScope.OFFLINE
+                )
+            )
+        }
     }
 
     private fun loadFriends() {
@@ -51,7 +60,7 @@ class HomeFragment : Fragment() {
             object : VKApiCallback<List<User>> {
                 override fun success(result: List<User>) {
                     val action =
-                        HomeFragmentDirections.actionHomeFragmentToFirstFragment(
+                        HomeFragmentDirections.actionHomeFragmentToListFragment(
                             FriendsListState(result)
                         )
                     findNavController().navigate(action)

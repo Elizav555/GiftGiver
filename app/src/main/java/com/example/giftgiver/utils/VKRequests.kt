@@ -1,6 +1,8 @@
 package com.example.giftgiver.utils
 
 import com.example.giftgiver.user.User
+import com.example.giftgiver.user.UserInfo
+import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
 
@@ -20,5 +22,20 @@ class VKFriendsRequest(uid: Int = 0) : VKRequest<List<User>>("friends.get") {
             result.add(User().parse(users.getJSONObject(i)))
         }
         return result
+    }
+}
+
+class VKUserInfoRequest(uid: Int = 0) : VKRequest<UserInfo>("users.get") {
+    init {
+        addParam("access_token", VKAccessToken.toString())
+        if (uid != 0) {
+            addParam("user_ids", uid)
+        }
+        addParam("fields", "bdate,interests, music, movies, tv, books, games, about")
+    }
+
+    override fun parse(r: JSONObject): UserInfo {
+        val userInfo = r.getJSONArray("response").getJSONArray(0)
+        return UserInfo().parse(userInfo.getJSONObject(0))
     }
 }

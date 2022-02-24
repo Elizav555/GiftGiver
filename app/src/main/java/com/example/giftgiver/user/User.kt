@@ -10,6 +10,7 @@ data class User(
     val firstName: String = "",
     val lastName: String = "",
     val photo: String = "",
+    var info: UserInfo? = null
 ) : Parcelable {
     fun parse(json: JSONObject) = User(
         id = json.optInt("id", 0),

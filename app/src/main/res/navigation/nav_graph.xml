@@ -6,13 +6,16 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/firstFragment"
+        android:id="@+id/listFragment"
         android:name="com.example.giftgiver.fragments.ListFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_list" >
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list">
         <argument
             android:name="friendsListState"
-            app:argType="com.example.giftgiver.extensions.FriendsListState" />
+            app:argType="com.example.giftgiver.utils.FriendsListState" />
+        <action
+            android:id="@+id/action_listFragment_to_userFragment"
+            app:destination="@id/userFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -20,7 +23,16 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_firstFragment"
-            app:destination="@id/firstFragment" />
+            android:id="@+id/action_homeFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.giftgiver.fragments.UserFragment"
+        android:label="fragment_user"
+        tools:layout="@layout/fragment_user" >
+        <argument
+            android:name="user"
+            app:argType="com.example.giftgiver.user.User" />
     </fragment>
 </navigation>
