@@ -35,7 +35,7 @@ class VKUserInfoRequest(uid: Int = 0) : VKRequest<UserInfo>("users.get") {
     }
 
     override fun parse(r: JSONObject): UserInfo {
-        val userInfo = r.getJSONArray("response").getJSONArray(0)
+        val userInfo= r.getJSONArray("response")
         return UserInfo().parse(userInfo.getJSONObject(0))
     }
 }

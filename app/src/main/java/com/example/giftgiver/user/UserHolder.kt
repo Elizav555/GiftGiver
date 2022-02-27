@@ -17,7 +17,7 @@ class UserHolder(
 
     fun bind(user: User) {
         with(binding) {
-            userNameTv.text = user.firstName + user.lastName
+            userNameTv.text = user.firstName +" "+ user.lastName
             userPhotoIv.load(user.photo)
         }
     }

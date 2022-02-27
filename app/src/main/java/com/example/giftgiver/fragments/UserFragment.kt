@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.databinding.FragmentUserBinding
+import com.example.giftgiver.user.UserInfo
 
 class UserFragment : Fragment() {
     private lateinit var binding: FragmentUserBinding
@@ -28,7 +29,7 @@ class UserFragment : Fragment() {
         with(binding)
         {
             avatarIV.load(user.photo)
-            infoTV.text = user.firstName + user.lastName + user.info
+            infoTV.text = user.firstName+" "+ user.lastName +" "+ user.info
         }
     }
 }
