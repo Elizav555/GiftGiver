@@ -31,7 +31,7 @@ class VKUserInfoRequest(uid: Int = 0) : VKRequest<UserInfo>("users.get") {
         if (uid != 0) {
             addParam("user_ids", uid)
         }
-        addParam("fields", "bdate,interests, music, movies, tv, books, games, about")
+        addParam("fields", "bdate, about, photo_max")
     }
 
     override fun parse(r: JSONObject): UserInfo {

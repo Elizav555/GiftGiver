@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/account"
+        android:icon="@drawable/ic_account_foreground"
+        android:title="@string/account" />
+
+    <item
+        android:id="@+id/wishlists"
+        android:icon="@drawable/ic_wishlist_foreground"
+        android:title="@string/wishlists" />
+
+    <item
+        android:id="@+id/friends_list"
+        android:icon="@drawable/ic_home_foreground"
+        android:title="@string/friends_list" />
+
+    <item
+        android:id="@+id/calendar"
+        android:icon="@drawable/ic_calendar_foreground"
+        android:title="@string/calendar" />
+
+    <item
+        android:id="@+id/cart"
+        android:icon="@drawable/ic_cart_foreground"
+        android:title="@string/cart" />
+</menu>

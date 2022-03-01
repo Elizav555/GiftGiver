@@ -28,8 +28,8 @@ class UserFragment : Fragment() {
         val user = args.user
         with(binding)
         {
-            avatarIV.load(user.photo)
-            infoTV.text = user.firstName+" "+ user.lastName +" "+ user.info
+            avatarIV.load(user.info?.photoMax)
+            infoTV.text = user.firstName+" "+ user.lastName +" "+ user.info?.about+""+user.info?.bdate
         }
     }
 }
