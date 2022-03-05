@@ -1,4 +1,4 @@
-package com.example.giftgiver.user
+package com.example.giftgiver.entities
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -7,15 +7,13 @@ import org.json.JSONObject
 @Parcelize
 data class User(
     val id: Int = 0,
-    val firstName: String = "",
-    val lastName: String = "",
+    val name: String = "",
     val photo: String = "",
     var info: UserInfo? = null
 ) : Parcelable {
     fun parse(json: JSONObject) = User(
         id = json.optInt("id", 0),
-        firstName = json.optString("first_name", ""),
-        lastName = json.optString("last_name", ""),
+        name = json.optString("first_name", "") + " " + json.optString("last_name", ""),
         photo = json.optString("photo_100", ""),
     )
 }

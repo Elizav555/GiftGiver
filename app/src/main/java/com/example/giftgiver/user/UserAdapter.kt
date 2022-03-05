@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.giftgiver.databinding.ItemUserBinding
+import com.example.giftgiver.entities.User
 
 class UserAdapter(
     private val action: (position: Int) -> Unit,

@@ -1,6 +1,7 @@
 package com.example.giftgiver.user
 
 import androidx.recyclerview.widget.DiffUtil
+import com.example.giftgiver.entities.User
 
 class UserDiffItemCallback : DiffUtil.ItemCallback<User>() {
     override fun areItemsTheSame(

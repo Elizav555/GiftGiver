@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_user" >
         <argument
             android:name="user"
-            app:argType="com.example.giftgiver.user.User" />
+            app:argType="com.example.giftgiver.entities.User" />
     </fragment>
     <fragment
         android:id="@+id/account"

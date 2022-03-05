@@ -1,7 +1,7 @@
 package com.example.giftgiver.utils
 
-import com.example.giftgiver.user.User
-import com.example.giftgiver.user.UserInfo
+import com.example.giftgiver.entities.User
+import com.example.giftgiver.entities.UserInfo
 import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
@@ -35,7 +35,7 @@ class VKUserInfoRequest(uid: Int = 0) : VKRequest<UserInfo>("users.get") {
     }
 
     override fun parse(r: JSONObject): UserInfo {
-        val userInfo= r.getJSONArray("response")
+        val userInfo = r.getJSONArray("response")
         return UserInfo().parse(userInfo.getJSONObject(0))
     }
 }

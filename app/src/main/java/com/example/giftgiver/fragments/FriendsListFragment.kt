@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
-import com.example.giftgiver.user.User
+import com.example.giftgiver.entities.User
+import com.example.giftgiver.entities.UserInfo
 import com.example.giftgiver.user.UserAdapter
-import com.example.giftgiver.user.UserInfo
 import com.example.giftgiver.utils.VKFriendsRequest
 import com.example.giftgiver.utils.VKUserInfoRequest
 import com.example.giftgiver.utils.autoCleared

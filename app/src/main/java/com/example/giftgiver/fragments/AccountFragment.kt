@@ -6,12 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.giftgiver.R
-import com.example.giftgiver.firebase.RealtimeDB
-import com.vk.api.sdk.VK
 
 class AccountFragment : Fragment() {
-
-    private val database = RealtimeDB()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,6 +20,5 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        database.addNewClient(VK.getUserId().value, "Interesting Info", listOf())
     }
 }

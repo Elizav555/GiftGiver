@@ -3,6 +3,7 @@ package com.example.giftgiver.user
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.example.giftgiver.databinding.ItemUserBinding
+import com.example.giftgiver.entities.User
 
 class UserHolder(
     private val binding: ItemUserBinding,
@@ -17,7 +18,7 @@ class UserHolder(
 
     fun bind(user: User) {
         with(binding) {
-            userNameTv.text = user.firstName +" "+ user.lastName
+            userNameTv.text = user.name
             userPhotoIv.load(user.photo)
         }
     }

@@ -1,7 +1,7 @@
 package com.example.giftgiver.utils
 
 import android.os.Parcelable
-import com.example.giftgiver.user.User
+import com.example.giftgiver.entities.User
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
