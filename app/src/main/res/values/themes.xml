@@ -29,4 +29,7 @@
         <item name="labelBehavior">floating</item>
     </style>
 
+    <style name="FABStyle">
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
 </resources>
