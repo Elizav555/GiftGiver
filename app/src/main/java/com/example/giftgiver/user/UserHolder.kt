@@ -18,7 +18,6 @@ class UserHolder(
 
     fun bind(user: User) {
         with(binding) {
-            ivUserPhoto.clipToOutline = true
             tvUserName.text = user.name
             ivUserPhoto.load(user.photo)
         }

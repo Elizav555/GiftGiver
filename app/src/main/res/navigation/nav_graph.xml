@@ -13,19 +13,19 @@
         <argument
             android:name="friendsListState"
             app:argType="com.example.giftgiver.utils.FriendsListState" />
-        <action
-            android:id="@+id/action_friendsListFragment_to_userFragment"
-            app:destination="@id/user_fragment" />
+                <action
+                    android:id="@+id/action_friendsListFragment_to_userFragment"
+                    app:destination="@id/user_fragment" />
     </fragment>
-    <fragment
-        android:id="@+id/user_fragment"
-        android:name="com.example.giftgiver.fragments.UserFragment"
-        android:label="fragment_user"
-        tools:layout="@layout/fragment_user" >
-        <argument
-            android:name="user"
-            app:argType="com.example.giftgiver.entities.User" />
-    </fragment>
+        <fragment
+            android:id="@+id/user_fragment"
+            android:name="com.example.giftgiver.fragments.UserFragment"
+            android:label="fragment_user"
+            tools:layout="@layout/fragment_user" >
+            <argument
+                android:name="user"
+                app:argType="com.example.giftgiver.entities.User" />
+        </fragment>
     <fragment
         android:id="@+id/account"
         android:name="com.example.giftgiver.fragments.AccountFragment"

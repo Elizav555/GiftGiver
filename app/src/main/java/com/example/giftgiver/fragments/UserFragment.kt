@@ -27,7 +27,6 @@ class UserFragment : Fragment() {
         val user = args.user
         with(binding)
         {
-            ivAvatar.clipToOutline = true
             ivAvatar.load(user.info?.photoMax)
             tvBirthdate.text = user.info?.bdate
             tvInfo.text = user.info?.about

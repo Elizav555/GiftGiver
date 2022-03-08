@@ -6,18 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".fragments.AccountFragment">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_avatar"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
-        android:background="@drawable/bg_oval"
-        android:outlineProvider="background"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@tools:sample/avatars"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"/>
 
     <TextView
         android:id="@+id/tv_name"
