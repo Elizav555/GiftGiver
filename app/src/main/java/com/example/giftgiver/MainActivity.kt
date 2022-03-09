@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.account,
                 R.id.wishlists,
-                R.id.friends_list,
+                R.id.friends,
                 R.id.calendar,
                 R.id.cart
             )
