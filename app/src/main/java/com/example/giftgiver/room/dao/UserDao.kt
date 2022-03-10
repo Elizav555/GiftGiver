@@ -7,20 +7,20 @@ import com.example.giftgiver.room.entities.UserR
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(user: UserR)
+    suspend fun save(user: UserR)
 
     @Update
-    fun updateUsers(user: UserR)
+    suspend fun updateUsers(user: UserR)
 
     @Query("SELECT * FROM users")
-    fun getUsers(): MutableList<UserR>
+    suspend fun getUsers(): MutableList<UserR>
 
     @Query("SELECT * FROM users WHERE vkId = :vkId")
-    fun getUserByVkId(vkId: Long): UserR?
+    suspend fun getUserByVkId(vkId: Long): UserR?
 
     @Delete
-    fun deleteUser(user: UserR)
+    suspend fun deleteUser(user: UserR)
 
     @Query("DELETE FROM users")
-    fun deleteAllUsers()
+    suspend fun deleteAllUsers()
 }

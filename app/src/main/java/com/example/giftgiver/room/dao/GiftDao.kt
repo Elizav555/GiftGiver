@@ -7,20 +7,20 @@ import com.example.giftgiver.room.entities.GiftR
 interface GiftDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(gift: GiftR)
+    suspend fun save(gift: GiftR)
 
     @Update
-    fun updateGifts(gift: GiftR)
+    suspend fun updateGifts(gift: GiftR)
 
     @Query("SELECT * FROM gifts")
-    fun getGifts(): MutableList<GiftR>
+    suspend fun getGifts(): MutableList<GiftR>
 
     @Query("SELECT * FROM gifts WHERE id = :id")
-    fun getGiftById(id: Int): GiftR?
+    suspend fun getGiftById(id: Int): GiftR?
 
     @Delete
-    fun deleteGift(gift: GiftR)
+    suspend fun deleteGift(gift: GiftR)
 
     @Query("DELETE FROM gifts")
-    fun deleteAllGifts()
+    suspend fun deleteAllGifts()
 }

@@ -7,20 +7,20 @@ import com.example.giftgiver.room.entities.CartR
 interface CartDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(cart: CartR)
+    suspend fun save(cart: CartR)
 
     @Update
-    fun updateCarts(cart: CartR)
+    suspend fun updateCarts(cart: CartR)
 
     @Query("SELECT * FROM carts")
-    fun getCarts(): MutableList<CartR>
+    suspend fun getCarts(): MutableList<CartR>
 
     @Query("SELECT * FROM carts WHERE id = :id")
-    fun getCartById(id: Int): CartR?
+    suspend fun getCartById(id: Int): CartR?
 
     @Delete
-    fun deleteCart(cart: CartR)
+    suspend fun deleteCart(cart: CartR)
 
     @Query("DELETE FROM carts")
-    fun deleteAllCarts()
+    suspend fun deleteAllCarts()
 }

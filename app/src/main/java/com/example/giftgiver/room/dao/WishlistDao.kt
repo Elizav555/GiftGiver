@@ -7,20 +7,20 @@ import com.example.giftgiver.room.entities.WishlistR
 interface WishlistDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(wishlist: WishlistR)
+    suspend fun save(wishlist: WishlistR)
 
     @Update
-    fun updateWishlists(wishlist: WishlistR)
+    suspend fun updateWishlists(wishlist: WishlistR)
 
     @Query("SELECT * FROM  wishlists")
-    fun getWishlists(): MutableList<WishlistR>
+    suspend fun getWishlists(): MutableList<WishlistR>
 
     @Query("SELECT * FROM wishlists WHERE id = :id")
-    fun getWishlistById(id: Int): WishlistR?
+    suspend fun getWishlistById(id: Int): WishlistR?
 
     @Delete
-    fun deleteWishlist(wishlist: WishlistR)
+    suspend fun deleteWishlist(wishlist: WishlistR)
 
     @Query("DELETE FROM wishlists")
-    fun deleteAllWishlists()
+    suspend fun deleteAllWishlists()
 }

@@ -35,13 +35,13 @@ abstract class RoomDB : RoomDatabase() {
         @Volatile
         private var instance: RoomDB? = null
         private val LOCK = Any()
+
         operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
             buildDatabase(context).also { instance = it }
         }
 
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context, RoomDB::class.java, DATABASE_NAME)
-                .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()
     }

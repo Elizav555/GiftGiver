@@ -7,20 +7,20 @@ import com.example.giftgiver.room.entities.CalendarR
 interface CalendarDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(calendar: CalendarR)
+    suspend fun save(calendar: CalendarR)
 
     @Update
-    fun updateCalendars(calendar: CalendarR)
+    suspend fun updateCalendars(calendar: CalendarR)
 
     @Query("SELECT * FROM calendars")
-    fun getCalendars(): MutableList<CalendarR>
+    suspend fun getCalendars(): MutableList<CalendarR>
 
     @Query("SELECT * FROM calendars WHERE id = :id")
-    fun getCalendarById(id: Int): CalendarR?
+    suspend fun getCalendarById(id: Int): CalendarR?
 
     @Delete
-    fun deleteCalendar(calendar: CalendarR)
+    suspend fun deleteCalendar(calendar: CalendarR)
 
     @Query("DELETE FROM calendars")
-    fun deleteAllCalendars()
+    suspend fun deleteAllCalendars()
 }
