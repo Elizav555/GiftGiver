@@ -1,11 +1,14 @@
-package com.example.giftgiver.entities
+package com.example.giftgiver.room.entities
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
+@Entity(tableName = "gifts")
 @Parcelize
-data class Gift(
-    val id: Long,
+data class GiftR(
+    @PrimaryKey(autoGenerate = false) val id: Long,
     val name: String,
     val forUser: Long,
     val desc: String?,
