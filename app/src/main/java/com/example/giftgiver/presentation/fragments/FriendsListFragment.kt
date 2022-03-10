@@ -38,6 +38,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.toolbar.inflateMenu(R.menu.menu_filter)
         initVK()
     }
 

@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.cart
             )
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
 }

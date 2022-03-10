@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentAccountBinding
 
 class AccountFragment : Fragment() {
@@ -21,6 +22,6 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.toolbar.inflateMenu(R.menu.menu_edit)
     }
 }

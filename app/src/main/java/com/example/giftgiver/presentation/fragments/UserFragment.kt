@@ -27,6 +27,8 @@ class UserFragment : Fragment() {
         val user = args.user
         with(binding)
         {
+            //toolbar.inflateMenu(R.menu.menu_favorite)
+            toolbar.title = user.name
             ivAvatar.load(user.info?.photoMax)
             tvBirthdate.text = user.info?.bdate
             tvInfo.text = user.info?.about
