@@ -25,6 +25,7 @@
         android:clickable="true"
         android:padding="0dp"
         android:src="@drawable/ic_add_foreground"
+        android:theme="@style/ThemeOverlay.GiftGiver.FloatingActionButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

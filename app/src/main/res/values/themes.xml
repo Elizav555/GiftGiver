@@ -32,4 +32,8 @@
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="ThemeOverlay.GiftGiver.FloatingActionButton" parent="ThemeOverlay.Material3.FloatingActionButton.Primary">
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
 </resources>
