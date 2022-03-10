@@ -5,7 +5,7 @@
     android:id="@+id/listContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FriendsListFragment">
+    tools:context=".presentation.fragments.FriendsListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

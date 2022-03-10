@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/account"
-        android:name="com.example.giftgiver.fragments.AccountFragment"
+        android:name="com.example.giftgiver.presentation.fragments.AccountFragment"
         android:label="@string/account"
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/calendar"
-        android:name="com.example.giftgiver.fragments.CalendarFragment"
+        android:name="com.example.giftgiver.presentation.fragments.CalendarFragment"
         android:label="@string/calendar"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/cart"
-        android:name="com.example.giftgiver.fragments.CartFragment"
+        android:name="com.example.giftgiver.presentation.fragments.CartFragment"
         android:label="@string/cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
         android:id="@+id/wishlists"
-        android:name="com.example.giftgiver.fragments.WishlistsFragment"
+        android:name="com.example.giftgiver.presentation.fragments.WishlistsFragment"
         android:label="@string/wishlists"
         tools:layout="@layout/fragment_wishlists" />
     <navigation
@@ -30,7 +30,7 @@
         app:startDestination="@id/friends_list">
         <fragment
             android:id="@+id/friends_list"
-            android:name="com.example.giftgiver.fragments.FriendsListFragment"
+            android:name="com.example.giftgiver.presentation.fragments.FriendsListFragment"
             android:label="@string/friends_list"
             tools:layout="@layout/fragment_friends_list">
             <argument
@@ -42,12 +42,12 @@
         </fragment>
         <fragment
             android:id="@+id/user_fragment"
-            android:name="com.example.giftgiver.fragments.UserFragment"
+            android:name="com.example.giftgiver.presentation.fragments.UserFragment"
             android:label="fragment_user"
             tools:layout="@layout/fragment_user">
             <argument
                 android:name="user"
-                app:argType="com.example.giftgiver.entities.User" />
+                app:argType="com.example.giftgiver.domain.entities.User" />
         </fragment>
     </navigation>
 </navigation>
