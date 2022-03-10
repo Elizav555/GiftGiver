@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/friends_list">
+    app:startDestination="@id/friends">
 
     <fragment
         android:id="@+id/account"
@@ -25,7 +25,8 @@
         android:name="com.example.giftgiver.fragments.WishlistsFragment"
         android:label="@string/wishlists"
         tools:layout="@layout/fragment_wishlists" />
-    <navigation android:id="@+id/friends"
+    <navigation
+        android:id="@+id/friends"
         app:startDestination="@id/friends_list">
         <fragment
             android:id="@+id/friends_list"

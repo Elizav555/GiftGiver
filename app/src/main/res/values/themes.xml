@@ -29,10 +29,6 @@
         <item name="labelBehavior">floating</item>
     </style>
 
-    <style name="FABStyle">
-        <item name="colorOnSecondary">@color/black</item>
-    </style>
-
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
     </style>
