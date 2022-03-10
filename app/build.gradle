@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -46,6 +47,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.room:room-common:2.3.0'
+    implementation 'androidx.room:room-ktx:2.3.0'
 
     def retrofit = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:${retrofit}"
@@ -69,6 +72,12 @@ dependencies {
     //vk
     implementation 'com.vk:android-sdk-core:3.5.0'
     implementation 'com.vk:android-sdk-api:3.5.0'
+
+    //firebase
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
 }
 
 detekt {

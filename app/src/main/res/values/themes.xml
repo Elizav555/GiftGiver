@@ -21,12 +21,19 @@
     </style>
 
     <style name="BottomNavigationStyle">
-        <item name="itemBackground">@color/primary_light</item>
-        <item name="labelVisibilityMode">unlabeled</item>
-        <item name="colorOnSurface">@color/icons</item>
+        <item name="itemBackground">@color/white</item>
+        <item name="labelVisibilityMode">selected</item>
         <item name="itemIconTint">@drawable/nav_color_state</item>
-        <item name="itemIconSize">50dp</item>
+        <item name="itemIconSize">35dp</item>
+        <item name="itemTextColor">@color/accent</item>
+        <item name="labelBehavior">floating</item>
     </style>
 
-    
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ThemeOverlay.GiftGiver.FloatingActionButton" parent="ThemeOverlay.Material3.FloatingActionButton.Primary">
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
 </resources>

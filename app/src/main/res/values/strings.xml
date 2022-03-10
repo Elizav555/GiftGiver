@@ -10,4 +10,8 @@
     <string name="wishlists">WishLists</string>
     <string name="calendar">Calendar</string>
     <string name="cart">Cart</string>
+    <string name="delete">Delete</string>
+    <string name="gift_photo">Gift photo</string>
+    <string name="my_wishlists">My WishLists :</string>
+    <string name="wishlists_points">Wishlists :</string>
 </resources>
