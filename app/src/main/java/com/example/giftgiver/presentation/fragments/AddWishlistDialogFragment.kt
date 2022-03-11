@@ -20,7 +20,7 @@ class AddWishlistDialogFragment : DialogFragment() {
                     .setPositiveButton(R.string.add) { _, _ ->
                         AccountFragment().addWishlist(
                             Wishlist(
-                                0,
+                                0, //generate id?
                                 etName.text.toString(),
                                 listOf()
                             )

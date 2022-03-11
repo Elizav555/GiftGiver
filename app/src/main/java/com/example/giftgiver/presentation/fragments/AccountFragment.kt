@@ -55,6 +55,7 @@ class AccountFragment : Fragment() {
     }
 
     fun addWishlist(wishlist: Wishlist) {
+        //todo add to bd
         wishlist.id = client?.info?.wishlists?.size?.toLong() ?: 0
         client?.info?.wishlists?.add(wishlist)
         wishlistAdapter.submitList(client?.info?.wishlists)
@@ -80,6 +81,6 @@ class AccountFragment : Fragment() {
     }
 
     private fun navigateToWishlist(wishistId: Long) {
-
+//todo navigate
     }
 }

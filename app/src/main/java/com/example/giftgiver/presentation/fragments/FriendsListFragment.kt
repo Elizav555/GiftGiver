@@ -10,14 +10,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.R
-import com.example.giftgiver.data.vk.VKFriendsRequest
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
 import com.example.giftgiver.domain.entities.User
+import com.example.giftgiver.domain.usecase.LoadFriendsVK
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import com.example.giftgiver.presentation.user.UserAdapter
 import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
-import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
 
@@ -93,20 +92,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         }
     }
 
-    private fun loadFriends() {
-        VK.execute(
-            VKFriendsRequest(VK.getUserId().value),
-            object : VKApiCallback<List<User>> {
-                override fun success(result: List<User>) {
-                    init(result)
-                }
-
-                override fun fail(error: Exception) {
-                    makeToast("Error while loading friends")
-                }
-            }
-        )
-    }
+    private fun loadFriends() = LoadFriendsVK().loadFriends(VK.getUserId().value, ::init)
 
     private fun makeToast(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_LONG)
