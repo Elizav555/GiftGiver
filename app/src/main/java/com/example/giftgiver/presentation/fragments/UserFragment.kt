@@ -29,6 +29,7 @@ class UserFragment : Fragment() {
         {
             //toolbar.inflateMenu(R.menu.menu_favorite)
             toolbar.title = user.name
+            //toolbar.setNavigationOnClickListener {  }
             ivAvatar.load(user.info?.photoMax)
             tvBirthdate.text = user.info?.bdate
             tvInfo.text = user.info?.about

@@ -1,7 +1,6 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.R
 import com.example.giftgiver.data.vk.VKFriendsRequest
-import com.example.giftgiver.data.vk.VKUserWithInfoRequest
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
 import com.example.giftgiver.domain.entities.User
+import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import com.example.giftgiver.presentation.user.UserAdapter
 import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
@@ -44,7 +43,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
 
     private fun init(friends: List<User>) {
         val goToProfile = { position: Int ->
-            loadInfo(friends[position])
+            LoadUserInfoVK().loadInfo(friends[position].vkId, ::navigateToProfile)
         }
         userAdapter = UserAdapter(goToProfile, friends)
         with(binding.recyclerView) {
@@ -61,25 +60,12 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         userAdapter.submitList(friends)
     }
 
-    private fun loadInfo(user: User) {
-        VK.execute(
-            VKUserWithInfoRequest(user.vkId),
-            object : VKApiCallback<User> {
-                override fun success(result: User) {
-//                    user = result
-                    val action =
-                        FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(
-                            result
-                        )
-                    findNavController().navigate(action)
-                }
-
-                override fun fail(error: Exception) {
-                    makeToast("Error while loading user infoVk ")
-                    Log.println(Log.ERROR, "", error.toString())
-                }
-            }
-        )
+    private fun navigateToProfile(user: User) {
+        val action =
+            FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(
+                user
+            )
+        findNavController().navigate(action)
     }
 
     private fun initVK() {
