@@ -17,13 +17,13 @@ const val USERS = "users"
 
 class FirestoreDB {
     private val database = FirebaseFirestore.getInstance()
-    private val clients = database.collection(CLIENTS)
-    private val calendars = database.collection(CALENDARS)
-    private val carts = database.collection(CARTS)
-    private val events = database.collection(EVENTS)
-    private val gifts = database.collection(GIFTS)
-    private val wishlists = database.collection(WISHLISTS)
-    private val users = database.collection(USERS)
+    val clients = database.collection(CLIENTS)
+    val calendars = database.collection(CALENDARS)
+    val carts = database.collection(CARTS)
+    val events = database.collection(EVENTS)
+    val gifts = database.collection(GIFTS)
+    val wishlists = database.collection(WISHLISTS)
+    val users = database.collection(USERS)
 
     fun addNewClient(client: ClientFB) {
         val map = ClientFB::class.declaredMemberProperties.associate { it.name to it.get(client) }

@@ -9,5 +9,5 @@ data class UserInfo(
     val bdate: String? = "",
     val about: String? = "",
     val photoMax: String? = "",
-    val wishlists: List<Wishlist> = listOf(),
+    val wishlists: MutableList<Wishlist> = mutableListOf(),
 ) : Parcelable
