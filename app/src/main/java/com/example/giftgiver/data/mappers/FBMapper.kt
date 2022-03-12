@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class FBMapper {
-    fun mapUserToFB(user: User): UserFB = UserFB(
+    private fun mapUserToFB(user: User): UserFB = UserFB(
         vkId = user.vkId,
         wishlists = user.info.wishlists
     )
@@ -35,13 +35,13 @@ class FBMapper {
 
     fun mapWishlistFromFB(wishlist: WishlistFB) = Wishlist(
         name = wishlist.name,
-        gifts = wishlist.gifts.map { mapGiftFromFB(it) },
+        gifts = wishlist.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>,
     )
 
-    fun mapEventToFB(event: Event): EventFB =
+    private fun mapEventToFB(event: Event): EventFB =
         EventFB(name = event.name, date = event.date, desc = event.desc)
 
-    fun mapGiftToFB(gift: Gift): GiftFB = GiftFB(
+    private fun mapGiftToFB(gift: Gift): GiftFB = GiftFB(
         name = gift.name,
         forUser = gift.forUser,
         desc = gift.desc,
@@ -49,10 +49,10 @@ class FBMapper {
         isChosen = gift.isChosen
     )
 
-    fun mapEventFromFB(event: EventFB): Event =
+    private fun mapEventFromFB(event: EventFB): Event =
         Event(name = event.name, date = event.date, desc = event.desc)
 
-    fun mapGiftFromFB(gift: GiftFB): Gift = Gift(
+    private fun mapGiftFromFB(gift: GiftFB): Gift = Gift(
         name = gift.name,
         forUser = gift.forUser,
         desc = gift.desc,
@@ -65,7 +65,8 @@ class FBMapper {
         val client = Client(clientFB.vkId, user = user)
         client.calendar.events = clientFB.calendar.events.map { mapEventFromFB(it) }
         client.cart.gifts = clientFB.cart.gifts.map { mapGiftFromFB(it) }
-        client.favFriends = clientFB.favFriends.map { withContext(Dispatchers.Default){ mapUserFromFB(it) }}
+        client.favFriends =
+            clientFB.favFriends.map { withContext(Dispatchers.Default) { mapUserFromFB(it) } }
         client.user.info.wishlists =
             clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
         return client

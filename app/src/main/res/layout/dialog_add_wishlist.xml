@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.fragments.AddWishlistDialogFragment" >
+    tools:context=".presentation.fragments.AddWishlistDialogFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_name"
@@ -21,7 +21,8 @@
             android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Wishlist's name"
+            android:backgroundTint="@color/white"
+            android:hint="@string/enter_wishlist_s_name"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

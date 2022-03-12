@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
@@ -79,10 +80,12 @@ class AccountFragment : Fragment() {
 
     private fun initWishlists(wishlists: MutableList<Wishlist>) {
         val goToProfile = { position: Int ->
-            navigateToWishlist(wishlists[position])
+            navigateToWishlist(position)
         }
-
-        wishlistAdapter = WishlistAdapter(goToProfile, wishlists)
+        val delete = { position: Int ->
+            deleteWishlist(wishlists[position])
+        }
+        wishlistAdapter = WishlistAdapter(goToProfile, delete, wishlists)
         with(binding.rvWishlists) {
             adapter = wishlistAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -96,7 +99,16 @@ class AccountFragment : Fragment() {
         wishlistAdapter.submitList(wishlists)
     }
 
-    private fun navigateToWishlist(wishist: Wishlist) {
-        //todo navigate
+    private fun deleteWishlist(wishlist: Wishlist) {
+        client.user.info.wishlists.remove(wishlist)
+        lifecycleScope.launch {
+            clients.updateClient(client.vkId, mapOf("wishlists" to client.user.info.wishlists))
+        }
+        wishlistAdapter.submitList(client.user.info.wishlists)
+    }
+
+    private fun navigateToWishlist(wishistIndex: Int) {
+        val action = AccountFragmentDirections.actionAccountToMyWishlistFragment(wishistIndex)
+        findNavController().navigate(action)
     }
 }

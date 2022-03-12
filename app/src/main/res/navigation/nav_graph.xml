@@ -9,10 +9,10 @@
         android:id="@+id/account"
         android:name="com.example.giftgiver.presentation.fragments.AccountFragment"
         android:label="@string/account"
-        tools:layout="@layout/fragment_account" >
+        tools:layout="@layout/fragment_account">
         <action
-            android:id="@+id/action_account_to_friends"
-            app:destination="@id/friends" />
+            android:id="@+id/action_account_to_myWishlistFragment"
+            app:destination="@id/myWishlistFragment" />
     </fragment>
     <fragment
         android:id="@+id/calendar"
@@ -25,7 +25,7 @@
         android:label="@string/cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
-        android:id="@+id/wishlists"
+        android:id="@+id/my_wishlists"
         android:name="com.example.giftgiver.presentation.fragments.WishlistsFragment"
         android:label="@string/wishlists"
         tools:layout="@layout/fragment_wishlists" />
@@ -59,4 +59,28 @@
         android:name="com.example.giftgiver.presentation.fragments.AddWishlistDialogFragment"
         android:label="dialog_add_wishlist"
         tools:layout="@layout/dialog_add_wishlist" />
+    <fragment
+        android:id="@+id/myWishlistFragment"
+        android:name="com.example.giftgiver.presentation.fragments.MyWishlistFragment"
+        android:label="fragment_my_wishlist"
+        tools:layout="@layout/fragment_my_wishlist" >
+        <argument
+            android:name="wishlistIndex"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_myWishlistFragment_to_giftFragment"
+            app:destination="@id/myGiftFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myGiftFragment"
+        android:name="com.example.giftgiver.presentation.fragments.MyGiftFragment"
+        android:label="fragment_my_gift"
+        tools:layout="@layout/fragment_my_gift">
+        <argument
+            android:name="giftIndex"
+            app:argType="integer" />
+        <argument
+            android:name="wishlistIndex"
+            app:argType="integer" />
+    </fragment>
 </navigation>

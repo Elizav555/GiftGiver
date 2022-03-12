@@ -21,7 +21,7 @@ class AddWishlistDialogFragment : DialogFragment() {
                         (parentFragment as AccountFragment).addWishlist(
                             Wishlist(
                                 etName.text.toString(),
-                                listOf()
+                                mutableListOf()
                             )
                         )
                     }

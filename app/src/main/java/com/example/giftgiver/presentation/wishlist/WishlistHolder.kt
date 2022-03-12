@@ -6,12 +6,16 @@ import com.example.giftgiver.domain.entities.Wishlist
 
 class WishlistHolder(
     private val binding: ItemWishlistBinding,
-    action: (position: Int) -> Unit
+    action: (position: Int) -> Unit,
+    deleteAction: (position: Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         itemView.setOnClickListener {
             action(adapterPosition)
+        }
+        binding.btnDelete.setOnClickListener {
+            deleteAction(adapterPosition)
         }
     }
 

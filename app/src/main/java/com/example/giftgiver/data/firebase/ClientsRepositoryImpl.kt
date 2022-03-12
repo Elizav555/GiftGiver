@@ -5,6 +5,8 @@ import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.repositories.ClientsRepository
 import com.google.firebase.firestore.FirebaseFirestore
 
+const val CLIENTS = "clients"
+
 class ClientsRepositoryImpl : ClientsRepository {
     private val clients = FirebaseFirestore.getInstance().collection(CLIENTS)
 

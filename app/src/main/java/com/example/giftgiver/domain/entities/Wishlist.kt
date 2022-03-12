@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Wishlist(
     val name: String,
-    val gifts: List<Gift> = listOf(),
+    val gifts: MutableList<Gift> = mutableListOf(),
 ) : Parcelable

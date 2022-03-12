@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foregroundTint="@color/black"
-    tools:context=".presentation.fragments.WishlistsFragment">
+    tools:context=".presentation.fragments.MyWishlistFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,19 +18,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/wishlists" />
+        app:title="@string/wishlist" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_gifts"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:listitem="@layout/item_wishlist" />
+        tools:listitem="@layout/item_gift" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addWishlist"
+        android:id="@+id/addItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"

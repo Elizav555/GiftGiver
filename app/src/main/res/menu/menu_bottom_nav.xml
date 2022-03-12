@@ -7,7 +7,7 @@
         android:title="@string/account" />
 
     <item
-        android:id="@+id/wishlists"
+        android:id="@+id/myWishlistFragment"
         android:icon="@drawable/ic_wishlist_foreground"
         android:title="@string/wishlists" />
 
