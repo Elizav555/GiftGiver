@@ -8,5 +8,5 @@ data class User(
     val vkId: Long,
     val name: String = "",
     val photo: String = "",
-    var info: UserInfo? = null
+    var info: UserInfo = UserInfo(vkId)
 ) : Parcelable

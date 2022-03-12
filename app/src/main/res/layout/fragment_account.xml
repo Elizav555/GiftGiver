@@ -125,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        app:constraint_referenced_ids="rv_wishlists,tv_name,tv_birthdate,tv_info,btn_logout,tv_wishlists,iv_avatar"
+        app:constraint_referenced_ids="rv_wishlists,btn_add,tv_name,tv_birthdate,tv_info,btn_logout,tv_wishlists,iv_avatar"
         tools:visibility="visible" />
 
     <Button

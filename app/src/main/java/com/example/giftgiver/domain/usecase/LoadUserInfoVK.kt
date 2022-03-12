@@ -5,6 +5,8 @@ import com.example.giftgiver.data.vk.VKUserWithInfoRequest
 import com.example.giftgiver.domain.entities.User
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class LoadUserInfoVK {
     fun loadInfo(vkId: Long, successAction: (User) -> Unit) {
@@ -19,6 +21,12 @@ class LoadUserInfoVK {
                     Log.println(Log.ERROR, "", error.toString())
                 }
             }
+        )
+    }
+
+    suspend fun loadInfo(vkId: Long) = withContext(Dispatchers.Default) {
+        VK.executeSync(
+            VKUserWithInfoRequest(vkId)
         )
     }
 }

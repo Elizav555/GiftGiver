@@ -10,7 +10,7 @@ class VkMapper {
         vkId = userVk.vkId,
         name = userVk.name,
         photo = userVk.photo,
-        info = null
+        info = UserInfo(userVk.vkId)
     )
 
     fun mapUserWithInfo(userVk: UserVk, userInfoVk: UserInfoVk): User {

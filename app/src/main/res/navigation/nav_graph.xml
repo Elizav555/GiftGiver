@@ -9,7 +9,11 @@
         android:id="@+id/account"
         android:name="com.example.giftgiver.presentation.fragments.AccountFragment"
         android:label="@string/account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_account_to_friends"
+            app:destination="@id/friends" />
+    </fragment>
     <fragment
         android:id="@+id/calendar"
         android:name="com.example.giftgiver.presentation.fragments.CalendarFragment"
@@ -50,4 +54,9 @@
                 app:argType="com.example.giftgiver.domain.entities.User" />
         </fragment>
     </navigation>
+    <dialog
+        android:id="@+id/addWishlistDialogFragment"
+        android:name="com.example.giftgiver.presentation.fragments.AddWishlistDialogFragment"
+        android:label="dialog_add_wishlist"
+        tools:layout="@layout/dialog_add_wishlist" />
 </navigation>
