@@ -12,7 +12,7 @@ class App : Application() {
 
     private val tokenTracker = object : VKTokenExpiredHandler {
         override fun onTokenExpired() {
-            val str = ""
+            //todo handle token inspiration
         }
     }
 }

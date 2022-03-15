@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,11 +13,10 @@ import com.example.giftgiver.databinding.FragmentFriendsListBinding
 import com.example.giftgiver.domain.entities.User
 import com.example.giftgiver.domain.usecase.LoadFriendsVK
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
+import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.user.UserAdapter
 import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
-import com.vk.api.sdk.auth.VKAuthenticationResult
-import com.vk.api.sdk.auth.VKScope
 
 class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
@@ -36,8 +34,9 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity).setBottomNavigationVisibility(View.VISIBLE)
         binding.toolbar.inflateMenu(R.menu.menu_filter)
-        initVK()
+        loadFriends()
     }
 
     private fun init(friends: List<User>) {
@@ -67,35 +66,5 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         findNavController().navigate(action)
     }
 
-    private fun initVK() {
-        if (VK.isLoggedIn()) {
-            loadFriends()
-        } else {
-            val activityLauncher =
-                registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
-                    when (result) {
-                        is VKAuthenticationResult.Success -> {
-                            val userId = VK.getUserId()
-                            makeToast(userId.toString())
-                            loadFriends()
-                        }
-                        is VKAuthenticationResult.Failed -> makeToast("Authentication error")
-                    }
-                }
-            activityLauncher.launch(
-                arrayListOf(
-                    VKScope.FRIENDS,
-                    VKScope.NOTIFICATIONS,
-                    VKScope.OFFLINE
-                )
-            )
-        }
-    }
-
     private fun loadFriends() = LoadFriendsVK().loadFriends(VK.getUserId().value, ::init)
-
-    private fun makeToast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG)
-            .show()
-    }
 }

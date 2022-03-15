@@ -14,23 +14,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.firebase.entities.ClientFB
-import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentMyWishlistBinding
-import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.gift.GiftAdapter
+import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
-import com.google.firebase.firestore.ktx.toObject
-import com.vk.api.sdk.VK
 import kotlinx.coroutines.launch
 
 class MyWishlistFragment : Fragment() {
     lateinit var binding: FragmentMyWishlistBinding
     private val args: MyWishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
-    private lateinit var client: Client
+    private val client = ClientState.client
     private var index = 0
     private val clients = ClientsRepositoryImpl()
     override fun onCreateView(
@@ -44,27 +40,21 @@ class MyWishlistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        lifecycleScope.launch {
-            clients.getClientByVkId(VK.getUserId().value).addOnSuccessListener {
-                it.toObject<ClientFB>()?.let { clientFB ->
-                    lifecycleScope.launch { bindInfo(FBMapper().mapClientFromFB(clientFB)) }
-                }
-            }
-        }
+        bindInfo()
     }
 
-    private fun bindInfo(clientFB: Client) {
-        client = clientFB
-        index = args.wishlistIndex
-        val wishlist = client.user.info.wishlists[index]
-        binding.toolbar.title = wishlist.name
-        binding.toolbar.inflateMenu(R.menu.menu_edit)
-        binding.addItem.setOnClickListener {
-            AddGiftDialogFragment()
-                .show(childFragmentManager, "dialog")
+    private fun bindInfo() {
+        client?.let {
+            index = args.wishlistIndex
+            val wishlist = client.user.info.wishlists[index]
+            binding.toolbar.title = wishlist.name
+            binding.toolbar.inflateMenu(R.menu.menu_edit)
+            binding.addItem.setOnClickListener {
+                AddGiftDialogFragment()
+                    .show(childFragmentManager, "dialog")
+            }
+            initAdapter(wishlist.gifts)
         }
-        initAdapter(wishlist.gifts)
     }
 
     private fun initAdapter(gifts: MutableList<Gift>) {
@@ -95,7 +85,7 @@ class MyWishlistFragment : Fragment() {
         giftAdapter.submitList(gifts)
     }
 
-    fun addGift(gift: Gift) {
+    fun addGift(gift: Gift) = client?.let {
         client.user.info.wishlists[index].gifts.add(gift)
         lifecycleScope.launch {
             clients.updateClient(client.vkId, mapOf("wishlists" to client.user.info.wishlists))
@@ -103,7 +93,7 @@ class MyWishlistFragment : Fragment() {
         giftAdapter.submitList(client.user.info.wishlists[index].gifts)
     }
 
-    private fun deleteGift(gift: Gift) {
+    private fun deleteGift(gift: Gift) = client?.let {
         client.user.info.wishlists[index].gifts.remove(gift)
         lifecycleScope.launch {
             clients.updateClient(client.vkId, mapOf("wishlists" to client.user.info.wishlists))

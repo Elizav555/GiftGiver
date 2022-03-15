@@ -26,4 +26,6 @@
     <string name="image_link">Image Link</string>
     <string name="description">Description</string>
     <string name="enter_wishlist_s_name">Enter Wishlist\'s name</string>
+    <string name="logout">Logout</string>
+    <string name="log_in_using_vk">Log in using Vk</string>
 </resources>
