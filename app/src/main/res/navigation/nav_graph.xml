@@ -24,11 +24,6 @@
         android:name="com.example.giftgiver.presentation.fragments.CartFragment"
         android:label="@string/cart"
         tools:layout="@layout/fragment_cart" />
-    <fragment
-        android:id="@+id/my_wishlists"
-        android:name="com.example.giftgiver.presentation.fragments.WishlistsFragment"
-        android:label="@string/wishlists"
-        tools:layout="@layout/fragment_wishlists" />
     <navigation
         android:id="@+id/friends"
         app:startDestination="@id/friends_list">
@@ -52,6 +47,9 @@
             <argument
                 android:name="user"
                 app:argType="com.example.giftgiver.domain.entities.User" />
+            <action
+                android:id="@+id/action_user_fragment_to_myWishlistFragment"
+                app:destination="@id/myWishlistFragment" />
         </fragment>
     </navigation>
     <dialog

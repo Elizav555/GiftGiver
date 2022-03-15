@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 //        val appBarConfiguration = AppBarConfiguration(
 //            setOf(
 //                R.id.account,
-//                R.id.wishlists,
 //                R.id.friends,
 //                R.id.calendar,
 //                R.id.cart

@@ -12,6 +12,7 @@ class ClientsRepositoryImpl : ClientsRepository {
 
     override suspend fun addClient(client: Client) {
         clients.document(client.vkId.toString()).set(FBMapper().mapClientToFB(client))
+        //clients.document(client.vkId.toString()).collection("wishlist")
     }
 
     override suspend fun deleteClient(client: Client) =
