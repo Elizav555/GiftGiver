@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 class GiftAdapter(
     private val action: (position: Int) -> Unit,
     private val gifts: List<Gift>,
-    private val isFriends: Boolean = false,
+    private val checkedFunc: ((Int,Boolean)->Unit)? = null,
     private val getClient: ((Long) -> Deferred<Client?>)? = null
 ) : ListAdapter<Gift, GiftHolder>(GiftDiffItemCallback()) {
 
@@ -26,7 +26,7 @@ class GiftAdapter(
             false
         ),
         action,
-        isFriends,
+        checkedFunc,
         getClient
     )
 
