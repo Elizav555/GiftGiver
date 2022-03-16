@@ -28,4 +28,5 @@
     <string name="enter_wishlist_s_name">Enter Wishlist\'s name</string>
     <string name="logout">Logout</string>
     <string name="log_in_using_vk">Log in using Vk</string>
+    <string name="friend_wishlist">%1$s\'s %2$s Wishlist</string>
 </resources>

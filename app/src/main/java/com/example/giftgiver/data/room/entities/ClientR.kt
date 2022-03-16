@@ -12,5 +12,5 @@ data class ClientR(
     val calendar: CalendarR,
     val user: UserR,
     val cart: CartR,
-    val favFriends: List<UserR> = listOf(),
+    val favFriendsIds: List<Long> = listOf(),
 ) : Parcelable

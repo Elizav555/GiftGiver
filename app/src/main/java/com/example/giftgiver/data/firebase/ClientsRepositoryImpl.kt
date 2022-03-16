@@ -11,10 +11,22 @@ class ClientsRepositoryImpl : ClientsRepository {
     private val clients = FirebaseFirestore.getInstance().collection(CLIENTS)
 
     override suspend fun addClient(client: Client) {
-        clients.document(client.vkId.toString()).set(FBMapper().mapClientToFB(client))
-        //clients.document(client.vkId.toString()).collection("wishlist")
+        val clientFB = FBMapper().mapClientToFB(client)
+        clients.document(client.vkId.toString()).set(clientFB)
+        //clients.document(client.vkId.toString()).collection("wishlists").add(clientFB.wishlists)
     }
 
+    //    override suspend fun addClient(client: Client) {
+//        val clientFB = FBMapper().mapClientToFB(client)
+//        val map = ClientFB::class.declaredMemberProperties.associate { it.name to it.get(clientFB) }
+//        map.forEach { prop ->
+//            prop.value?.let {
+//                clients.document(client.vkId.toString()).collection(prop.key).add(
+//                    it
+//                )
+//            }
+//        }
+//    }
     override suspend fun deleteClient(client: Client) =
         clients.document(client.vkId.toString()).delete()
 

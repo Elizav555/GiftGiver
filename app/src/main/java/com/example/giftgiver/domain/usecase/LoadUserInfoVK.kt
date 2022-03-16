@@ -24,6 +24,15 @@ class LoadUserInfoVK {
         )
     }
 
+//    suspend fun loadInfo(vkId: Long) = suspendCoroutine<User> { continuation ->
+//        try {
+//            val result = VK.executeSync(VKUserWithInfoRequest(vkId))
+//            continuation.resume(result)
+//        } catch (e: VKApiExecutionException) {
+//            continuation.resumeWithException(e)
+//        }
+//    }
+
     suspend fun loadInfo(vkId: Long) = withContext(Dispatchers.Default) {
         VK.executeSync(
             VKUserWithInfoRequest(vkId)

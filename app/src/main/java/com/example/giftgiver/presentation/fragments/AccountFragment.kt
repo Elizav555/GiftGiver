@@ -73,13 +73,13 @@ class AccountFragment : Fragment() {
     }
 
     private fun initWishlists(wishlists: MutableList<Wishlist>) {
-        val goToProfile = { position: Int ->
+        val goToWishlist = { position: Int ->
             navigateToWishlist(position)
         }
         val delete = { position: Int ->
             deleteWishlist(wishlists[position])
         }
-        wishlistAdapter = WishlistAdapter(goToProfile, delete, wishlists)
+        wishlistAdapter = WishlistAdapter(goToWishlist, delete, wishlists)
         with(binding.rvWishlists) {
             adapter = wishlistAdapter
             layoutManager = LinearLayoutManager(requireContext())

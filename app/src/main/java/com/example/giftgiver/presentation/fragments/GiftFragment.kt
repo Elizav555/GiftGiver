@@ -7,14 +7,14 @@ import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.databinding.FragmentMyGiftBinding
+import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.utils.ClientState
 
-class MyGiftFragment : Fragment() {
-    private lateinit var binding: FragmentMyGiftBinding
-    private val args: MyGiftFragmentArgs by navArgs()
+class GiftFragment : Fragment() {
+    private lateinit var binding: FragmentGiftBinding
+    private val args: GiftFragmentArgs by navArgs()
     private val client = ClientState.client
     private var giftIndex = 0
     private var gifts = mutableListOf<Gift>()
@@ -24,7 +24,7 @@ class MyGiftFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMyGiftBinding.inflate(inflater)
+        binding = FragmentGiftBinding.inflate(inflater)
         return binding.root
     }
 
@@ -36,7 +36,7 @@ class MyGiftFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_edit, menu)
     }
-    //todo edit gift and save changes
+    //todo edit gift if it's client's gift and save changes
 
     private fun bindInfo() {
         giftIndex = args.giftIndex

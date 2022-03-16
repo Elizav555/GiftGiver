@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.databinding.FragmentMyWishlistBinding
+import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.gift.GiftAdapter
@@ -21,9 +21,9 @@ import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
 import kotlinx.coroutines.launch
 
-class MyWishlistFragment : Fragment() {
-    lateinit var binding: FragmentMyWishlistBinding
-    private val args: MyWishlistFragmentArgs by navArgs()
+class WishlistFragment : Fragment() {
+    lateinit var binding: FragmentWishlistBinding
+    private val args: WishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
     private val client = ClientState.client
     private var index = 0
@@ -33,7 +33,7 @@ class MyWishlistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMyWishlistBinding.inflate(inflater)
+        binding = FragmentWishlistBinding.inflate(inflater)
         return binding.root
     }
 
@@ -107,7 +107,7 @@ class MyWishlistFragment : Fragment() {
     private fun navigateToItem(giftIndex: Int) {
         client?.let {
             val action =
-                MyWishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
+                WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
                     giftIndex,
                     client.user.info.wishlists[index].gifts.toTypedArray()
                 )

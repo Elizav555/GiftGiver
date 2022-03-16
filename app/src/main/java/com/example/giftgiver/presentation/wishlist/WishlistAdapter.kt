@@ -8,7 +8,7 @@ import com.example.giftgiver.domain.entities.Wishlist
 
 class WishlistAdapter(
     private val action: (position: Int) -> Unit,
-    private val deleteAction: (position: Int) -> Unit,
+    private val deleteAction: ((position: Int) -> Unit)?,
     private val wishlists: List<Wishlist>,
 ) : ListAdapter<Wishlist, WishlistHolder>(WishlistDiffItemCallback()) {
 

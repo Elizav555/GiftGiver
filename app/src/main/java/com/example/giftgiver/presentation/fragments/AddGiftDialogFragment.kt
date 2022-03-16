@@ -18,7 +18,7 @@ class AddGiftDialogFragment : DialogFragment() {
             return activity?.let {
                 val dialog = AlertDialog.Builder(it).setView(root)
                     .setPositiveButton(R.string.add) { _, _ ->
-                        (parentFragment as MyWishlistFragment).addGift(
+                        (parentFragment as WishlistFragment).addGift(
                             Gift(
                                 etName.text.toString(),
                                 0,
