@@ -43,8 +43,23 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         loadFriends()
     }
 
+    //todo implement search
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_filter, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.filter -> {
+                filterFriends()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun filterFriends() {
+        //todo implement filter
     }
 
     private fun init(friends: List<User>) {
@@ -54,7 +69,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         userAdapter = UserAdapter(goToProfile, friends)
         with(binding.recyclerView) {
             adapter = userAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             val dividerItemDecoration = DividerItemDecoration(
                 context,

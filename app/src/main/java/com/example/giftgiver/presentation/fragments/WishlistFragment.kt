@@ -47,6 +47,20 @@ class WishlistFragment : Fragment() {
         inflater.inflate(R.menu.menu_edit, menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.edit -> {
+                enterEditMode()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun enterEditMode() {
+        ChangeWishlistDialog().show(childFragmentManager, "dialog")
+    }
+
     private fun bindInfo() {
         client?.let {
             index = args.wishlistIndex
@@ -54,7 +68,7 @@ class WishlistFragment : Fragment() {
             setHasOptionsMenu(true)
             (activity as MainActivity).supportActionBar?.title = wishlist.name
             binding.addItem.setOnClickListener {
-                AddGiftDialogFragment()
+                AddGiftDialog()
                     .show(childFragmentManager, "dialog")
             }
             initAdapter(wishlist.gifts)
@@ -110,9 +124,19 @@ class WishlistFragment : Fragment() {
             val action =
                 WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
                     giftIndex,
-                    client.user.info.wishlists[index].gifts.toTypedArray()
+                    client.user.info.wishlists[index].gifts.toTypedArray(),
+                    true,
+                    index
                 )
             findNavController().navigate(action)
         }
+    }
+
+    fun changeWishlistName(newName: String) = client?.let {
+        client.user.info.wishlists[index].name = newName
+        lifecycleScope.launch {
+            clients.updateClient(client.vkId, mapOf("wishlists" to client.user.info.wishlists))
+        }
+        (activity as MainActivity).supportActionBar?.title = newName
     }
 }

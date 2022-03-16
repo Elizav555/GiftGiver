@@ -125,4 +125,5 @@
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_avatar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

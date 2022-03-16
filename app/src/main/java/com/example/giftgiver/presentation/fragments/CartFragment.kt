@@ -85,7 +85,9 @@ class CartFragment : Fragment() {
             val action =
                 CartFragmentDirections.actionCartToMyGiftFragment(
                     giftIndex,
-                    client.cart.gifts.toTypedArray()
+                    client.cart.gifts.toTypedArray(),
+                    false,
+                    -1
                 )
             findNavController().navigate(action)
         }

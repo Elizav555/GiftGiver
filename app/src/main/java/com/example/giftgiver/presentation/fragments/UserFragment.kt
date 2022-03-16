@@ -36,7 +36,6 @@ class UserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         user = args.user
         user?.let { bindInfo(it) }
-
     }
 
     private fun bindInfo(user: User) {

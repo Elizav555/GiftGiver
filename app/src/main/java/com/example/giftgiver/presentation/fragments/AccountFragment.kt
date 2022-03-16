@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
-import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentAccountBinding
@@ -39,18 +38,14 @@ class AccountFragment : Fragment() {
         client?.let { bindInfo(it) }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_edit, menu)
-    }
-
     private fun bindInfo(curClient: Client) {
         with(binding) {
-            setHasOptionsMenu(true)
+            setHasOptionsMenu(false)
             btnLogout.setOnClickListener {
                 logout()
             }
             btnAdd.setOnClickListener {
-                AddWishlistDialogFragment()
+                AddWishlistDialog()
                     .show(childFragmentManager, "dialog")
             }
             ivAvatar.load(curClient.user.info.photoMax)
@@ -113,6 +108,5 @@ class AccountFragment : Fragment() {
         VK.logout()
         ClientState.client = null
         findNavController().navigate(AccountFragmentDirections.actionAccountToStartFragment())
-
     }
 }

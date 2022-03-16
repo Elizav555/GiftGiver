@@ -32,6 +32,12 @@ class MainActivity : AppCompatActivity() {
         )
         navView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
+        actionBar?.setHomeButtonEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 
     fun setBottomNavigationVisibility(visibility: Int) {

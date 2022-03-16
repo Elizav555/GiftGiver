@@ -9,7 +9,7 @@ import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogAddWishlistBinding
 import com.example.giftgiver.domain.entities.Wishlist
 
-class AddWishlistDialogFragment : DialogFragment() {
+class AddWishlistDialog : DialogFragment() {
     private lateinit var binding: DialogAddWishlistBinding
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogAddWishlistBinding.inflate(layoutInflater)

@@ -9,6 +9,7 @@ import com.example.giftgiver.domain.entities.Gift
 class GiftAdapter(
     private val action: (position: Int) -> Unit,
     private val gifts: List<Gift>,
+    private val isFriends: Boolean = false
 ) : ListAdapter<Gift, GiftHolder>(GiftDiffItemCallback()) {
 
     override fun onCreateViewHolder(
@@ -20,7 +21,8 @@ class GiftAdapter(
             parent,
             false
         ),
-        action
+        action,
+        isFriends
     )
 
     override fun onBindViewHolder(

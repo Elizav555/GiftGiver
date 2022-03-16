@@ -9,7 +9,7 @@ import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogAddGiftBinding
 import com.example.giftgiver.domain.entities.Gift
 
-class AddGiftDialogFragment : DialogFragment() {
+class AddGiftDialog : DialogFragment() {
     private lateinit var binding: DialogAddGiftBinding
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogAddGiftBinding.inflate(layoutInflater)

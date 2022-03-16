@@ -48,7 +48,7 @@ class FriendsWishlistFragment : Fragment() {
         val goToItem = { position: Int ->
             navigateToItem(position)
         }
-        giftAdapter = GiftAdapter(goToItem, gifts)
+        giftAdapter = GiftAdapter(goToItem, gifts, true)
         with(binding.rvGifts) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -67,7 +67,9 @@ class FriendsWishlistFragment : Fragment() {
             val action =
                 FriendsWishlistFragmentDirections.actionFriendsWishlistFragmentToMyGiftFragment(
                     giftIndex,
-                    it.gifts.toTypedArray()
+                    it.gifts.toTypedArray(),
+                    false,
+                    -1
                 )
             findNavController().navigate(action)
         }

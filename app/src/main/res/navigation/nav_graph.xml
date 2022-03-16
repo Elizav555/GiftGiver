@@ -58,7 +58,7 @@
     </navigation>
     <dialog
         android:id="@+id/addWishlistDialogFragment"
-        android:name="com.example.giftgiver.presentation.fragments.AddWishlistDialogFragment"
+        android:name="com.example.giftgiver.presentation.fragments.AddWishlistDialog"
         android:label="dialog_add_wishlist"
         tools:layout="@layout/dialog_add_wishlist" />
     <fragment
@@ -84,6 +84,12 @@
         <argument
             android:name="gifts"
             app:argType="com.example.giftgiver.domain.entities.Gift[]" />
+        <argument
+            android:name="isClient"
+            app:argType="boolean" />
+        <argument
+            android:name="wishlistIndex"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/startFragment"
