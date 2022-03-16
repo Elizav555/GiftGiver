@@ -1,9 +1,7 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -40,9 +38,13 @@ class AccountFragment : Fragment() {
         client?.let { bindInfo(it) }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_edit, menu)
+    }
+
     private fun bindInfo(curClient: Client) {
         with(binding) {
-            toolbar.inflateMenu(R.menu.menu_edit)
+            setHasOptionsMenu(true)
             btnLogout.setOnClickListener {
                 logout()
             }

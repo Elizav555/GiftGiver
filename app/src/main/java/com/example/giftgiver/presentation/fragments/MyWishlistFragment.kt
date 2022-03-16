@@ -1,9 +1,7 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +14,7 @@ import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
 import com.example.giftgiver.databinding.FragmentMyWishlistBinding
 import com.example.giftgiver.domain.entities.Gift
+import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.gift.GiftAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.SwipeToDeleteCallback
@@ -43,12 +42,16 @@ class MyWishlistFragment : Fragment() {
         bindInfo()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_edit, menu)
+    }
+
     private fun bindInfo() {
         client?.let {
             index = args.wishlistIndex
             val wishlist = client.user.info.wishlists[index]
-            binding.toolbar.title = wishlist.name
-            binding.toolbar.inflateMenu(R.menu.menu_edit)
+            setHasOptionsMenu(true)
+            (activity as MainActivity).supportActionBar?.title = wishlist.name
             binding.addItem.setOnClickListener {
                 AddGiftDialogFragment()
                     .show(childFragmentManager, "dialog")

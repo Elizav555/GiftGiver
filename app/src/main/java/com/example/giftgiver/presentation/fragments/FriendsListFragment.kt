@@ -1,9 +1,7 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -35,8 +33,12 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(View.VISIBLE)
-        binding.toolbar.inflateMenu(R.menu.menu_filter)
+        setHasOptionsMenu(true)
         loadFriends()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_filter, menu)
     }
 
     private fun init(friends: List<User>) {

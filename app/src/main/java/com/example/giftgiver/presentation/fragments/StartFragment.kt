@@ -53,6 +53,7 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(View.GONE)
+        setHasOptionsMenu(false)
         initVK()
         binding.btnLogin.setOnClickListener {
             initVK()

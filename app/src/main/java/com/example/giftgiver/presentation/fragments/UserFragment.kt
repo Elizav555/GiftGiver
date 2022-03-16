@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.databinding.FragmentUserBinding
+import com.example.giftgiver.presentation.MainActivity
 
 class UserFragment : Fragment() {
     private lateinit var binding: FragmentUserBinding
@@ -16,7 +17,7 @@ class UserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentUserBinding.inflate(inflater)
         return binding.root
@@ -27,9 +28,9 @@ class UserFragment : Fragment() {
         val user = args.user
         with(binding)
         {
-            //toolbar.inflateMenu(R.menu.menu_favorite)
-            toolbar.title = user.name
-            //toolbar.setNavigationOnClickListener {  }
+            //todo add favorite menu
+            setHasOptionsMenu(true)
+            (activity as MainActivity).supportActionBar?.title = user.name
             ivAvatar.load(user.info.photoMax)
             tvBirthdate.text = user.info.bdate
             tvInfo.text = user.info.about

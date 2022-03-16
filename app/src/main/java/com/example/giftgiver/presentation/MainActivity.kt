@@ -3,6 +3,8 @@ package com.example.giftgiver.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.ActivityMainBinding
@@ -20,15 +22,16 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
-//        val appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.account,
-//                R.id.friends,
-//                R.id.calendar,
-//                R.id.cart
-//            )
-//        )
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.account,
+                R.id.friends,
+                R.id.calendar,
+                R.id.cart
+            )
+        )
         navView.setupWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
     fun setBottomNavigationVisibility(visibility: Int) {
