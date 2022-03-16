@@ -1,7 +1,9 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -52,7 +54,7 @@ class AccountFragment : Fragment() {
             tvBirthdate.text = curClient.user.info.bdate
             tvInfo.text = curClient.user.info.about
             tvName.text = curClient.user.name
-            initWishlists(curClient.user.info.wishlists)
+            initWishlists(curClient.wishlists)
             progressBar.visibility = View.GONE
             views.visibility = View.VISIBLE
         }
@@ -60,11 +62,11 @@ class AccountFragment : Fragment() {
 
     fun addWishlist(wishlist: Wishlist) {
         client?.let {
-            client.user.info.wishlists.add(wishlist)
+            client.wishlists.add(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(client.vkId, mapOf("wishlists" to client.user.info.wishlists))
+                clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
             }
-            wishlistAdapter.submitList(client.user.info.wishlists)
+            wishlistAdapter.submitList(client.wishlists)
         }
     }
 
@@ -91,11 +93,11 @@ class AccountFragment : Fragment() {
 
     private fun deleteWishlist(wishlist: Wishlist) {
         client?.let {
-            client.user.info.wishlists.remove(wishlist)
+            client.wishlists.remove(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(client.vkId, mapOf("wishlists" to client.user.info.wishlists))
+                clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
             }
-            wishlistAdapter.submitList(client.user.info.wishlists)
+            wishlistAdapter.submitList(client.wishlists)
         }
     }
 

@@ -49,8 +49,8 @@
             android:label="fragment_user"
             tools:layout="@layout/fragment_user">
             <argument
-                android:name="user"
-                app:argType="com.example.giftgiver.domain.entities.User" />
+                android:name="client"
+                app:argType="com.example.giftgiver.domain.entities.Client" />
             <action
                 android:id="@+id/action_user_fragment_to_friendsWishlistFragment"
                 app:destination="@id/friendsWishlistFragment" />

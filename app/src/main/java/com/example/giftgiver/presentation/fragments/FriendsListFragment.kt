@@ -25,6 +25,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
     private var userAdapter: UserAdapter by autoCleared()
     private lateinit var loadFriendsVK: LoadFriendsVK
+    private val clients = ClientsRepositoryImpl(FBMapper())
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,7 +65,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
 
     private fun init(friends: List<User>) {
         val goToProfile = { position: Int ->
-            LoadUserInfoVK().loadInfo(friends[position].vkId, ::navigateToProfile)
+            navigateToProfile(friends[position].vkId)
         }
         userAdapter = UserAdapter(goToProfile, friends)
         with(binding.recyclerView) {
@@ -81,12 +82,18 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         userAdapter.submitList(friends)
     }
 
-    private fun navigateToProfile(user: User) {
-        val action =
-            FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(
-                user
-            )
-        findNavController().navigate(action)
+    private fun navigateToProfile(vkId: Long) {
+        lifecycleScope.launch {
+            val client = clients.getClientByVkId(vkId)
+            client?.user = LoadUserInfoVK().loadInfo(vkId)
+            client?.let {
+                val action =
+                    FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(
+                        it
+                    )
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun loadFriends() {

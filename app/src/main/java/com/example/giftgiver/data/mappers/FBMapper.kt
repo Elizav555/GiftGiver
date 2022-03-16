@@ -19,7 +19,7 @@ class FBMapper {
         clientFB.cart.gifts = client.cart.gifts.map { mapGiftToFB(it) }
         clientFB.favFriendsIds = client.favFriends.map { it.vkId } as MutableList<Long>
         clientFB.wishlists =
-            client.user.info.wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
+            client.wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
         return clientFB
     }
 
@@ -68,7 +68,7 @@ class FBMapper {
                     )
                 }
             }
-        client.user.info.wishlists =
+        client.wishlists =
             clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
         return client
     }

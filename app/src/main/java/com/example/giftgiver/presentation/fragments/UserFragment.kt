@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
 import com.example.giftgiver.databinding.FragmentUserBinding
-import com.example.giftgiver.domain.entities.User
+import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Wishlist
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.wishlist.WishlistAdapter
@@ -21,7 +21,7 @@ class UserFragment : Fragment() {
     private lateinit var binding: FragmentUserBinding
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private val args: UserFragmentArgs by navArgs()
-    private var user: User? = null
+    private var client: Client? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,21 +34,21 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        user = args.user
-        user?.let { bindInfo(it) }
+        client = args.client
+        client?.let { bindInfo(it) }
     }
 
-    private fun bindInfo(user: User) {
+    private fun bindInfo(client: Client) {
         with(binding)
         {
             //todo add favorite menu
             setHasOptionsMenu(true)
-            (activity as MainActivity).supportActionBar?.title = user.name
-            ivAvatar.load(user.info.photoMax)
-            tvBirthdate.text = user.info.bdate
-            tvInfo.text = user.info.about
-            tvName.text = user.name
-            initWishlists(user.info.wishlists)
+            (activity as MainActivity).supportActionBar?.title = client.user.name
+            ivAvatar.load(client.user.info.photoMax)
+            tvBirthdate.text = client.user.info.bdate
+            tvInfo.text = client.user.info.about
+            tvName.text = client.user.name
+            initWishlists(client.wishlists)
         }
     }
 
@@ -71,11 +71,11 @@ class UserFragment : Fragment() {
     }
 
     private fun navigateToWishlist(wishlist: Wishlist) {
-        user?.let {
+        client?.let {
             val action =
                 UserFragmentDirections.actionUserFragmentToFriendsWishlistFragment(
                     wishlist,
-                    it.name
+                    it.user.name
                 )
             findNavController().navigate(action)
         }

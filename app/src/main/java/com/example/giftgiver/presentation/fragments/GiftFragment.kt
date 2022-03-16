@@ -71,12 +71,12 @@ class GiftFragment : Fragment() {
     fun changeGift(name: String, desc: String, imageUrl: String) = client?.let {
         val index = args.wishlistIndex
         if (index == -1) return@let
-        val gift = client.user.info.wishlists[index].gifts[giftIndex]
-        client.user.info.wishlists[index].gifts[giftIndex] =
+        val gift = client.wishlists[index].gifts[giftIndex]
+        client.wishlists[index].gifts[giftIndex] =
             Gift(name, gift.forUser, desc, imageUrl, gift.isChosen)
         lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("wishlists" to client.user.info.wishlists))
+            clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
         }
-        bindInfo(client.user.info.wishlists[index].gifts[giftIndex])
+        bindInfo(client.wishlists[index].gifts[giftIndex])
     }
 }
