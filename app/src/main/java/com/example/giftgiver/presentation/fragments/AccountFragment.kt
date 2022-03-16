@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
+import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Wishlist
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 class AccountFragment : Fragment() {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
-    private val clients = ClientsRepositoryImpl()
+    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
     private val client = ClientState.client
     override fun onCreateView(
         inflater: LayoutInflater,

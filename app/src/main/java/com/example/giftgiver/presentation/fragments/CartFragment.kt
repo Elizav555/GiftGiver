@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
+import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentCartBinding
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.gift.GiftAdapter
@@ -23,7 +24,7 @@ class CartFragment : Fragment() {
     private lateinit var binding: FragmentCartBinding
     private val client = ClientState.client
     private var giftAdapter: GiftAdapter by autoCleared()
-    private val clients = ClientsRepositoryImpl()
+    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

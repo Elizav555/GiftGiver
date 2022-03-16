@@ -7,6 +7,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 interface ClientsRepository {
     suspend fun addClient(client: Client)
     suspend fun deleteClient(client: Client): Task<Void>
-    suspend fun getClientByVkId(vkId: Long): Task<DocumentSnapshot>
+    suspend fun getClientByVkId(vkId: Long): DocumentSnapshot
     suspend fun updateClient(vkId: Long, changes: Map<String, Any>)
 }

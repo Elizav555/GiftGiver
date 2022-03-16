@@ -7,6 +7,7 @@ import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
+import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.MainActivity
@@ -18,7 +19,7 @@ class GiftFragment : Fragment() {
     private val client = ClientState.client
     private var giftIndex = 0
     private var gifts = mutableListOf<Gift>()
-    private val clients = ClientsRepositoryImpl()
+    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

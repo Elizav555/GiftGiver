@@ -5,8 +5,9 @@ import com.example.giftgiver.data.vk.VKUserWithInfoRequest
 import com.example.giftgiver.domain.entities.User
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class LoadUserInfoVK {
     fun loadInfo(vkId: Long, successAction: (User) -> Unit) {
@@ -24,18 +25,26 @@ class LoadUserInfoVK {
         )
     }
 
-//    suspend fun loadInfo(vkId: Long) = suspendCoroutine<User> { continuation ->
-//        try {
-//            val result = VK.executeSync(VKUserWithInfoRequest(vkId))
-//            continuation.resume(result)
-//        } catch (e: VKApiExecutionException) {
-//            continuation.resumeWithException(e)
-//        }
-//    }
+    suspend fun loadInfo(vkId: Long): User {
+        return suspendCoroutine { continuation ->
+            VK.execute(
+                VKUserWithInfoRequest(vkId),
+                object : VKApiCallback<User> {
+                    override fun success(result: User) {
+                        continuation.resume(result)
+                    }
 
-    suspend fun loadInfo(vkId: Long) = withContext(Dispatchers.Default) {
-        VK.executeSync(
-            VKUserWithInfoRequest(vkId)
-        )
+                    override fun fail(error: Exception) {
+                        continuation.resumeWithException(error)
+                    }
+                }
+            )
+        }
     }
+
+//    suspend fun loadInfo(vkId: Long) = withContext(Dispatchers.Default) {
+//        VK.executeSync(
+//            VKUserWithInfoRequest(vkId)
+//        )
+//    }
 }

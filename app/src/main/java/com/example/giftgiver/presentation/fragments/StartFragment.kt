@@ -26,7 +26,7 @@ import kotlinx.coroutines.*
 
 class StartFragment : Fragment() {
     private lateinit var binding: FragmentStartBinding
-    private val clientsRep = ClientsRepositoryImpl()
+    private val clientsRep = ClientsRepositoryImpl(fbMapper = FBMapper())
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private val activityLauncher =
         registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
@@ -63,30 +63,28 @@ class StartFragment : Fragment() {
     private fun getClientState() {
         val vkId = VK.getUserId().value
         lifecycleScope.launch {
-            checkClient(vkId).addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.data == null) {
-                    lifecycleScope.launch {
-                        val client = Client(
-                            vkId,
-                            Calendar(),
-                            LoadUserInfoVK().loadInfo(vkId),
-                            Cart()
-                        )
-                        clientsRep.addClient(
-                            client
-                        )
-                        setClientState(client)
-                    }
-                } else lifecycleScope.launch {
-                    clientsRep.getClientByVkId(VK.getUserId().value).addOnSuccessListener {
-                        it.toObject<ClientFB>()?.let { client ->
-                            lifecycleScope.launch { setClientState(FBMapper().mapClientFromFB(client)) }
-                        }
-                    }
+            if (checkClient(vkId).data == null) {
+                lifecycleScope.launch {
+                    val client = Client(
+                        vkId,
+                        Calendar(),
+                        LoadUserInfoVK().loadInfo(vkId),
+                        Cart()
+                    )
+                    clientsRep.addClient(
+                        client
+                    )
+                    setClientState(client)
                 }
+            } else lifecycleScope.launch {
+                clientsRep.getClientByVkId(VK.getUserId().value).toObject<ClientFB>()
+                    ?.let { client ->
+                        lifecycleScope.launch { setClientState(FBMapper().mapClientFromFB(client)) }
+                    }
             }
         }
     }
+
 
     private fun setClientState(client: Client) {
         ClientState.client = client

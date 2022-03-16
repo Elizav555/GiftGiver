@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
+import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.MainActivity
@@ -27,7 +28,7 @@ class WishlistFragment : Fragment() {
     private var giftAdapter: GiftAdapter by autoCleared()
     private val client = ClientState.client
     private var index = 0
-    private val clients = ClientsRepositoryImpl()
+    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
