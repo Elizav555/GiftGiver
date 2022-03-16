@@ -18,6 +18,7 @@ import com.example.giftgiver.presentation.gift.GiftAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class CartFragment : Fragment() {
@@ -44,11 +45,30 @@ class CartFragment : Fragment() {
         inflater.inflate(R.menu.menu_delete, menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete -> {
+                deleteAll()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun deleteAll() = client?.let {
+        client.cart.gifts.clear()
+        lifecycleScope.launch {
+            clients.updateClient(client.vkId, mapOf("cart" to client.cart))
+        }
+        giftAdapter.submitList(client.cart.gifts)
+    }
+
     private fun initAdapter(gifts: MutableList<Gift>) {
         val goToItem = { position: Int ->
             navigateToItem(position)
         }
-        giftAdapter = GiftAdapter(goToItem, gifts)
+        //todo как получить там клиента
+        giftAdapter = GiftAdapter(goToItem, gifts, false, ::getClientByVkIdAsync)
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -71,6 +91,8 @@ class CartFragment : Fragment() {
         }
         giftAdapter.submitList(gifts)
     }
+
+    private fun getClientByVkIdAsync(vkId: Long) = lifecycleScope.async { clients.getClientByVkId(vkId) }
 
     private fun deleteGift(gift: Gift) = client?.let {
         client.cart.gifts.remove(gift)

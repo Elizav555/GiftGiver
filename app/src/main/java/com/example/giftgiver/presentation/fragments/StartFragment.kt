@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.firebase.entities.ClientFB
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentStartBinding
 import com.example.giftgiver.domain.entities.Calendar
@@ -18,7 +17,6 @@ import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.utils.ClientState
-import com.google.firebase.firestore.ktx.toObject
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
@@ -63,7 +61,8 @@ class StartFragment : Fragment() {
     private fun getClientState() {
         val vkId = VK.getUserId().value
         lifecycleScope.launch {
-            if (checkClient(vkId).data == null) {
+            val clientFromFB = checkClient(vkId)
+            if (clientFromFB == null) {
                 lifecycleScope.launch {
                     val client = Client(
                         vkId,
@@ -74,20 +73,12 @@ class StartFragment : Fragment() {
                     clientsRep.addClient(
                         client
                     )
-                    setClientState(client)
+                    ClientState.client = client
                 }
             } else lifecycleScope.launch {
-                clientsRep.getClientByVkId(VK.getUserId().value).toObject<ClientFB>()
-                    ?.let { client ->
-                        lifecycleScope.launch { setClientState(FBMapper().mapClientFromFB(client)) }
-                    }
+                ClientState.client = clientFromFB
             }
         }
-    }
-
-
-    private fun setClientState(client: Client) {
-        ClientState.client = client
     }
 
     private suspend fun checkClient(vkId: Long) =

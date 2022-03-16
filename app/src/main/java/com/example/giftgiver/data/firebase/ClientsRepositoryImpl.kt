@@ -1,10 +1,12 @@
 package com.example.giftgiver.data.firebase
 
+import com.example.giftgiver.data.firebase.entities.ClientFB
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.repositories.ClientsRepository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -34,7 +36,13 @@ class ClientsRepositoryImpl(private val fbMapper: FBMapper) : ClientsRepository 
     override suspend fun deleteClient(client: Client) =
         clients.document(client.vkId.toString()).delete()
 
-    override suspend fun getClientByVkId(vkId: Long): DocumentSnapshot {
+    override suspend fun getClientByVkId(vkId: Long): Client? {
+        val snapshot = getDataSnapshot(vkId)
+        val clientFB = snapshot.toObject<ClientFB>()
+        return clientFB?.let { fbMapper.mapClientFromFB(it) }
+    }
+
+    private suspend fun getDataSnapshot(vkId: Long): DocumentSnapshot {
         return suspendCoroutine { continuation ->
             clients.document(vkId.toString()).get().addOnSuccessListener {
                 continuation.resume(it)
