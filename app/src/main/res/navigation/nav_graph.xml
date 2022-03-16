@@ -26,7 +26,11 @@
         android:id="@+id/cart"
         android:name="com.example.giftgiver.presentation.fragments.CartFragment"
         android:label="@string/cart"
-        tools:layout="@layout/fragment_cart" />
+        tools:layout="@layout/fragment_cart" >
+        <action
+            android:id="@+id/action_cart_to_myGiftFragment"
+            app:destination="@id/myGiftFragment" />
+    </fragment>
     <navigation
         android:id="@+id/friends"
         app:startDestination="@id/friends_list">
@@ -35,9 +39,6 @@
             android:name="com.example.giftgiver.presentation.fragments.FriendsListFragment"
             android:label="@string/friends_list"
             tools:layout="@layout/fragment_friends_list">
-            <argument
-                android:name="friendsListState"
-                app:argType="com.example.giftgiver.utils.FriendsListState" />
             <action
                 android:id="@+id/action_friendsListFragment_to_userFragment"
                 app:destination="@id/user_fragment" />
@@ -81,8 +82,8 @@
             android:name="giftIndex"
             app:argType="integer" />
         <argument
-            android:name="wishlistIndex"
-            app:argType="integer" />
+            android:name="gifts"
+            app:argType="com.example.giftgiver.domain.entities.Gift[]" />
     </fragment>
     <fragment
         android:id="@+id/startFragment"

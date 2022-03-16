@@ -33,7 +33,7 @@ class MyWishlistFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMyWishlistBinding.inflate(inflater)
         return binding.root
     }
@@ -102,8 +102,13 @@ class MyWishlistFragment : Fragment() {
     }
 
     private fun navigateToItem(giftIndex: Int) {
-        val action =
-            MyWishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(giftIndex, index)
-        findNavController().navigate(action)
+        client?.let {
+            val action =
+                MyWishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
+                    giftIndex,
+                    client.user.info.wishlists[index].gifts.toTypedArray()
+                )
+            findNavController().navigate(action)
+        }
     }
 }

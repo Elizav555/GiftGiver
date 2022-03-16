@@ -28,12 +28,12 @@ class FBMapper {
         return clientFB
     }
 
-    fun mapWishlistToFB(wishlist: Wishlist) = WishlistFB(
+    private fun mapWishlistToFB(wishlist: Wishlist) = WishlistFB(
         name = wishlist.name,
         gifts = wishlist.gifts.map { mapGiftToFB(it) },
     )
 
-    fun mapWishlistFromFB(wishlist: WishlistFB) = Wishlist(
+    private fun mapWishlistFromFB(wishlist: WishlistFB) = Wishlist(
         name = wishlist.name,
         gifts = wishlist.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>,
     )
@@ -64,7 +64,7 @@ class FBMapper {
         val user = withContext(Dispatchers.Default) { LoadUserInfoVK().loadInfo(clientFB.vkId) }
         val client = Client(clientFB.vkId, user = user)
         client.calendar.events = clientFB.calendar.events.map { mapEventFromFB(it) }
-        client.cart.gifts = clientFB.cart.gifts.map { mapGiftFromFB(it) }
+        client.cart.gifts = clientFB.cart.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>
         client.favFriends =
             clientFB.favFriends.map { withContext(Dispatchers.Default) { mapUserFromFB(it) } }
         client.user.info.wishlists =
