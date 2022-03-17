@@ -68,7 +68,7 @@ class CartFragment : Fragment() {
             navigateToItem(position)
         }
         //todo как получить там клиента
-        giftAdapter = GiftAdapter(goToItem, gifts, ::checkedFunc, ::getClientByVkIdAsync)
+        giftAdapter = GiftAdapter(goToItem, gifts, null, ::getClientByVkIdAsync)
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -113,13 +113,5 @@ class CartFragment : Fragment() {
                 )
             findNavController().navigate(action)
         }
-    }
-
-    private fun checkedFunc(pos:Int,isChecked:Boolean)= client?.let {
-        client.cart.gifts[pos].isChosen = isChecked
-        lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("cart" to client.cart))
-        }
-        giftAdapter.submitList(client.cart.gifts)
     }
 }

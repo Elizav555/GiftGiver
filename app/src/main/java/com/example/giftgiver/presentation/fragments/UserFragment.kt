@@ -54,7 +54,7 @@ class UserFragment : Fragment() {
 
     private fun initWishlists(wishlists: MutableList<Wishlist>) {
         val goToWishlist = { position: Int ->
-            navigateToWishlist(wishlists[position])
+            navigateToWishlist(position)
         }
         wishlistAdapter = WishlistAdapter(goToWishlist, null, wishlists)
         with(binding.rvWishlists) {
@@ -70,12 +70,12 @@ class UserFragment : Fragment() {
         wishlistAdapter.submitList(wishlists)
     }
 
-    private fun navigateToWishlist(wishlist: Wishlist) {
+    private fun navigateToWishlist(wishlistIndex: Int) {
         client?.let {
             val action =
                 UserFragmentDirections.actionUserFragmentToFriendsWishlistFragment(
-                    wishlist,
-                    it.user.name
+                    wishlistIndex,
+                    it
                 )
             findNavController().navigate(action)
         }

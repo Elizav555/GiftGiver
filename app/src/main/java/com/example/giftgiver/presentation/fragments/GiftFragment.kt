@@ -70,7 +70,8 @@ class GiftFragment : Fragment() {
 
     fun changeGift(name: String, desc: String, imageUrl: String) = client?.let {
         val index = args.wishlistIndex
-        if (index == -1) return@let
+        if (!isClient)
+            return@let
         val gift = client.wishlists[index].gifts[giftIndex]
         client.wishlists[index].gifts[giftIndex] =
             Gift(name, gift.forUser, desc, imageUrl, gift.isChosen)

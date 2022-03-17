@@ -2,6 +2,7 @@ package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,11 +22,13 @@ import com.vk.api.sdk.VK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+
 class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
     private var userAdapter: UserAdapter by autoCleared()
     private lateinit var loadFriendsVK: LoadFriendsVK
     private val clients = ClientsRepositoryImpl(FBMapper())
+    private var friends = listOf<User>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,9 +47,27 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         loadFriends()
     }
 
-    //todo implement search
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_filter, menu)
+        val searchViewItem = menu.findItem(R.id.searchView)
+        val searchView = searchViewItem.actionView as SearchView
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    val friendsName = friends.map { friend -> friend.name }
+                    if (friendsName.contains(query)) {
+                        userAdapter.filter.filter(query)
+                    }
+                    binding.recyclerView.scrollToPosition(0)
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    userAdapter.filter.filter(newText)
+                    return false
+                }
+            }
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -98,7 +119,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
 
     private fun loadFriends() {
         lifecycleScope.launch {
-            val friends = loadFriendsVK.loadFriends(VK.getUserId().value)
+            friends = loadFriendsVK.loadFriends(VK.getUserId().value)
             init(friends)
         }
     }

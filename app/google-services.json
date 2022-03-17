@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "739235953487",
+    "project_id": "giftgiver-938fc",
+    "storage_bucket": "giftgiver-938fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739235953487:android:ed67bb1a201207a92be33a",
+        "android_client_info": {
+          "package_name": "com.example.giftgiver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739235953487-102t7ktuf89uj9umu94aqo60pq17plm7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpd-pIAU2rFO5NnJaU_jwRu7QA8nY9_cc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739235953487-102t7ktuf89uj9umu94aqo60pq17plm7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

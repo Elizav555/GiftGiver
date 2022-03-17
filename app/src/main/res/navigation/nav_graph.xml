@@ -106,13 +106,13 @@
         android:label="fragment_friends_wishlist"
         tools:layout="@layout/fragment_friends_wishlist">
         <argument
-            android:name="wishlist"
-            app:argType="com.example.giftgiver.domain.entities.Wishlist" />
+            android:name="wishlistIndex"
+            app:argType="integer" />
         <action
             android:id="@+id/action_friendsWishlistFragment_to_myGiftFragment"
             app:destination="@id/giftFragment" />
         <argument
-            android:name="friend_name"
-            app:argType="string" />
+            android:name="friend"
+            app:argType="com.example.giftgiver.domain.entities.Client" />
     </fragment>
 </navigation>
