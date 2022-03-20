@@ -4,10 +4,7 @@ import com.example.giftgiver.data.firebase.entities.ClientFB
 import com.example.giftgiver.data.firebase.entities.EventFB
 import com.example.giftgiver.data.firebase.entities.GiftFB
 import com.example.giftgiver.data.firebase.entities.WishlistFB
-import com.example.giftgiver.domain.entities.Client
-import com.example.giftgiver.domain.entities.Event
-import com.example.giftgiver.domain.entities.Gift
-import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.domain.entities.*
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -67,7 +64,7 @@ class FBMapper {
                         it
                     )
                 }
-            }
+            } as MutableList<User>
         client.wishlists =
             clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
         return client

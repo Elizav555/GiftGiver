@@ -20,6 +20,8 @@ class CalendarFragment : Fragment() {
         return binding.root
     }
 
+    //todo реализовать appbar add
+    //todo реализовать календарь
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_add, menu)
     }

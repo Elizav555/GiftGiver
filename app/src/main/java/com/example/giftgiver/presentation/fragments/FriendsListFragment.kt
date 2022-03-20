@@ -3,6 +3,8 @@ package com.example.giftgiver.presentation.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,11 +19,12 @@ import com.example.giftgiver.domain.usecase.LoadFriendsVK
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.user.UserAdapter
+import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.withContext
 
 class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
@@ -29,6 +32,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var loadFriendsVK: LoadFriendsVK
     private val clients = ClientsRepositoryImpl(FBMapper())
     private var friends = listOf<User>()
+    private var isFav = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,7 +48,10 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(View.VISIBLE)
         setHasOptionsMenu(true)
-        loadFriends()
+        lifecycleScope.launch {
+            friends = loadFriends()
+            init(friends)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -73,15 +80,35 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter -> {
-                filterFriends()
+                filterFriends(item)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun filterFriends() {
-        //todo implement filter
+    private fun filterFriends(item: MenuItem) {
+        isFav = !isFav
+        if (isFav) {
+            item.icon = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_fav_filed,
+                null
+            )
+            val client = ClientState.client
+            client?.let { friends = it.favFriends.sortedBy { friend -> friend.name } }
+            updateList()
+        } else {
+            item.icon = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_fav_border,
+                null
+            )
+            lifecycleScope.launch {
+                friends = loadFriends()
+                updateList()
+            }
+        }
     }
 
     private fun init(friends: List<User>) {
@@ -100,7 +127,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
             addItemDecoration(dividerItemDecoration)
         }
         binding.progressBar.visibility = View.GONE
-        userAdapter.submitList(friends)
+        updateList()
     }
 
     private fun navigateToProfile(vkId: Long) {
@@ -117,10 +144,14 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         }
     }
 
-    private fun loadFriends() {
-        lifecycleScope.launch {
-            friends = loadFriendsVK.loadFriends(VK.getUserId().value)
-            init(friends)
+    private fun updateList() {
+        binding.tvEmpty.isVisible = friends.isEmpty()
+        userAdapter.submitList(friends)
+    }
+
+    private suspend fun loadFriends(): List<User> {
+        return withContext(Dispatchers.Default) {
+            loadFriendsVK.loadFriends(VK.getUserId().value)
         }
     }
 

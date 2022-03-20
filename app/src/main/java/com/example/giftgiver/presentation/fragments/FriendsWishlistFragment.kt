@@ -92,7 +92,7 @@ class FriendsWishlistFragment : Fragment() {
         if (isChecked) client?.cart?.gifts?.add(gift)
         else client?.cart?.gifts?.remove(gift)
         lifecycleScope.launch {
-            clients.updateClient(friend.vkId, mapOf("wishlist" to friend.wishlists))
+            clients.updateClient(friend.vkId, mapOf("wishlists" to friend.wishlists))
             client?.let { clients.updateClient(it.vkId, mapOf("cart" to it.cart)) }
         }
         giftAdapter.submitList(friend.wishlists[wishlistIndex].gifts)

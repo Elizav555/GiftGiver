@@ -52,7 +52,7 @@ class UserAdapter(
                 } else {
                     val filterResultsData = mutableListOf<User>()
                     friends.forEach {
-                        if (it.name.contains(charSequence)) {
+                        if (it.name.contains(charSequence,true)) {
                             filterResultsData.add(it)
                         }
                     }
@@ -63,7 +63,7 @@ class UserAdapter(
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults) {
-                submitList(results.values as List<User>)
+               submitList(results.values as List<User>)
             }
         }
     }

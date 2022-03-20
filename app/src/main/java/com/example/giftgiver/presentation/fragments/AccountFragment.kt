@@ -35,6 +35,7 @@ class AccountFragment : Fragment() {
         return binding.root
     }
 
+    //todo решить, давать ли возможность редактировать информацию и если да, то добавить в appbar edit
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         client?.let { bindInfo(it) }

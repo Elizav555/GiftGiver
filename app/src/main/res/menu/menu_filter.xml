@@ -10,7 +10,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/filter"
-        android:icon="@drawable/ic_filter_foreground"
+        android:icon="@drawable/ic_fav_border"
         android:title="@string/filter"
         app:showAsAction="always" />
 </menu>
