@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/add"
         android:icon="@drawable/ic_edit_foreground"
         android:title="@string/edit"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/changeImage"
+        android:icon="@drawable/ic_change_photo"
+        android:title="@string/change_image"
         app:showAsAction="always" />
 </menu>

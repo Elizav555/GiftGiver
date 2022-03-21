@@ -45,6 +45,7 @@ class WishlistFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_edit, menu)
+        menu.findItem(R.id.changeImage).isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

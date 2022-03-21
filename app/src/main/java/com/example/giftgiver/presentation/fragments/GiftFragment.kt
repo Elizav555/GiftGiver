@@ -3,6 +3,7 @@ package com.example.giftgiver.presentation.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import coil.api.load
@@ -11,6 +12,7 @@ import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.domain.entities.Gift
+import com.example.giftgiver.presentation.ImageViewModel
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
@@ -23,6 +25,7 @@ class GiftFragment : Fragment() {
     private var gifts = mutableListOf<Gift>()
     private var isClient = false
     private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
+    private val viewModel by viewModels<ImageViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,6 +54,10 @@ class GiftFragment : Fragment() {
                 enterEditMode()
                 true
             }
+            R.id.changeImage -> {
+                changePhoto()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -59,12 +66,19 @@ class GiftFragment : Fragment() {
         ChangeGiftDialog().show(childFragmentManager, "dialog")
     }
 
+    private fun changePhoto() {
+        ImageDialogFragment().show(childFragmentManager, "dialog")
+    }
+
     private fun bindInfo(gift: Gift) {
         with(binding) {
             setHasOptionsMenu(isClient)
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc
             ivPhoto.load(gift.imageUrl)
+            viewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
+                ivPhoto.setImageBitmap(it)
+            }
         }
     }
 

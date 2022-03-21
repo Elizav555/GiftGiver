@@ -47,7 +47,7 @@ class FriendsWishlistFragment : Fragment() {
         friend?.let { bindInfo(it.wishlists[wishlistIndex]) }
     }
 
-    //todo обработать нажатие на checkbox
+    //todo решить давать ли возможномть отменить свой выбор
     private fun bindInfo(wishlist: Wishlist) {
         setHasOptionsMenu(false)
         (activity as MainActivity).supportActionBar?.title =

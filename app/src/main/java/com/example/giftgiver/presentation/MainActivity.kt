@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.account,
-                R.id.friends,
+                R.id.ng_friends,
                 R.id.calendar,
                 R.id.cart
             )
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
         actionBar?.setHomeButtonEnabled(true)
+        navView.setOnItemReselectedListener {  }
     }
 
     override fun onSupportNavigateUp(): Boolean {

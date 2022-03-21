@@ -92,7 +92,8 @@ class CartFragment : Fragment() {
         giftAdapter.submitList(gifts)
     }
 
-    private fun getClientByVkIdAsync(vkId: Long) = lifecycleScope.async { clients.getClientByVkId(vkId) }
+    private fun getClientByVkIdAsync(vkId: Long) =
+        lifecycleScope.async { clients.getClientByVkId(vkId) }
 
     private fun deleteGift(gift: Gift) = client?.let {
         client.cart.gifts.remove(gift)
@@ -104,8 +105,7 @@ class CartFragment : Fragment() {
 
     private fun navigateToItem(giftIndex: Int) {
         client?.let {
-            val action =
-                CartFragmentDirections.actionCartToMyGiftFragment(
+            val action = CartFragmentDirections.actionCartToCartGiftFragment(
                     giftIndex,
                     client.cart.gifts.toTypedArray(),
                     false,

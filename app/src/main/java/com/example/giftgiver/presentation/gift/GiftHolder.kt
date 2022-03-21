@@ -36,7 +36,7 @@ class GiftHolder(
             }
             if (getClient != null) {
                 tvFor.visibility = View.VISIBLE
-                //  getClient(gift.forUser)
+                //getClient(gift.forUser)
             }
             tvName.text = gift.name
             ivPhoto.load(gift.imageUrl)

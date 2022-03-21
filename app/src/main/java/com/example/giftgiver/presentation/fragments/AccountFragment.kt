@@ -15,6 +15,7 @@ import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.wishlist.WishlistAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
@@ -43,7 +44,9 @@ class AccountFragment : Fragment() {
 
     private fun bindInfo(curClient: Client) {
         with(binding) {
+            //todo add edit menu
             setHasOptionsMenu(false)
+           // (activity as MainActivity).supportActionBar?.setDisplayOptions()
             btnLogout.setOnClickListener {
                 logout()
             }

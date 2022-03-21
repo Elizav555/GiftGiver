@@ -6,33 +6,12 @@
     app:startDestination="@id/startFragment">
 
     <fragment
-        android:id="@+id/account"
-        android:name="com.example.giftgiver.presentation.fragments.AccountFragment"
-        android:label="@string/account"
-        tools:layout="@layout/fragment_account">
-        <action
-            android:id="@+id/action_account_to_myWishlistFragment"
-            app:destination="@id/myWishlistFragment" />
-        <action
-            android:id="@+id/action_account_to_startFragment"
-            app:destination="@id/startFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/calendar"
         android:name="com.example.giftgiver.presentation.fragments.CalendarFragment"
         android:label="@string/calendar"
         tools:layout="@layout/fragment_calendar" />
-    <fragment
-        android:id="@+id/cart"
-        android:name="com.example.giftgiver.presentation.fragments.CartFragment"
-        android:label="@string/cart"
-        tools:layout="@layout/fragment_cart">
-        <action
-            android:id="@+id/action_cart_to_myGiftFragment"
-            app:destination="@id/giftFragment" />
-    </fragment>
     <navigation
-        android:id="@+id/friends"
+        android:id="@+id/ng_friends"
         app:startDestination="@id/friends_list">
         <fragment
             android:id="@+id/friends_list"
@@ -55,6 +34,39 @@
                 android:id="@+id/action_user_fragment_to_friendsWishlistFragment"
                 app:destination="@id/friendsWishlistFragment" />
         </fragment>
+        <fragment
+            android:id="@+id/giftFragment"
+            android:name="com.example.giftgiver.presentation.fragments.GiftFragment"
+            android:label="fragment_gift"
+            tools:layout="@layout/fragment_gift">
+            <argument
+                android:name="giftIndex"
+                app:argType="integer" />
+            <argument
+                android:name="gifts"
+                app:argType="com.example.giftgiver.domain.entities.Gift[]" />
+            <argument
+                android:name="isClient"
+                app:argType="boolean" />
+            <argument
+                android:name="wishlistIndex"
+                app:argType="integer" />
+        </fragment>
+        <fragment
+            android:id="@+id/friendsWishlistFragment"
+            android:name="com.example.giftgiver.presentation.fragments.FriendsWishlistFragment"
+            android:label="fragment_friends_wishlist"
+            tools:layout="@layout/fragment_friends_wishlist">
+            <argument
+                android:name="wishlistIndex"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_friendsWishlistFragment_to_myGiftFragment"
+                app:destination="@id/giftFragment" />
+            <argument
+                android:name="friend"
+                app:argType="com.example.giftgiver.domain.entities.Client" />
+        </fragment>
     </navigation>
     <dialog
         android:id="@+id/addWishlistDialogFragment"
@@ -62,57 +74,88 @@
         android:label="dialog_add_wishlist"
         tools:layout="@layout/dialog_add_wishlist" />
     <fragment
-        android:id="@+id/myWishlistFragment"
-        android:name="com.example.giftgiver.presentation.fragments.WishlistFragment"
-        android:label="fragment_my_wishlist"
-        tools:layout="@layout/fragment_wishlist">
-        <argument
-            android:name="wishlistIndex"
-            app:argType="integer" />
-        <action
-            android:id="@+id/action_myWishlistFragment_to_giftFragment"
-            app:destination="@id/giftFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/giftFragment"
-        android:name="com.example.giftgiver.presentation.fragments.GiftFragment"
-        android:label="fragment_gift"
-        tools:layout="@layout/fragment_gift">
-        <argument
-            android:name="giftIndex"
-            app:argType="integer" />
-        <argument
-            android:name="gifts"
-            app:argType="com.example.giftgiver.domain.entities.Gift[]" />
-        <argument
-            android:name="isClient"
-            app:argType="boolean" />
-        <argument
-            android:name="wishlistIndex"
-            app:argType="integer" />
-    </fragment>
-    <fragment
         android:id="@+id/startFragment"
         android:name="com.example.giftgiver.presentation.fragments.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start">
         <action
             android:id="@+id/action_startFragment_to_friends"
-            app:destination="@id/friends" />
+            app:destination="@id/ng_friends" />
     </fragment>
-    <fragment
-        android:id="@+id/friendsWishlistFragment"
-        android:name="com.example.giftgiver.presentation.fragments.FriendsWishlistFragment"
-        android:label="fragment_friends_wishlist"
-        tools:layout="@layout/fragment_friends_wishlist">
-        <argument
-            android:name="wishlistIndex"
-            app:argType="integer" />
-        <action
-            android:id="@+id/action_friendsWishlistFragment_to_myGiftFragment"
-            app:destination="@id/giftFragment" />
-        <argument
-            android:name="friend"
-            app:argType="com.example.giftgiver.domain.entities.Client" />
-    </fragment>
+    <navigation
+        android:id="@+id/ng_account"
+        app:startDestination="@id/account">
+        <fragment
+            android:id="@+id/account"
+            android:name="com.example.giftgiver.presentation.fragments.AccountFragment"
+            android:label="@string/account"
+            tools:layout="@layout/fragment_account">
+            <action
+                android:id="@+id/action_account_to_myWishlistFragment"
+                app:destination="@id/myWishlistFragment" />
+            <action
+                android:id="@+id/action_account_to_startFragment"
+                app:destination="@id/startFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/myWishlistFragment"
+            android:name="com.example.giftgiver.presentation.fragments.WishlistFragment"
+            android:label="fragment_my_wishlist"
+            tools:layout="@layout/fragment_wishlist">
+            <argument
+                android:name="wishlistIndex"
+                app:argType="integer" />
+            <action
+                android:id="@+id/action_myWishlistFragment_to_giftFragment"
+                app:destination="@id/myGiftFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/myGiftFragment"
+            android:name="com.example.giftgiver.presentation.fragments.GiftFragment"
+            android:label="fragment_gift"
+            tools:layout="@layout/fragment_gift">
+            <argument
+                android:name="giftIndex"
+                app:argType="integer" />
+            <argument
+                android:name="gifts"
+                app:argType="com.example.giftgiver.domain.entities.Gift[]" />
+            <argument
+                android:name="isClient"
+                app:argType="boolean" />
+            <argument
+                android:name="wishlistIndex"
+                app:argType="integer" />
+        </fragment>
+    </navigation>
+    <navigation android:id="@+id/ng_cart"
+        app:startDestination="@id/cart">
+        <fragment
+            android:id="@+id/cart"
+            android:name="com.example.giftgiver.presentation.fragments.CartFragment"
+            android:label="@string/cart"
+            tools:layout="@layout/fragment_cart">
+            <action
+                android:id="@+id/action_cart_to_cartGiftFragment"
+                app:destination="@id/cartGiftFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/cartGiftFragment"
+            android:name="com.example.giftgiver.presentation.fragments.GiftFragment"
+            android:label="fragment_gift"
+            tools:layout="@layout/fragment_gift">
+            <argument
+                android:name="giftIndex"
+                app:argType="integer" />
+            <argument
+                android:name="gifts"
+                app:argType="com.example.giftgiver.domain.entities.Gift[]" />
+            <argument
+                android:name="isClient"
+                app:argType="boolean" />
+            <argument
+                android:name="wishlistIndex"
+                app:argType="integer" />
+        </fragment>
+    </navigation>
 </navigation>

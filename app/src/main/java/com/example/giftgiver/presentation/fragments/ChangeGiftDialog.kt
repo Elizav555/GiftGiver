@@ -4,11 +4,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.DialogFragment
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogAddGiftBinding
 
-class ChangeGiftDialog : DialogFragment() {
+class ChangeGiftDialog : ImageDialogFragment() {
     private lateinit var binding: DialogAddGiftBinding
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogAddGiftBinding.inflate(layoutInflater)
