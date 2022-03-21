@@ -14,24 +14,19 @@ import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
-import com.example.giftgiver.domain.entities.User
-import com.example.giftgiver.domain.usecase.LoadFriendsVK
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.user.UserAdapter
 import com.example.giftgiver.utils.ClientState
+import com.example.giftgiver.utils.FriendsState
 import com.example.giftgiver.utils.autoCleared
-import com.vk.api.sdk.VK
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
     private var userAdapter: UserAdapter by autoCleared()
-    private lateinit var loadFriendsVK: LoadFriendsVK
     private val clients = ClientsRepositoryImpl(FBMapper())
-    private var friends = listOf<User>()
+    private var friends = FriendsState.friends
     private var isFav = false
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +35,6 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentFriendsListBinding.inflate(inflater)
-        initObjects()
         return binding.root
     }
 
@@ -48,10 +42,8 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(View.VISIBLE)
         setHasOptionsMenu(true)
-        lifecycleScope.launch {
-            friends = loadFriends()
-            init(friends)
-        }
+        (activity as MainActivity).supportActionBar?.show()
+        init()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -105,13 +97,13 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
                 null
             )
             lifecycleScope.launch {
-                friends = loadFriends()
+                friends = FriendsState.friends
                 updateList()
             }
         }
     }
 
-    private fun init(friends: List<User>) {
+    private fun init() {
         val goToProfile = { position: Int ->
             navigateToProfile(friends[position].vkId)
         }
@@ -147,18 +139,5 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private fun updateList() {
         binding.tvEmpty.isVisible = friends.isEmpty()
         userAdapter.submitList(friends)
-    }
-
-    private suspend fun loadFriends(): List<User> {
-        return withContext(Dispatchers.Default) {
-            loadFriendsVK.loadFriends(VK.getUserId().value)
-        }
-    }
-
-    private fun initObjects() {
-        loadFriendsVK = LoadFriendsVK(
-            clientsRep = ClientsRepositoryImpl(fbMapper = FBMapper()),
-            dispatcher = Dispatchers.Default
-        )
     }
 }

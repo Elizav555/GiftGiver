@@ -106,11 +106,11 @@ class CartFragment : Fragment() {
     private fun navigateToItem(giftIndex: Int) {
         client?.let {
             val action = CartFragmentDirections.actionCartToCartGiftFragment(
-                    giftIndex,
-                    client.cart.gifts.toTypedArray(),
-                    false,
-                    -1
-                )
+                giftIndex,
+                client.cart.gifts.toTypedArray(),
+                false,
+                -1
+            )
             findNavController().navigate(action)
         }
     }

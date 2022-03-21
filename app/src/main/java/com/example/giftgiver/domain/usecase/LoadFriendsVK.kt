@@ -6,15 +6,12 @@ import com.example.giftgiver.domain.entities.User
 import com.example.giftgiver.domain.repositories.ClientsRepository
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class LoadFriendsVK(
-    private val clientsRep: ClientsRepository,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Main
+    private val clientsRep: ClientsRepository
 ) {
     fun loadFriends(vkId: Long, successAction: (List<User>) -> Unit) {
         VK.execute(
@@ -33,7 +30,7 @@ class LoadFriendsVK(
 
     suspend fun loadFriends(vkId: Long): List<User> {
         val friendsVK = loadAllFriends(vkId)
-       // return friendsVK.sortedBy{ user -> user.name }
+        // return friendsVK.sortedBy{ user -> user.name }
         return friendsVK.filter { friend -> clientsRep.getClientByVkId(friend.vkId) != null }
             .sortedByDescending { user -> user.name }
     }

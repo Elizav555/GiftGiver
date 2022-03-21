@@ -46,7 +46,6 @@ class AccountFragment : Fragment() {
         with(binding) {
             //todo add edit menu
             setHasOptionsMenu(false)
-           // (activity as MainActivity).supportActionBar?.setDisplayOptions()
             btnLogout.setOnClickListener {
                 logout()
             }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,9 +15,11 @@ import com.example.giftgiver.databinding.FragmentStartBinding
 import com.example.giftgiver.domain.entities.Calendar
 import com.example.giftgiver.domain.entities.Cart
 import com.example.giftgiver.domain.entities.Client
+import com.example.giftgiver.domain.usecase.LoadFriendsVK
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.utils.ClientState
+import com.example.giftgiver.utils.FriendsState
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
@@ -51,6 +54,7 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(View.GONE)
+        (activity as MainActivity).supportActionBar?.hide()
         setHasOptionsMenu(false)
         initVK()
         binding.btnLogin.setOnClickListener {
@@ -101,9 +105,16 @@ class StartFragment : Fragment() {
         }
     }
 
+    //todo fix appbar while loading
     private fun navigateToList() {
-        val action = StartFragmentDirections.actionStartFragmentToFriends()
-        findNavController().navigate(action)
+        val loadFriendsVK = LoadFriendsVK(clientsRep)
+        lifecycleScope.launch {
+            binding.btnLogin.isVisible = false
+            binding.progressBar.isVisible = true
+            FriendsState.friends = loadFriendsVK.loadFriends(VK.getUserId().value)
+            val action = StartFragmentDirections.actionStartFragmentToFriends()
+            findNavController().navigate(action)
+        }
     }
 
     private fun makeToast(text: String) {
