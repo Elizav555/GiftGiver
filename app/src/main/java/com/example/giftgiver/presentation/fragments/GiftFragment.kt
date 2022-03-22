@@ -93,7 +93,6 @@ class GiftFragment : Fragment() {
             newImageFile?.let {
                 gift.imageUrl = ImageStorage().addGiftImage(newImageFile).toString()
             }
-            "Get from firebase storage and save file if it's not null else заглушка" //todo
             client.wishlists[index].gifts[giftIndex] =
                 Gift(newName, gift.forUser, newDesc, gift.imageUrl, gift.isChosen)
             clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
