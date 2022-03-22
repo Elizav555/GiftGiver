@@ -9,6 +9,7 @@ import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
+import com.example.giftgiver.data.firebase.ImageStorage
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.domain.entities.Gift
@@ -16,6 +17,7 @@ import com.example.giftgiver.presentation.ImageViewModel
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
+import java.io.File
 
 class GiftFragment : Fragment() {
     private lateinit var binding: FragmentGiftBinding
@@ -54,20 +56,20 @@ class GiftFragment : Fragment() {
                 enterEditMode()
                 true
             }
-            R.id.changeImage -> {
-                changePhoto()
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun enterEditMode() {
-        ChangeGiftDialog().show(childFragmentManager, "dialog")
-    }
-
-    private fun changePhoto() {
-        ImageDialogFragment().show(childFragmentManager, "dialog")
+        val submitAction = { newName: String, newDesc: String, newFile: File? ->
+            changeGift(
+                newName,
+                newDesc,
+                newFile
+            )
+        }
+        AddGiftDialog(submitAction)
+            .show(childFragmentManager, "dialog")
     }
 
     private fun bindInfo(gift: Gift) {
@@ -82,16 +84,20 @@ class GiftFragment : Fragment() {
         }
     }
 
-    fun changeGift(name: String, desc: String, imageUrl: String) = client?.let {
+    private fun changeGift(newName: String, newDesc: String, newImageFile: File?) = client?.let {
         val index = args.wishlistIndex
         if (!isClient)
             return@let
-        val gift = client.wishlists[index].gifts[giftIndex]
-        client.wishlists[index].gifts[giftIndex] =
-            Gift(name, gift.forUser, desc, imageUrl, gift.isChosen)
         lifecycleScope.launch {
+            val gift = client.wishlists[index].gifts[giftIndex]
+            newImageFile?.let {
+                gift.imageUrl = ImageStorage().addGiftImage(newImageFile).toString()
+            }
+            "Get from firebase storage and save file if it's not null else заглушка" //todo
+            client.wishlists[index].gifts[giftIndex] =
+                Gift(newName, gift.forUser, newDesc, gift.imageUrl, gift.isChosen)
             clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
+            bindInfo(client.wishlists[index].gifts[giftIndex])
         }
-        bindInfo(client.wishlists[index].gifts[giftIndex])
     }
 }

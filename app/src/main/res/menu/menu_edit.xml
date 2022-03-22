@@ -6,9 +6,9 @@
         android:icon="@drawable/ic_edit_foreground"
         android:title="@string/edit"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/changeImage"
-        android:icon="@drawable/ic_change_photo"
-        android:title="@string/change_image"
-        app:showAsAction="always" />
+    <!--    <item-->
+    <!--        android:id="@+id/changeImage"-->
+    <!--        android:icon="@drawable/ic_change_photo"-->
+    <!--        android:title="@string/change_image"-->
+    <!--        app:showAsAction="always" />--> <!--todo delete-->
 </menu>

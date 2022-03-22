@@ -8,6 +8,6 @@ data class Gift(
     val name: String,
     val forUser: Long,
     val desc: String?,
-    val imageUrl: String?,
+    var imageUrl: String?,
     var isChosen: Boolean = false,
 ) : Parcelable
