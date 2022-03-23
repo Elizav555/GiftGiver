@@ -2,8 +2,7 @@ package com.example.giftgiver.data.firebase
 
 import com.example.giftgiver.data.firebase.entities.ClientFB
 import com.example.giftgiver.data.mappers.FBMapper
-import com.example.giftgiver.domain.entities.Client
-import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.domain.entities.*
 import com.example.giftgiver.domain.repositories.ClientsRepository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -57,14 +56,24 @@ class ClientsRepositoryImpl(private val fbMapper: FBMapper) : ClientsRepository 
         clients.document(vkId.toString())
             .update(changes)
     }
-//
-//    override suspend fun updateWishlists(vkId: Long, wishlist: Wishlist, wishlistIndex: Int) {
-//        clients.document(vkId.toString()).collection("info").document("wishlists")
-//            .update(mapOf(wishlistIndex.toString() to wishlist))
-//    }
-//
-//    override suspend fun updateCart(vkId: Long, wishlist: Wishlist, wishlistIndex: Int) {
-//        clients.document(vkId.toString()).collection("info").document("wishlists")
-//            .update(mapOf(wishlistIndex.toString() to wishlist))
-//    }
+
+    fun updateWishlists(vkId: Long, wishlists: MutableList<Wishlist>) {
+        clients.document(vkId.toString()).collection("info").document("wishlists")
+            .set(wishlists)
+    }
+
+    fun updateCart(vkId: Long, gifts: List<Gift>) {
+        val giftsFB = gifts.map { fbMapper.mapGiftToFB(it) }
+        clients.document(vkId.toString()).collection("cart").document("gifts").set(giftsFB)
+    }
+
+    fun updateCalendar(vkId: Long, events: List<Event>) {
+        val eventsFB = events.map { fbMapper.mapEventToFB(it) }
+        clients.document(vkId.toString()).collection("calendar").document("events").set(eventsFB)
+    }
+
+    fun updateFavFriends(vkId: Long, friends: List<Client>) {
+        val friendsFB = friends.map { it.vkId }
+        clients.document("$vkId/favFriends").set(friendsFB)
+    }
 }

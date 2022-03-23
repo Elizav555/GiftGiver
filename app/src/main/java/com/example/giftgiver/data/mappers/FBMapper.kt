@@ -27,7 +27,7 @@ class FBMapper {
         return clientFB
     }
 
-    private fun mapWishlistToFB(wishlist: Wishlist) = WishlistFB(
+    fun mapWishlistToFB(wishlist: Wishlist) = WishlistFB(
         name = wishlist.name,
         gifts = wishlist.gifts.map { mapGiftToFB(it) },
     )
@@ -37,10 +37,10 @@ class FBMapper {
         gifts = wishlist.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>,
     )
 
-    private fun mapEventToFB(event: Event): EventFB =
+    fun mapEventToFB(event: Event): EventFB =
         EventFB(name = event.name, date = event.date, desc = event.desc)
 
-    private fun mapGiftToFB(gift: Gift): GiftFB = GiftFB(
+    fun mapGiftToFB(gift: Gift): GiftFB = GiftFB(
         name = gift.name,
         forId = gift.forId,
         forName = gift.forName,
