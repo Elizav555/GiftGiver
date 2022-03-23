@@ -57,8 +57,9 @@ class AccountFragment : Fragment() {
                 tvBirthdate.text = bdate
                 tvInfo.text = about
                 tvName.text = name
-                initWishlists(wishlists)
             }
+
+            initWishlists(curClient.wishlists)
             progressBar.visibility = View.GONE
             views.visibility = View.VISIBLE
         }
@@ -66,12 +67,12 @@ class AccountFragment : Fragment() {
 
     fun addWishlist(wishlist: Wishlist) {
         client?.let {
-            it.info.wishlists.add(wishlist)
+            it.wishlists.add(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(it.vkId, mapOf("wishlists" to it.info.wishlists))
+                clients.updateClient(it.vkId, mapOf("wishlists" to it.wishlists))
                 //todo change to updateClientInfo
             }
-            wishlistAdapter.submitList(it.info.wishlists)
+            wishlistAdapter.submitList(it.wishlists)
         }
     }
 
@@ -98,12 +99,12 @@ class AccountFragment : Fragment() {
 
     private fun deleteWishlist(wishlist: Wishlist) {
         client?.let {
-            it.info.wishlists.remove(wishlist)
+            it.wishlists.remove(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(client.vkId, mapOf("wishlists" to it.info.wishlists))
+                clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
                 //todo change to updateClientInfo
             }
-            wishlistAdapter.submitList(it.info.wishlists)
+            wishlistAdapter.submitList(it.wishlists)
         }
     }
 

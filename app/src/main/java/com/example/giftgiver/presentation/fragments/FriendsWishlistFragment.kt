@@ -44,7 +44,7 @@ class FriendsWishlistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         wishlistIndex = args.wishlistIndex
         friend = args.friend
-        friend?.let { bindInfo(it.info.wishlists[wishlistIndex]) }
+        friend?.let { bindInfo(it.wishlists[wishlistIndex]) }
     }
 
     //todo решить давать ли возможномть отменить свой выбор
@@ -78,7 +78,7 @@ class FriendsWishlistFragment : Fragment() {
             val action =
                 FriendsWishlistFragmentDirections.actionFriendsWishlistFragmentToMyGiftFragment(
                     giftIndex,
-                    it.info.wishlists[wishlistIndex].gifts.toTypedArray(),
+                    it.wishlists[wishlistIndex].gifts.toTypedArray(),
                     false,
                     wishlistIndex
                 )
@@ -87,16 +87,16 @@ class FriendsWishlistFragment : Fragment() {
     }
 
     private fun checkedFunc(pos: Int, isChecked: Boolean) = friend?.let { friend ->
-        friend.info.wishlists[wishlistIndex].gifts[pos].isChosen = isChecked
-        val gift = friend.info.wishlists[wishlistIndex].gifts[pos]
+        friend.wishlists[wishlistIndex].gifts[pos].isChosen = isChecked
+        val gift = friend.wishlists[wishlistIndex].gifts[pos]
         if (isChecked) client?.cart?.gifts?.add(gift)
         else client?.cart?.gifts?.remove(gift)
         lifecycleScope.launch {
-            clients.updateClient(friend.vkId, mapOf("wishlists" to friend.info.wishlists))
+            clients.updateClient(friend.vkId, mapOf("wishlists" to friend.wishlists))
             //todo change to updateClientInfo
             client?.let { clients.updateClient(it.vkId, mapOf("cart" to it.cart)) }
             //todo change to updateClientInfo
         }
-        giftAdapter.submitList(friend.info.wishlists[wishlistIndex].gifts)
+        giftAdapter.submitList(friend.wishlists[wishlistIndex].gifts)
     }
 }

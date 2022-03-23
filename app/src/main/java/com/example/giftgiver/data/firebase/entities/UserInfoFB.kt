@@ -6,5 +6,4 @@ data class UserInfoFB(
     val bdate: String? = "",
     val about: String? = "",
     val photoMax: String? = "",
-    var wishlists: MutableList<WishlistFB> = mutableListOf(),
 )

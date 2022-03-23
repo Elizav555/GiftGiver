@@ -12,14 +12,23 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 const val CLIENTS = "clients"
-
+const val WISHLISTS="wishlists"
+const val CART="cart"
+const val CALENDAR = "calendar"
+const val FAV_FRIENDS = "favFriends"
+const val EVENTS = "events"
+const val GIFTS = "gifts"
 class ClientsRepositoryImpl(private val fbMapper: FBMapper) : ClientsRepository {
     private val clients = FirebaseFirestore.getInstance().collection(CLIENTS)
 
     override suspend fun addClient(client: Client) {
+        val clientRef= clients.document(client.vkId.toString())
         val clientFB = fbMapper.mapClientToFB(client)
-        clients.document(client.vkId.toString()).set(clientFB)
-        //clients.document(client.vkId.toString()).collection("wishlists").add(clientFB.wishlists)
+        clientFB.info?.let { clientRef.set(it) }
+        clientFB.wishlists.forEach { clientRef.collection(WISHLISTS).add(it) }
+        clientFB.favFriendsIds.forEach { clientRef.collection(FAV_FRIENDS).add(it) }
+        clientRef.collection(CALENDAR).document(EVENTS).set(clientFB.calendar.events)
+        clientRef.collection(CART).document(GIFTS).set(clientFB.cart.gifts)
     }
 
     //    override suspend fun addClient(client: Client) {
@@ -57,9 +66,8 @@ class ClientsRepositoryImpl(private val fbMapper: FBMapper) : ClientsRepository 
             .update(changes)
     }
 
-    fun updateWishlists(vkId: Long, wishlists: MutableList<Wishlist>) {
-        clients.document(vkId.toString()).collection("info").document("wishlists")
-            .set(wishlists)
+    fun addWishlist(vkId: Long, wishlist: Wishlist) {
+        clients.document(vkId.toString()).collection("wishlists").add(wishlist)
     }
 
     fun updateCart(vkId: Long, gifts: List<Gift>) {

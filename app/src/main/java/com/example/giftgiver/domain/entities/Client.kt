@@ -9,5 +9,6 @@ data class Client(
     val calendar: Calendar = Calendar(),
     val cart: Cart = Cart(),
     var favFriends: MutableList<Client> = mutableListOf(),
+    var wishlists: MutableList<Wishlist> = mutableListOf(),
     var info: UserInfo,
 ) : Parcelable

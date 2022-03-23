@@ -14,5 +14,4 @@ data class UserInfoR(
     val bdate: String? = "",
     val about: String? = "",
     val photoMax: String? = "",
-    val wishlists: List<WishlistR> = listOf(),
 ) : Parcelable

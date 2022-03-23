@@ -68,7 +68,7 @@ class WishlistFragment : Fragment() {
     private fun bindInfo() {
         client?.let {
             index = args.wishlistIndex
-            val wishlist = it.info.wishlists[index]
+            val wishlist = it.wishlists[index]
             setHasOptionsMenu(true)
             (activity as MainActivity).supportActionBar?.title = wishlist.name
             binding.addItem.setOnClickListener {
@@ -120,21 +120,21 @@ class WishlistFragment : Fragment() {
             newImageFile?.let {
                 gift.imageUrl = ImageStorage().addGiftImage(newImageFile).toString()
             }
-            it.info.wishlists[index].gifts.add(gift)
-            clients.updateClient(client.vkId, mapOf("wishlists" to it.info.wishlists))
+            it.wishlists[index].gifts.add(gift)
+            clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
             //todo change to updateClientInfo
-            giftAdapter.submitList(it.info.wishlists[index].gifts)
+            giftAdapter.submitList(it.wishlists[index].gifts)
         }
         return@let
     }
 
     private fun deleteGift(gift: Gift) = client?.let {
-        it.info.wishlists[index].gifts.remove(gift)
+        it.wishlists[index].gifts.remove(gift)
         lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("wishlists" to it.info.wishlists))
+            clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
             //todo change to updateClientInfo
         }
-        giftAdapter.submitList(it.info.wishlists[index].gifts)
+        giftAdapter.submitList(it.wishlists[index].gifts)
     }
 
     private fun navigateToItem(giftIndex: Int) {
@@ -142,7 +142,7 @@ class WishlistFragment : Fragment() {
             val action =
                 WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
                     giftIndex,
-                    it.info.wishlists[index].gifts.toTypedArray(),
+                    it.wishlists[index].gifts.toTypedArray(),
                     true,
                     index
                 )
@@ -151,9 +151,9 @@ class WishlistFragment : Fragment() {
     }
 
     fun changeWishlistName(newName: String) = client?.let {
-        it.info.wishlists[index].name = newName
+        it.wishlists[index].name = newName
         lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("wishlists" to it.info.wishlists))
+            clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
             //todo change to updateClientInfo
         }
         (activity as MainActivity).supportActionBar?.title = newName

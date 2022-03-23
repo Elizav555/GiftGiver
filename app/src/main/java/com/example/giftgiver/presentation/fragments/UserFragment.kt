@@ -44,7 +44,10 @@ class UserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
             friend = clients.getClientByVkId(args.vkId)
-            friend?.let { bindInfo(it.info) }
+            friend?.let {
+                bindInfo(it.info)
+                initWishlists(it.wishlists)
+            }
         }
     }
 
@@ -101,8 +104,6 @@ class UserFragment : Fragment() {
             tvBirthdate.text = info.bdate
             tvInfo.text = info.about
             tvName.text = info.name
-            initWishlists(info.wishlists)
-
         }
     }
 

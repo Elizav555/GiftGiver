@@ -14,6 +14,7 @@ class FBMapper {
         clientFB.calendar.events = client.calendar.events.map { mapEventToFB(it) }
         clientFB.cart.gifts = client.cart.gifts.map { mapGiftToFB(it) }
         clientFB.favFriendsIds = client.favFriends.map { it.vkId } as MutableList<Long>
+        clientFB.wishlists = client.wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
         clientFB.info = with(client.info) {
             UserInfoFB(
                 name,
@@ -21,7 +22,6 @@ class FBMapper {
                 bdate,
                 about,
                 photoMax,
-                wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
             )
         }
         return clientFB
@@ -73,10 +73,10 @@ class FBMapper {
                 infoFB.bdate,
                 infoFB.about,
                 infoFB.photoMax,
-                infoFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
             )
         }
         val client = Client(clientFB.vkId, info = info)
+        client.wishlists = clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
         client.calendar.events = clientFB.calendar.events.map { mapEventFromFB(it) }
         client.cart.gifts = clientFB.cart.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>
         val favFriendsFB =
