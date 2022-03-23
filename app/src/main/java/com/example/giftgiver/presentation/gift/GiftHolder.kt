@@ -4,15 +4,13 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.example.giftgiver.databinding.ItemGiftBinding
-import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Gift
-import kotlinx.coroutines.Deferred
 
 class GiftHolder(
     private val binding: ItemGiftBinding,
     action: (position: Int) -> Unit,
     private val checkedFunc: ((Int, Boolean) -> Unit)?,
-    private val getClient: ((Long) -> Deferred<Client?>)?
+    private val isCart: Boolean = false,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
@@ -34,9 +32,9 @@ class GiftHolder(
                     checkedFunc?.let { it(adapterPosition, isChecked) }
                 }
             }
-            if (getClient != null) {
+            if (isCart) {
                 tvFor.visibility = View.VISIBLE
-                //getClient(gift.forUser)
+                tvFor.text = gift.forName
             }
             tvName.text = gift.name
             ivPhoto.load(gift.imageUrl)

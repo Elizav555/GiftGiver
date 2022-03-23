@@ -89,14 +89,15 @@ class GiftFragment : Fragment() {
         if (!isClient)
             return@let
         lifecycleScope.launch {
-            val gift = client.wishlists[index].gifts[giftIndex]
+            val gift = client.info.wishlists[index].gifts[giftIndex]
             newImageFile?.let {
                 gift.imageUrl = ImageStorage().addGiftImage(newImageFile).toString()
             }
-            client.wishlists[index].gifts[giftIndex] =
-                Gift(newName, gift.forUser, newDesc, gift.imageUrl, gift.isChosen)
-            clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
-            bindInfo(client.wishlists[index].gifts[giftIndex])
+            client.info.wishlists[index].gifts[giftIndex] =
+                Gift(newName, gift.forId, gift.forName, newDesc, gift.imageUrl, gift.isChosen)
+            clients.updateClient(client.vkId, mapOf("wishlists" to client.info.wishlists))
+            //todo change to updateClientInfo
+            bindInfo(client.info.wishlists[index].gifts[giftIndex])
         }
     }
 }

@@ -9,6 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UserInfoR(
     @PrimaryKey(autoGenerate = false) val vkId: Long = 0,
+    val name: String = "",
+    val photo: String = "",
     val bdate: String? = "",
     val about: String? = "",
     val photoMax: String? = "",

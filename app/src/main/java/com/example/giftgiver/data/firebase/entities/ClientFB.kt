@@ -5,5 +5,5 @@ data class ClientFB(
     val calendar: CalendarFB = CalendarFB(),
     val cart: CartFB = CartFB(),
     var favFriendsIds: MutableList<Long> = mutableListOf(),
-    var wishlists: MutableList<WishlistFB> = mutableListOf(),
+    var info: UserInfoFB? = null
 )

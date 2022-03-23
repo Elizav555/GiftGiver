@@ -7,8 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Client(
     val vkId: Long = 0,
     val calendar: Calendar = Calendar(),
-    var user: User,
     val cart: Cart = Cart(),
-    var favFriends: MutableList<User> = mutableListOf(),
-    var wishlists: MutableList<Wishlist> = mutableListOf(),
+    var favFriends: MutableList<Client> = mutableListOf(),
+    var info: UserInfo,
 ) : Parcelable

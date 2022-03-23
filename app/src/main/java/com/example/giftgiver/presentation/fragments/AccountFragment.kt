@@ -15,7 +15,6 @@ import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Wishlist
-import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.wishlist.WishlistAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
@@ -53,11 +52,13 @@ class AccountFragment : Fragment() {
                 AddWishlistDialog()
                     .show(childFragmentManager, "dialog")
             }
-            ivAvatar.load(curClient.user.info.photoMax)
-            tvBirthdate.text = curClient.user.info.bdate
-            tvInfo.text = curClient.user.info.about
-            tvName.text = curClient.user.name
-            initWishlists(curClient.wishlists)
+            with(curClient.info) {
+                ivAvatar.load(photoMax)
+                tvBirthdate.text = bdate
+                tvInfo.text = about
+                tvName.text = name
+                initWishlists(wishlists)
+            }
             progressBar.visibility = View.GONE
             views.visibility = View.VISIBLE
         }
@@ -65,11 +66,12 @@ class AccountFragment : Fragment() {
 
     fun addWishlist(wishlist: Wishlist) {
         client?.let {
-            client.wishlists.add(wishlist)
+            it.info.wishlists.add(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
+                clients.updateClient(it.vkId, mapOf("wishlists" to it.info.wishlists))
+                //todo change to updateClientInfo
             }
-            wishlistAdapter.submitList(client.wishlists)
+            wishlistAdapter.submitList(it.info.wishlists)
         }
     }
 
@@ -96,16 +98,17 @@ class AccountFragment : Fragment() {
 
     private fun deleteWishlist(wishlist: Wishlist) {
         client?.let {
-            client.wishlists.remove(wishlist)
+            it.info.wishlists.remove(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
+                clients.updateClient(client.vkId, mapOf("wishlists" to it.info.wishlists))
+                //todo change to updateClientInfo
             }
-            wishlistAdapter.submitList(client.wishlists)
+            wishlistAdapter.submitList(it.info.wishlists)
         }
     }
 
-    private fun navigateToWishlist(wishistIndex: Int) {
-        val action = AccountFragmentDirections.actionAccountToMyWishlistFragment(wishistIndex)
+    private fun navigateToWishlist(wishlistIndex: Int) {
+        val action = AccountFragmentDirections.actionAccountToMyWishlistFragment(wishlistIndex)
         findNavController().navigate(action)
     }
 

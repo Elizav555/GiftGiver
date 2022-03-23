@@ -10,7 +10,8 @@ import kotlinx.parcelize.Parcelize
 data class GiftR(
     @PrimaryKey(autoGenerate = false) val id: Long,
     val name: String,
-    val forUser: Long,
+    val forId: Long = 0,
+    val forName: String? = null,
     val desc: String?,
     val imageUrl: String?,
     var isChosen: Boolean = false,

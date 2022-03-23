@@ -1,22 +1,29 @@
 package com.example.giftgiver.data.mappers
 
-import com.example.giftgiver.data.firebase.entities.ClientFB
-import com.example.giftgiver.data.firebase.entities.EventFB
-import com.example.giftgiver.data.firebase.entities.GiftFB
-import com.example.giftgiver.data.firebase.entities.WishlistFB
+import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
+import com.example.giftgiver.data.firebase.entities.*
 import com.example.giftgiver.domain.entities.*
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class FBMapper {
+    private val clients = ClientsRepositoryImpl(this)
     fun mapClientToFB(client: Client): ClientFB {
         val clientFB = ClientFB(client.vkId)
         clientFB.calendar.events = client.calendar.events.map { mapEventToFB(it) }
         clientFB.cart.gifts = client.cart.gifts.map { mapGiftToFB(it) }
         clientFB.favFriendsIds = client.favFriends.map { it.vkId } as MutableList<Long>
-        clientFB.wishlists =
-            client.wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
+        clientFB.info = with(client.info) {
+            UserInfoFB(
+                name,
+                photo,
+                bdate,
+                about,
+                photoMax,
+                wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
+            )
+        }
         return clientFB
     }
 
@@ -35,7 +42,8 @@ class FBMapper {
 
     private fun mapGiftToFB(gift: Gift): GiftFB = GiftFB(
         name = gift.name,
-        forUser = gift.forUser,
+        forId = gift.forId,
+        forName = gift.forName,
         desc = gift.desc,
         imageUrl = gift.imageUrl,
         isChosen = gift.isChosen
@@ -46,27 +54,38 @@ class FBMapper {
 
     private fun mapGiftFromFB(gift: GiftFB): Gift = Gift(
         name = gift.name,
-        forUser = gift.forUser,
+        forId = gift.forId,
+        forName = gift.forName,
         desc = gift.desc,
         imageUrl = gift.imageUrl,
         isChosen = gift.isChosen
     )
 
     suspend fun mapClientFromFB(clientFB: ClientFB): Client {
-        val user = withContext(Dispatchers.Default) { LoadUserInfoVK().loadInfo(clientFB.vkId) }
-        val client = Client(clientFB.vkId, user = user)
+        var info = UserInfo(clientFB.vkId)
+        if (clientFB.info == null) {
+            info = withContext(Dispatchers.Default) { LoadUserInfoVK().loadInfo(clientFB.vkId) }
+        } else clientFB.info?.let { infoFB ->
+            info = UserInfo(
+                clientFB.vkId,
+                infoFB.name,
+                infoFB.photo,
+                infoFB.bdate,
+                infoFB.about,
+                infoFB.photoMax,
+                infoFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
+            )
+        }
+        val client = Client(clientFB.vkId, info = info)
         client.calendar.events = clientFB.calendar.events.map { mapEventFromFB(it) }
         client.cart.gifts = clientFB.cart.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>
-        client.favFriends =
+        val favFriendsFB =
             clientFB.favFriendsIds.map {
                 withContext(Dispatchers.Default) {
-                    LoadUserInfoVK().loadInfo(
-                        it
-                    )
+                    clients.getClientByVkId(it)
                 }
-            } as MutableList<User>
-        client.wishlists =
-            clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
+            }
+        client.favFriends = favFriendsFB.filterNotNull() as MutableList<Client>
         return client
     }
 }

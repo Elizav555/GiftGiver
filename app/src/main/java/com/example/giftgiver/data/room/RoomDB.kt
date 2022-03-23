@@ -13,7 +13,7 @@ import com.example.giftgiver.data.room.entities.*
 @Database(
     entities = [
         CalendarR::class, CartR::class, ClientR::class, EventR::class,
-        GiftR::class, UserInfoR::class, UserR::class, WishlistR::class
+        GiftR::class, UserInfoR::class, WishlistR::class //,UserR::class
     ],
     version = 1
 )
@@ -24,7 +24,8 @@ abstract class RoomDB : RoomDatabase() {
     abstract fun clientDao(): ClientDao
     abstract fun eventDao(): EventDao
     abstract fun giftDao(): GiftDao
-    abstract fun userDao(): UserDao
+
+    //    abstract fun userDao(): UserDao
     abstract fun userInfoDao(): UserInfoDao
     abstract fun wishlistDao(): WishlistDao
 

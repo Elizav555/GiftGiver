@@ -6,7 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Gift(
     val name: String,
-    val forUser: Long,
+    val forId: Long = 0,
+    val forName: String? = null,
     val desc: String?,
     var imageUrl: String?,
     var isChosen: Boolean = false,

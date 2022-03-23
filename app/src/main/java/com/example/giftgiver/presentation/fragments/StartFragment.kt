@@ -71,8 +71,8 @@ class StartFragment : Fragment() {
                     val client = Client(
                         vkId,
                         Calendar(),
-                        LoadUserInfoVK().loadInfo(vkId),
-                        Cart()
+                        info = LoadUserInfoVK().loadInfo(vkId),
+                        cart = Cart()
                     )
                     clientsRep.addClient(
                         client

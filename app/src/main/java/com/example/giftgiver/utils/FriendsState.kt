@@ -1,7 +1,7 @@
 package com.example.giftgiver.utils
 
-import com.example.giftgiver.domain.entities.User
+import com.example.giftgiver.domain.entities.UserInfo
 
 object FriendsState {
-    var friends: List<User> = mutableListOf()
+    var friends: List<UserInfo> = mutableListOf()
 }

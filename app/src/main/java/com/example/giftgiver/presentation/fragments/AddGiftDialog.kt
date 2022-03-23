@@ -51,17 +51,6 @@ class AddGiftDialog(private val submitAction: (String, String, File?) -> Unit?) 
             return activity?.let {
                 val dialog = AlertDialog.Builder(it).setView(root)
                     .setPositiveButton(getString(R.string.save)) { _, _ ->
-//                        (parentFragment as WishlistFragment).addGift(
-//                            Gift(
-//                                etName.text.toString(),
-//                                0,
-//                                etDesc.text.toString(),
-//                            )
-//                        ) для добавления подарка
-//                        (parentFragment as GiftFragment).changeGift(
-//                            etName.text.toString(),
-//                            etDesc.text.toString()
-//                        ) for changing gift
                         submitAction(etName.text.toString(), etDesc.text.toString(), imageFile)
                     }
                     .setNegativeButton(

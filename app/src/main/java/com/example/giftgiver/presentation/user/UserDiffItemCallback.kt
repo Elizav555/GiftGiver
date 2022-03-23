@@ -1,16 +1,16 @@
 package com.example.giftgiver.presentation.user
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.giftgiver.domain.entities.User
+import com.example.giftgiver.domain.entities.UserInfo
 
-class UserDiffItemCallback : DiffUtil.ItemCallback<User>() {
+class UserDiffItemCallback : DiffUtil.ItemCallback<UserInfo>() {
     override fun areItemsTheSame(
-        oldItem: User,
-        newItem: User
+        oldItem: UserInfo,
+        newItem: UserInfo
     ): Boolean = oldItem.vkId == newItem.vkId
 
     override fun areContentsTheSame(
-        oldItem: User,
-        newItem: User
+        oldItem: UserInfo,
+        newItem: UserInfo
     ): Boolean = oldItem == newItem
 }

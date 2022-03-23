@@ -3,6 +3,7 @@ package com.example.giftgiver.data.firebase
 import com.example.giftgiver.data.firebase.entities.ClientFB
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.domain.entities.Client
+import com.example.giftgiver.domain.entities.Wishlist
 import com.example.giftgiver.domain.repositories.ClientsRepository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,4 +57,14 @@ class ClientsRepositoryImpl(private val fbMapper: FBMapper) : ClientsRepository 
         clients.document(vkId.toString())
             .update(changes)
     }
+//
+//    override suspend fun updateWishlists(vkId: Long, wishlist: Wishlist, wishlistIndex: Int) {
+//        clients.document(vkId.toString()).collection("info").document("wishlists")
+//            .update(mapOf(wishlistIndex.toString() to wishlist))
+//    }
+//
+//    override suspend fun updateCart(vkId: Long, wishlist: Wishlist, wishlistIndex: Int) {
+//        clients.document(vkId.toString()).collection("info").document("wishlists")
+//            .update(mapOf(wishlistIndex.toString() to wishlist))
+//    }
 }

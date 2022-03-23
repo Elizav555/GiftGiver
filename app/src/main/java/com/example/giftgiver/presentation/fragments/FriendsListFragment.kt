@@ -11,10 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
-import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.user.UserAdapter
 import com.example.giftgiver.utils.ClientState
@@ -25,7 +22,6 @@ import kotlinx.coroutines.launch
 class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
     private var userAdapter: UserAdapter by autoCleared()
-    private val clients = ClientsRepositoryImpl(FBMapper())
     private var friends = FriendsState.friends
     private var isFav = false
     override fun onCreateView(
@@ -88,7 +84,10 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
                 null
             )
             val client = ClientState.client
-            client?.let { friends = it.favFriends.sortedBy { friend -> friend.name } }
+            client?.let {
+                friends =
+                    it.favFriends.map { friend -> friend.info }.sortedBy { friend -> friend.name }
+            }
             updateList()
         } else {
             item.icon = ResourcesCompat.getDrawable(
@@ -123,17 +122,8 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     }
 
     private fun navigateToProfile(vkId: Long) {
-        lifecycleScope.launch {
-            val client = clients.getClientByVkId(vkId)
-            client?.user = LoadUserInfoVK().loadInfo(vkId)
-            client?.let {
-                val action =
-                    FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(
-                        it
-                    )
-                findNavController().navigate(action)
-            }
-        }
+        val action = FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(vkId)
+        findNavController().navigate(action)
     }
 
     private fun updateList() {

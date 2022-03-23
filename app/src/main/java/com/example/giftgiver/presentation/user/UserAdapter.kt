@@ -6,12 +6,12 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.ListAdapter
 import com.example.giftgiver.databinding.ItemUserBinding
-import com.example.giftgiver.domain.entities.User
+import com.example.giftgiver.domain.entities.UserInfo
 
 class UserAdapter(
     private val action: (position: Int) -> Unit,
-    private val friends: List<User>,
-) : ListAdapter<User, UserHolder>(UserDiffItemCallback()), Filterable {
+    private val friends: List<UserInfo>,
+) : ListAdapter<UserInfo, UserHolder>(UserDiffItemCallback()), Filterable {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +25,7 @@ class UserAdapter(
         action
     )
 
-    private var newFriends: List<User> = friends
+    private var newFriends: List<UserInfo> = friends
 
     override fun onBindViewHolder(
         holder: UserHolder,
@@ -35,7 +35,7 @@ class UserAdapter(
         holder.bind(user)
     }
 
-    override fun submitList(list: List<User>?) {
+    override fun submitList(list: List<UserInfo>?) {
         if (list != null) {
             newFriends = list
         }
@@ -50,9 +50,9 @@ class UserAdapter(
                     results.values = friends
                     results.count = friends.size
                 } else {
-                    val filterResultsData = mutableListOf<User>()
+                    val filterResultsData = mutableListOf<UserInfo>()
                     friends.forEach {
-                        if (it.name.contains(charSequence,true)) {
+                        if (it.name.contains(charSequence, true)) {
                             filterResultsData.add(it)
                         }
                     }
@@ -63,7 +63,7 @@ class UserAdapter(
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults) {
-               submitList(results.values as List<User>)
+                submitList(results.values as? List<UserInfo>)
             }
         }
     }

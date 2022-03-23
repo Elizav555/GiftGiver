@@ -4,16 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.giftgiver.databinding.ItemGiftBinding
-import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Gift
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Job
 
 class GiftAdapter(
     private val action: (position: Int) -> Unit,
     private val gifts: List<Gift>,
-    private val checkedFunc: ((Int,Boolean)->Unit)? = null,
-    private val getClient: ((Long) -> Deferred<Client?>)? = null
+    private val checkedFunc: ((Int, Boolean) -> Unit)? = null,
+    private val isCart: Boolean = false,
 ) : ListAdapter<Gift, GiftHolder>(GiftDiffItemCallback()) {
 
     override fun onCreateViewHolder(
@@ -27,7 +24,7 @@ class GiftAdapter(
         ),
         action,
         checkedFunc,
-        getClient
+        isCart,
     )
 
     override fun onBindViewHolder(

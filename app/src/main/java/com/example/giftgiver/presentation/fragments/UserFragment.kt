@@ -15,6 +15,7 @@ import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentUserBinding
 import com.example.giftgiver.domain.entities.Client
+import com.example.giftgiver.domain.entities.UserInfo
 import com.example.giftgiver.domain.entities.Wishlist
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.wishlist.WishlistAdapter
@@ -41,14 +42,16 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        friend = args.client
-        friend?.let { bindInfo(it) }
+        lifecycleScope.launch {
+            friend = clients.getClientByVkId(args.vkId)
+            friend?.let { bindInfo(it.info) }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_fav, menu)
         ClientState.client?.let {
-            isFav = it.favFriends.contains(friend?.user)
+            isFav = it.favFriends.contains(friend)
             changeFavBtn(menu.findItem(R.id.fav))
         }
     }
@@ -80,24 +83,26 @@ class UserFragment : Fragment() {
         isFav = !isFav
         changeFavBtn(item)
         if (isFav) {
-            friend?.let { friend -> it.favFriends.add(friend.user) }
-        } else friend?.let { friend -> it.favFriends.remove(friend.user) }
+            friend?.let { friend -> it.favFriends.add(friend) }
+        } else friend?.let { friend -> it.favFriends.remove(friend) }
         val favFriendsIds = it.favFriends.map { fav -> fav.vkId }
         lifecycleScope.launch {
             clients.updateClient(it.vkId, mapOf("favFriendsIds" to favFriendsIds))
+            //todo change to updateClientInfo
         }
     }
 
-    private fun bindInfo(client: Client) {
+    private fun bindInfo(info: UserInfo) {
         with(binding)
         {
             setHasOptionsMenu(true)
-            (activity as MainActivity).supportActionBar?.title = client.user.name
-            ivAvatar.load(client.user.info.photoMax)
-            tvBirthdate.text = client.user.info.bdate
-            tvInfo.text = client.user.info.about
-            tvName.text = client.user.name
-            initWishlists(client.wishlists)
+            (activity as MainActivity).supportActionBar?.title = info.name
+            ivAvatar.load(info.photoMax)
+            tvBirthdate.text = info.bdate
+            tvInfo.text = info.about
+            tvName.text = info.name
+            initWishlists(info.wishlists)
+
         }
     }
 

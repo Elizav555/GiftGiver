@@ -5,8 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class UserInfo(
-    val vkId: Long = 0,
+    val vkId: Long,
+    val name: String = "",
+    val photo: String = "",
     val bdate: String? = "",
     val about: String? = "",
     val photoMax: String? = "",
+    var wishlists: MutableList<Wishlist> = mutableListOf(),
 ) : Parcelable

@@ -28,8 +28,8 @@
             android:label="fragment_user"
             tools:layout="@layout/fragment_user">
             <argument
-                android:name="client"
-                app:argType="com.example.giftgiver.domain.entities.Client" />
+                android:name="vkId"
+                app:argType="long" />
             <action
                 android:id="@+id/action_user_fragment_to_friendsWishlistFragment"
                 app:destination="@id/friendsWishlistFragment" />

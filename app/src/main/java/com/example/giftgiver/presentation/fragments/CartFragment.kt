@@ -67,8 +67,7 @@ class CartFragment : Fragment() {
         val goToItem = { position: Int ->
             navigateToItem(position)
         }
-        //todo как получить там клиента
-        giftAdapter = GiftAdapter(goToItem, gifts, null, ::getClientByVkIdAsync)
+        giftAdapter = GiftAdapter(goToItem, gifts, null, true)
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())

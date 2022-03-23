@@ -3,12 +3,12 @@ package com.example.giftgiver.data.vk
 import com.example.giftgiver.data.mappers.VkMapper
 import com.example.giftgiver.data.vk.entities.UserInfoVk
 import com.example.giftgiver.data.vk.entities.UserVk
-import com.example.giftgiver.domain.entities.User
+import com.example.giftgiver.domain.entities.UserInfo
 import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
 
-class VKFriendsRequest(id: Long?) : VKRequest<List<User>>("friends.get") {
+class VKFriendsRequest(id: Long?) : VKRequest<List<UserInfo>>("friends.get") {
     init {
         if (id != null) {
             addParam("user_id", id)
@@ -17,9 +17,9 @@ class VKFriendsRequest(id: Long?) : VKRequest<List<User>>("friends.get") {
         addParam("fields", "photo_100")
     }
 
-    override fun parse(r: JSONObject): List<User> {
+    override fun parse(r: JSONObject): List<UserInfo> {
         val users = r.getJSONObject("response").getJSONArray("items")
-        val result = ArrayList<User>()
+        val result = ArrayList<UserInfo>()
         for (i in 0 until users.length()) {
             result.add(VkMapper().mapUser(UserVk().parse(users.getJSONObject(i))))
         }
@@ -27,7 +27,7 @@ class VKFriendsRequest(id: Long?) : VKRequest<List<User>>("friends.get") {
     }
 }
 
-class VKUserWithInfoRequest(id: Long?) : VKRequest<User>("users.get") {
+class VKUserWithInfoRequest(id: Long?) : VKRequest<UserInfo>("users.get") {
     init {
         addParam("access_token", VKAccessToken.toString())
         if (id != null) {
@@ -36,7 +36,7 @@ class VKUserWithInfoRequest(id: Long?) : VKRequest<User>("users.get") {
         addParam("fields", "bdate, about, photo_max, photo_100")
     }
 
-    override fun parse(r: JSONObject): User {
+    override fun parse(r: JSONObject): UserInfo {
         val userInfoVk = r.getJSONArray("response")
         val userInfo = UserInfoVk().parse(userInfoVk.getJSONObject(0))
         val user = UserVk().parse(userInfoVk.getJSONObject(0))
