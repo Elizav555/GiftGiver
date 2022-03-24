@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.example.giftgiver.databinding.ItemGiftBinding
 import com.example.giftgiver.domain.entities.Gift
+import com.example.giftgiver.utils.ClientState
 
 class GiftHolder(
     private val binding: ItemGiftBinding,
@@ -27,6 +28,9 @@ class GiftHolder(
                 if (gift.isChosen) {
                     ivFilter.visibility = View.VISIBLE
                     checkBox.isClickable = false
+                    ClientState.client?.let {
+                        checkBox.isClickable = it.cart.gifts.contains(gift)
+                    }
                 }
                 checkBox.setOnCheckedChangeListener { _, isChecked ->
                     checkedFunc?.let { it(adapterPosition, isChecked) }
