@@ -82,7 +82,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
     //for calendar
-
+    implementation 'com.applandeo:material-calendar-view:1.7.0'
 }
 
 detekt {
