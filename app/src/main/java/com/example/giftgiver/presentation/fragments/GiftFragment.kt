@@ -95,8 +95,7 @@ class GiftFragment : Fragment() {
             }
             client.wishlists[index].gifts[giftIndex] =
                 Gift(newName, gift.forId, gift.forName, newDesc, gift.imageUrl, gift.isChosen)
-            clients.updateClient(client.vkId, mapOf("wishlists" to client.wishlists))
-            //todo change to updateClientInfo
+            clients.updateWishlists(client.vkId, client.wishlists)
             bindInfo(client.wishlists[index].gifts[giftIndex])
         }
     }

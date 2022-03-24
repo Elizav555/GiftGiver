@@ -58,7 +58,7 @@ class CartFragment : Fragment() {
     private fun deleteAll() = client?.let {
         client.cart.gifts.clear()
         lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("cart" to client.cart))
+            clients.updateCart(client.vkId, client.cart.gifts)
         }
         giftAdapter.submitList(client.cart.gifts)
     }
@@ -97,7 +97,7 @@ class CartFragment : Fragment() {
     private fun deleteGift(gift: Gift) = client?.let {
         client.cart.gifts.remove(gift)
         lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("cart" to client.cart))
+            clients.updateCart(client.vkId, client.cart.gifts)
         }
         giftAdapter.submitList(client.cart.gifts)
     }

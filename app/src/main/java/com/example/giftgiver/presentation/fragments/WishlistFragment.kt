@@ -121,8 +121,7 @@ class WishlistFragment : Fragment() {
                 gift.imageUrl = ImageStorage().addGiftImage(newImageFile).toString()
             }
             it.wishlists[index].gifts.add(gift)
-            clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
-            //todo change to updateClientInfo
+            clients.updateWishlists(client.vkId, it.wishlists)
             giftAdapter.submitList(it.wishlists[index].gifts)
         }
         return@let
@@ -131,8 +130,7 @@ class WishlistFragment : Fragment() {
     private fun deleteGift(gift: Gift) = client?.let {
         it.wishlists[index].gifts.remove(gift)
         lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
-            //todo change to updateClientInfo
+            clients.updateWishlists(client.vkId, it.wishlists)
         }
         giftAdapter.submitList(it.wishlists[index].gifts)
     }
@@ -153,8 +151,7 @@ class WishlistFragment : Fragment() {
     fun changeWishlistName(newName: String) = client?.let {
         it.wishlists[index].name = newName
         lifecycleScope.launch {
-            clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
-            //todo change to updateClientInfo
+            clients.updateWishlists(client.vkId, it.wishlists)
         }
         (activity as MainActivity).supportActionBar?.title = newName
     }

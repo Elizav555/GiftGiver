@@ -88,10 +88,8 @@ class UserFragment : Fragment() {
         if (isFav) {
             friend?.let { friend -> it.favFriends.add(friend) }
         } else friend?.let { friend -> it.favFriends.remove(friend) }
-        val favFriendsIds = it.favFriends.map { fav -> fav.vkId }
         lifecycleScope.launch {
-            clients.updateClient(it.vkId, mapOf("favFriendsIds" to favFriendsIds))
-            //todo change to updateClientInfo
+            clients.updateFavFriends(it.vkId, it.favFriends)
         }
     }
 

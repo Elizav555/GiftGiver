@@ -69,8 +69,7 @@ class AccountFragment : Fragment() {
         client?.let {
             it.wishlists.add(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(it.vkId, mapOf("wishlists" to it.wishlists))
-                //todo change to updateClientInfo
+                clients.updateWishlists(it.vkId, it.wishlists)
             }
             wishlistAdapter.submitList(it.wishlists)
         }
@@ -101,8 +100,7 @@ class AccountFragment : Fragment() {
         client?.let {
             it.wishlists.remove(wishlist)
             lifecycleScope.launch {
-                clients.updateClient(client.vkId, mapOf("wishlists" to it.wishlists))
-                //todo change to updateClientInfo
+                clients.updateWishlists(client.vkId, it.wishlists)
             }
             wishlistAdapter.submitList(it.wishlists)
         }
