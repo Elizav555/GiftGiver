@@ -118,7 +118,7 @@ class WishlistFragment : Fragment() {
         val gift = Gift(newName, it.vkId, it.info.name, newDesc, defaultImageUri)
         lifecycleScope.launch {
             newImageFile?.let {
-                gift.imageUrl = ImageStorage().addGiftImage(newImageFile).toString()
+                gift.imageUrl = ImageStorage().addImage(newImageFile).toString()
             }
             it.wishlists[index].gifts.add(gift)
             clients.updateWishlists(client.vkId, it.wishlists)

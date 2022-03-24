@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragments.AccountFragment">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="283dp"
+        android:layout_height="280dp"
+        android:indeterminate="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_avatar"
         android:layout_width="180dp"
@@ -80,6 +92,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_wishlists"
         tools:listitem="@layout/item_wishlist" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:constraint_referenced_ids="iv_avatar,tv_name,tv_birthdate,tv_info,tv_wishlists,rv_wishlists" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

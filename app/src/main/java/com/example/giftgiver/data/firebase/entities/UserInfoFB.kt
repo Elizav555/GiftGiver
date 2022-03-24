@@ -5,5 +5,4 @@ data class UserInfoFB(
     val photo: String = "",
     val bdate: String? = "",
     val about: String? = "",
-    val photoMax: String? = "",
 )

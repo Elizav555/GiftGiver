@@ -11,12 +11,15 @@ class VkMapper {
         photo = userVk.photo,
     )
 
-    fun mapUserWithInfo(userVk: UserVk, userInfoVk: UserInfoVk) = UserInfo(
-        vkId = userVk.vkId,
-        name = userVk.name,
-        photo = userVk.photo,
-        bdate = userInfoVk.bdate,
-        about = userInfoVk.about,
-        photoMax = userInfoVk.photoMax,
-    )
+    fun mapUserWithInfo(userVk: UserVk, userInfoVk: UserInfoVk): UserInfo {
+        val user = UserInfo(
+            vkId = userVk.vkId,
+            name = userVk.name,
+            photo = userVk.photo,
+            bdate = userInfoVk.bdate,
+            about = userInfoVk.about,
+        )
+        userInfoVk.photoMax?.let { user.photo = it }
+        return user
+    }
 }

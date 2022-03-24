@@ -6,9 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UserInfo(
     val vkId: Long,
-    val name: String = "",
-    val photo: String = "",
-    val bdate: String? = "",
-    val about: String? = "",
-    val photoMax: String? = "",
+    var name: String = "",
+    var photo: String = "",
+    var bdate: String? = "",
+    var about: String? = "",
 ) : Parcelable

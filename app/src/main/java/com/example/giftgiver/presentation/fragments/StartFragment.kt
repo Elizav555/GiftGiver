@@ -105,7 +105,6 @@ class StartFragment : Fragment() {
         }
     }
 
-    //todo fix appbar while loading
     private fun navigateToList() {
         val loadFriendsVK = LoadFriendsVK(clientsRep)
         lifecycleScope.launch {

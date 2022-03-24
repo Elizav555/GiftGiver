@@ -1,16 +1,16 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
+import com.example.giftgiver.R
 import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
+import com.example.giftgiver.data.firebase.ImageStorage
 import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.domain.entities.Client
@@ -20,6 +20,7 @@ import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
 import kotlinx.coroutines.launch
+import java.io.File
 
 class AccountFragment : Fragment() {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
@@ -35,16 +36,32 @@ class AccountFragment : Fragment() {
         return binding.root
     }
 
-    //todo решить, давать ли возможность редактировать информацию и если да, то добавить в appbar edit
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        client?.let { bindInfo(it) }
+        client?.let { bindAll(it) }
     }
 
-    private fun bindInfo(curClient: Client) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_edit, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.edit -> {
+                enterEditMode()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun enterEditMode() {
+        EditClientDialog().show(childFragmentManager, "dialog")
+    }
+
+    private fun bindAll(curClient: Client) {
         with(binding) {
-            //todo add edit menu
-            setHasOptionsMenu(false)
+            setHasOptionsMenu(true)
             btnLogout.setOnClickListener {
                 logout()
             }
@@ -52,16 +69,19 @@ class AccountFragment : Fragment() {
                 AddWishlistDialog()
                     .show(childFragmentManager, "dialog")
             }
-            with(curClient.info) {
-                ivAvatar.load(photoMax)
-                tvBirthdate.text = bdate
-                tvInfo.text = about
-                tvName.text = name
-            }
-
+            bindInfo()
             initWishlists(curClient.wishlists)
             progressBar.visibility = View.GONE
             views.visibility = View.VISIBLE
+        }
+    }
+
+    private fun bindInfo() = client?.let {
+        with(it.info) {
+            binding.ivAvatar.load(photo)
+            binding.tvBirthdate.text = bdate
+            binding.tvInfo.text = about
+            binding.tvName.text = name
         }
     }
 
@@ -116,4 +136,19 @@ class AccountFragment : Fragment() {
         ClientState.client = null
         findNavController().navigate(AccountFragmentDirections.actionAccountToStartFragment())
     }
+
+    fun updateInfo(newName: String, newInfo: String, newBirthDate: String, imageFile: File?) =
+        client?.let {
+            lifecycleScope.launch {
+                imageFile?.let { file ->
+                    it.info.photo = ImageStorage().addImage(file).toString()
+                }
+                it.info.name = newName
+                it.info.about = newInfo
+                it.info.bdate = newBirthDate
+                clients.updateInfo(it.vkId, it.info)
+                ClientState.client = it
+                bindInfo()
+            }
+        }
 }

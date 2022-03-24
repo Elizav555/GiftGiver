@@ -13,5 +13,4 @@ data class UserInfoR(
     val photo: String = "",
     val bdate: String? = "",
     val about: String? = "",
-    val photoMax: String? = "",
 ) : Parcelable

@@ -98,10 +98,12 @@ class UserFragment : Fragment() {
         {
             setHasOptionsMenu(true)
             (activity as MainActivity).supportActionBar?.title = info.name
-            ivAvatar.load(info.photoMax)
+            ivAvatar.load(info.photo)
             tvBirthdate.text = info.bdate
             tvInfo.text = info.about
             tvName.text = info.name
+            progressBar.visibility = View.GONE
+            views.visibility = View.VISIBLE
         }
     }
 

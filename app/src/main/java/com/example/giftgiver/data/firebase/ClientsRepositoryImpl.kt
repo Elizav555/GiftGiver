@@ -1,17 +1,14 @@
 package com.example.giftgiver.data.firebase
 
 import com.example.giftgiver.data.firebase.entities.ClientFB
+import com.example.giftgiver.data.firebase.entities.UserInfoFB
 import com.example.giftgiver.data.mappers.FBMapper
-import com.example.giftgiver.domain.entities.Client
-import com.example.giftgiver.domain.entities.Event
-import com.example.giftgiver.domain.entities.Gift
-import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.domain.entities.*
 import com.example.giftgiver.domain.repositories.ClientsRepository
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -23,10 +20,10 @@ const val CALENDAR = "calendar"
 const val FAV_FRIENDS = "favFriends"
 const val EVENTS = "events"
 const val GIFTS = "gifts"
+const val INFO = "info"
 
 class ClientsRepositoryImpl(
-    private val fbMapper: FBMapper,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val fbMapper: FBMapper
 ) : ClientsRepository {
     private val clients = FirebaseFirestore.getInstance().collection(CLIENTS)
 
@@ -64,19 +61,29 @@ class ClientsRepositoryImpl(
         clients.document(vkId.toString()).update(changes)
     }
 
+    fun updateInfo(vkId: Long, info: UserInfo) {
+        val infoFB = UserInfoFB(
+            info.name,
+            info.photo,
+            info.bdate,
+            info.about,
+        )
+        clients.document(vkId.toString()).update(INFO, infoFB)
+    }
+
     fun updateWishlists(vkId: Long, wishlists: List<Wishlist>) {
-        val wishlistsFB = wishlists.map{ fbMapper.mapWishlistToFB(it) }
-        clients.document(vkId.toString()).update("$WISHLISTS", wishlistsFB)
+        val wishlistsFB = wishlists.map { fbMapper.mapWishlistToFB(it) }
+        clients.document(vkId.toString()).update(WISHLISTS, wishlistsFB)
     }
 
     fun updateCart(vkId: Long, gifts: List<Gift>) {
         val giftsFB = gifts.map { fbMapper.mapGiftToFB(it) }
-        clients.document(vkId.toString()).update("$CART/$GIFTS", giftsFB)
+        clients.document(vkId.toString()).update("${FieldPath.of(GIFTS)}", giftsFB)
     }
 
     fun updateCalendar(vkId: Long, events: List<Event>) {
         val eventsFB = events.map { fbMapper.mapEventToFB(it) }
-        clients.document("$vkId").update("$CALENDAR/$EVENTS", eventsFB)
+        clients.document("$vkId").update("${FieldPath.of(EVENTS)}", eventsFB)
     }
 
     fun updateFavFriends(vkId: Long, friends: List<Client>) {

@@ -11,7 +11,7 @@ class ImageStorage {
     private val storageRef = FirebaseStorage.getInstance().reference
     private val imagesRef = storageRef.child("images")
 
-    suspend fun addGiftImage(newFile: File): Uri? {
+    suspend fun addImage(newFile: File): Uri? {
         val newImageRef = imagesRef.child(newFile.name)
         val uploadTask = newImageRef.putFile(Uri.fromFile(newFile))
         return suspendCoroutine { continuation ->

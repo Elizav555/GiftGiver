@@ -52,7 +52,7 @@ class GiftFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.add -> {
+            R.id.edit -> {
                 enterEditMode()
                 true
             }
@@ -91,7 +91,7 @@ class GiftFragment : Fragment() {
         lifecycleScope.launch {
             val gift = client.wishlists[index].gifts[giftIndex]
             newImageFile?.let {
-                gift.imageUrl = ImageStorage().addGiftImage(newImageFile).toString()
+                gift.imageUrl = ImageStorage().addImage(newImageFile).toString()
             }
             client.wishlists[index].gifts[giftIndex] =
                 Gift(newName, gift.forId, gift.forName, newDesc, gift.imageUrl, gift.isChosen)

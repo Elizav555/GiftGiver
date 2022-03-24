@@ -21,7 +21,6 @@ class FBMapper {
                 photo,
                 bdate,
                 about,
-                photoMax,
             )
         }
         return clientFB
@@ -72,7 +71,6 @@ class FBMapper {
                 infoFB.photo,
                 infoFB.bdate,
                 infoFB.about,
-                infoFB.photoMax,
             )
         }
         val client = Client(clientFB.vkId, info = info)
