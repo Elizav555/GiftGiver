@@ -7,14 +7,24 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class HolidayMapper {
+    private val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     fun map(holidays: List<Holiday>): List<Event> {
-        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return holidays.map { holiday ->
             Event(
                 name = holiday.localName,
-                date = dateFormat.parse(holiday.date) ?: Calendar.getInstance().time,
-                desc = null
+                date = parseDateToCalendar(holiday.date),
+                desc = holiday.localName
             )
         }
+    }
+
+    private fun parseDateToCalendar(date: String): Calendar {
+        val time = dateFormat.parse(date)?.time
+        time?.let {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = time
+            return calendar
+        }
+        return Calendar.getInstance()
     }
 }

@@ -11,6 +11,6 @@ import java.util.*
 data class EventR(
     @PrimaryKey(autoGenerate = false) val id: Long,
     val name: String,
-    val date: Date,
+    val date: Calendar,
     val desc: String?,
 ) : Parcelable

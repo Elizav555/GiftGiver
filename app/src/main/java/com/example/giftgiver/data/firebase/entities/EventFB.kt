@@ -4,6 +4,6 @@ import java.util.*
 
 data class EventFB(
     val name: String = "",
-    val date: Date = Date(),
+    val date: Calendar = Calendar.getInstance(),
     val desc: String?,
 )
