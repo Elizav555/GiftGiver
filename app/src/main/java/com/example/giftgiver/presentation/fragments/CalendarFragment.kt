@@ -39,7 +39,7 @@ class CalendarFragment : Fragment() {
         return binding.root
     }
 
-    //todo удалять events? как быть с тем, что на одну дату может быть два ивента
+    //todo удалять events?
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_add, menu)
     }
@@ -104,7 +104,9 @@ class CalendarFragment : Fragment() {
         calendar.setHighlightedDays(eventDays.map { it.calendar })
         calendar.setOnDayClickListener { event ->
             tvDate.text = dateFormat.format(event.calendar.time)
-            tvDescription.text = holidays.find { it.date == event.calendar }?.desc
+            val eventsDesc =
+                holidays.filter { it.date == event.calendar }.map { it.desc }.joinToString(", ")
+            tvDescription.text = eventsDesc
         }
     }
 
