@@ -8,6 +8,6 @@ data class UserInfo(
     val vkId: Long,
     var name: String = "",
     var photo: String = "",
-    var bdate: String? = "",
+    var bdate: String? = null,
     var about: String? = "",
 ) : Parcelable

@@ -28,6 +28,7 @@
     <string name="logout">Logout</string>
     <string name="log_in_using_vk">Log in using Vk</string>
     <string name="friend_wishlist">%1$s\'s %2$s Wishlist</string>
+    <string name="friend_bday">%1$s\'s bday</string>
     <string name="search">Search</string>
     <string name="add_delete_from_fav">Add/Delete from fav</string>
     <string name="change_image">Change image</string>

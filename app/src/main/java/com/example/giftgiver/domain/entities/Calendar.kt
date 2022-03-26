@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Calendar(
-    var events: List<Event> = listOf(),
-):Parcelable
+    var events: MutableList<Event> = mutableListOf(),
+) : Parcelable

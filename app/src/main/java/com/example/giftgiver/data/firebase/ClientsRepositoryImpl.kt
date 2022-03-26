@@ -78,12 +78,12 @@ class ClientsRepositoryImpl(
 
     fun updateCart(vkId: Long, gifts: List<Gift>) {
         val giftsFB = gifts.map { fbMapper.mapGiftToFB(it) }
-        clients.document(vkId.toString()).update("${FieldPath.of(GIFTS)}", giftsFB)
+        clients.document(vkId.toString()).update("${FieldPath.of(CART,GIFTS)}", giftsFB)
     }
 
     fun updateCalendar(vkId: Long, events: List<Event>) {
         val eventsFB = events.map { fbMapper.mapEventToFB(it) }
-        clients.document("$vkId").update("${FieldPath.of(EVENTS)}", eventsFB)
+        clients.document("$vkId").update("${FieldPath.of(CALENDAR, EVENTS)}", eventsFB)
     }
 
     fun updateFavFriends(vkId: Long, friends: List<Client>) {

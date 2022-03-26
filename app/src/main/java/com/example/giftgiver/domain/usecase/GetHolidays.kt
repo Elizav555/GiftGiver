@@ -11,7 +11,7 @@ class GetHolidays(
     private val holidayRepository: HolidayRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 ) {
-    suspend operator fun invoke(year: String?): List<Event> {
+    suspend operator fun invoke(year: String?): List<Event>? {
         val curYear = year ?: Calendar.getInstance().get(Calendar.YEAR).toString()
         return withContext(dispatcher) {
             holidayRepository.getHolidays(curYear)

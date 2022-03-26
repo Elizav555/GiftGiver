@@ -6,6 +6,7 @@ import com.example.giftgiver.domain.entities.*
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 
 class FBMapper {
     private val clients = ClientsRepositoryImpl(this)
@@ -37,7 +38,8 @@ class FBMapper {
     )
 
     fun mapEventToFB(event: Event): EventFB =
-        EventFB(name = event.name, date = event.date, desc = event.desc)
+        EventFB(date = event.date.time, desc = event.desc)
+
 
     fun mapGiftToFB(gift: Gift): GiftFB = GiftFB(
         name = gift.name,
@@ -48,8 +50,11 @@ class FBMapper {
         isChosen = gift.isChosen
     )
 
-    private fun mapEventFromFB(event: EventFB): Event =
-        Event(name = event.name, date = event.date, desc = event.desc)
+    private fun mapEventFromFB(event: EventFB): Event {
+        val calendar = Calendar.getInstance()
+        calendar.time = event.date
+        return Event(date = calendar, desc = event.desc)
+    }
 
     private fun mapGiftFromFB(gift: GiftFB): Gift = Gift(
         name = gift.name,
@@ -75,7 +80,8 @@ class FBMapper {
         }
         val client = Client(clientFB.vkId, info = info)
         client.wishlists = clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
-        client.calendar.events = clientFB.calendar.events.map { mapEventFromFB(it) }
+        client.calendar.events =
+            clientFB.calendar.events.map { mapEventFromFB(it) } as MutableList<Event>
         client.cart.gifts = clientFB.cart.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>
         val favFriendsFB =
             clientFB.favFriendsIds.map {

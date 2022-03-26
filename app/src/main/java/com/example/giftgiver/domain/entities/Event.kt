@@ -6,7 +6,6 @@ import java.util.Calendar
 
 @Parcelize
 data class Event(
-    val name: String,
     val date: Calendar,
-    val desc: String?,
+    val desc: String? = "",
 ) : Parcelable
