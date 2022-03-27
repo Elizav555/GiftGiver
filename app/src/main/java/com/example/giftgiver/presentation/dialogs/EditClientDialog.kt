@@ -1,4 +1,4 @@
-package com.example.giftgiver.presentation.fragments
+package com.example.giftgiver.presentation.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -11,13 +11,16 @@ import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import coil.api.load
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogEditClientBinding
+import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.presentation.ImageViewModel
+import com.example.giftgiver.presentation.fragments.AccountFragment
 import java.io.File
 
-class EditClientDialog() : DialogFragment() {
+class EditClientDialog(private val client: Client) : DialogFragment() {
     private lateinit var binding: DialogEditClientBinding
     private var cameraImageFile: File? = null
     private val viewModel by viewModels<ImageViewModel>()
@@ -40,6 +43,10 @@ class EditClientDialog() : DialogFragment() {
         binding = DialogEditClientBinding.inflate(layoutInflater)
         binding.btnCamera.setOnClickListener { openCamera() }
         binding.btnGallery.setOnClickListener { openGallery() }
+        binding.etName.setText(client.info.name)
+        binding.etInfo.setText(client.info.about)
+        binding.etBirth.setText(client.info.bdate)
+        binding.ivImage.load(client.info.photo)
         viewModel.imageBitmapLiveData.observe(this) {
             binding.ivImage.setImageBitmap(it)
         }

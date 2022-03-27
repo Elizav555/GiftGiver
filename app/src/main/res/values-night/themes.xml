@@ -1,16 +1,40 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GiftGiver" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.GiftGiver" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/primary_text</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryVariant">@color/primary_light</item>
+        <item name="colorOnSecondary">@color/secondary_text</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="appBarLayoutStyle">@style/MyActionBarTheme</item>
+    </style>
+
+    <style name="MyActionBarTheme" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/primary_light</item>
+        <item name="titleTextColor">@color/primary_text</item>
+        <item name="titleCentered">true</item>
+    </style>
+
+    <style name="BottomNavigationStyle">
+        <item name="itemBackground">@color/primary_light</item>
+        <item name="labelVisibilityMode">selected</item>
+        <item name="itemIconTint">@drawable/nav_color_state</item>
+        <item name="itemIconSize">35dp</item>
+        <item name="itemTextColor">@color/accent</item>
+        <item name="labelBehavior">floating</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ThemeOverlay.GiftGiver.FloatingActionButton" parent="ThemeOverlay.Material3.FloatingActionButton.Primary">
+        <item name="colorOnSecondary">@color/icons</item>
     </style>
 </resources>

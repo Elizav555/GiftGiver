@@ -16,11 +16,9 @@
     <string name="filter">Filter</string>
     <string name="edit">Edit</string>
     <string name="delete_all">Delete All</string>
-    <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="wishlist">Wishlist</string>
     <string name="gift">Gift</string>
-    <string name="name">Name</string>
     <string name="image_link">Image Link</string>
     <string name="description">Description</string>
     <string name="enter_wishlist_s_name">Enter Wishlist\'s name</string>
@@ -33,6 +31,17 @@
     <string name="change_image">Change image</string>
     <string name="goBack">Go Back</string>
     <string name="save">Save</string>
+    <string name="deleteEventsTitle">Delete all events you added?</string>
+    <string name="deleteEventsMessage">All friends\' bdays and holidays will stay</string>
+    <string name="add">Add</string>
+    <string name="name">Name</string>
+    <string name="enter_event_desc">Enter event desc</string>
+    <string name="info">Info</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="pick_from_gallery">Pick from gallery</string>
+    <string name="take_picture">Take picture</string>
+    <string name="ups_friends_list_is_empty">Ups, friends list is empty</string>
+    <string name="for_someone">For someone</string>
 
     <string name="material_calendar_monday">M</string>
     <string name="material_calendar_tuesday">T</string>
@@ -60,6 +69,4 @@
     <string name="material_calendar_today_button">Today</string>
     <string name="material_calendar_positive_button">OK</string>
     <string name="material_calendar_negative_button">Cancel</string>
-    <string name="deleteEventsTitle">Delete all events you added?</string>
-    <string name="deleteEventsMessage">All friends\' bdays and holidays will stay</string>
 </resources>

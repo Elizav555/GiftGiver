@@ -70,7 +70,7 @@
     </navigation>
     <dialog
         android:id="@+id/addWishlistDialogFragment"
-        android:name="com.example.giftgiver.presentation.fragments.AddWishlistDialog"
+        android:name="com.example.giftgiver.presentation.dialogs.AddWishlistDialog"
         android:label="dialog_add_wishlist"
         tools:layout="@layout/dialog_add_wishlist" />
     <fragment

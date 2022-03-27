@@ -17,6 +17,8 @@ import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.MainActivity
+import com.example.giftgiver.presentation.dialogs.AddGiftDialog
+import com.example.giftgiver.presentation.dialogs.ChangeWishlistDialog
 import com.example.giftgiver.presentation.gift.GiftAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.SwipeToDeleteCallback

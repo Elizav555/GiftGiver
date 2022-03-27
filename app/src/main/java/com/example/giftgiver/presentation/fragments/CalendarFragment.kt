@@ -16,6 +16,7 @@ import com.example.giftgiver.databinding.FragmentCalendarBinding
 import com.example.giftgiver.di.DIContainer
 import com.example.giftgiver.domain.entities.Event
 import com.example.giftgiver.domain.usecase.GetHolidays
+import com.example.giftgiver.presentation.dialogs.AddEventDialog
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.FriendsState
 import kotlinx.coroutines.Dispatchers

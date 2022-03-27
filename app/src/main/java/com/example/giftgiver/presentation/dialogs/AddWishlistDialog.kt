@@ -1,4 +1,4 @@
-package com.example.giftgiver.presentation.fragments
+package com.example.giftgiver.presentation.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -7,8 +7,10 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogAddWishlistBinding
+import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.presentation.fragments.AccountFragment
 
-class ChangeWishlistDialog : DialogFragment() {
+class AddWishlistDialog : DialogFragment() {
     private lateinit var binding: DialogAddWishlistBinding
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogAddWishlistBinding.inflate(layoutInflater)
@@ -16,9 +18,12 @@ class ChangeWishlistDialog : DialogFragment() {
         with(binding) {
             return activity?.let {
                 val dialog = AlertDialog.Builder(it).setView(root)
-                    .setPositiveButton("Change name") { _, _ ->
-                        (parentFragment as WishlistFragment).changeWishlistName(
-                            etName.text.toString()
+                    .setPositiveButton(R.string.add) { _, _ ->
+                        (parentFragment as AccountFragment).addWishlist(
+                            Wishlist(
+                                etName.text.toString(),
+                                mutableListOf()
+                            )
                         )
                     }
                     .setNegativeButton(

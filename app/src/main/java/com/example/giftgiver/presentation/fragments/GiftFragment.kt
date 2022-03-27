@@ -15,6 +15,7 @@ import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.presentation.ImageViewModel
 import com.example.giftgiver.presentation.MainActivity
+import com.example.giftgiver.presentation.dialogs.AddGiftDialog
 import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
 import java.io.File

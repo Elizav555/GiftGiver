@@ -1,4 +1,4 @@
-package com.example.giftgiver.presentation.fragments
+package com.example.giftgiver.presentation.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog

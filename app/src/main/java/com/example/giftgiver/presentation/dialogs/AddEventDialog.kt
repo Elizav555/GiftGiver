@@ -1,4 +1,4 @@
-package com.example.giftgiver.presentation.fragments
+package com.example.giftgiver.presentation.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogAddEventBinding
 import com.example.giftgiver.domain.entities.Event
+import com.example.giftgiver.presentation.fragments.CalendarFragment
 import java.util.*
 
 class AddEventDialog : DialogFragment() {

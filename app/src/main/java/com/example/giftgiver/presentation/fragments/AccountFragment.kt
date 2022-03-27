@@ -15,6 +15,8 @@ import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.presentation.dialogs.AddWishlistDialog
+import com.example.giftgiver.presentation.dialogs.EditClientDialog
 import com.example.giftgiver.presentation.wishlist.WishlistAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
@@ -56,7 +58,7 @@ class AccountFragment : Fragment() {
     }
 
     private fun enterEditMode() {
-        EditClientDialog().show(childFragmentManager, "dialog")
+        ClientState.client?.let { EditClientDialog(it).show(childFragmentManager, "dialog") }
     }
 
     private fun bindAll(curClient: Client) {
