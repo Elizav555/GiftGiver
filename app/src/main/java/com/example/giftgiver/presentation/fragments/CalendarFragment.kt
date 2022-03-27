@@ -96,7 +96,7 @@ class CalendarFragment : Fragment() {
             holidays = getHolidaysUseCase(curYear.toString()) as MutableList<Event>
             val dateMapper = DateMapper()
             FriendsState.friends.forEach { friend ->
-                if (!friend.bdate.isNullOrBlank())
+                if (!friend.bdate.isNullOrBlank()) {
                     friend.bdate?.let {
                         val calendar = dateMapper.parseStringToCalendar(it)
                         calendar.set(Calendar.YEAR, curYear)
@@ -107,6 +107,7 @@ class CalendarFragment : Fragment() {
                             )
                         )
                     }
+                }
             }
             bindCalendar()
             client?.let { client ->
