@@ -1,5 +1,6 @@
 package com.example.giftgiver.presentation.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -39,9 +40,8 @@ class CalendarFragment : Fragment() {
         return binding.root
     }
 
-    //todo удалять events?
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_add, menu)
+        inflater.inflate(R.menu.menu_calendar, menu)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +59,27 @@ class CalendarFragment : Fragment() {
                 enterEditMode()
                 true
             }
+            R.id.delete -> {
+                showDeleteDialog()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showDeleteDialog() {
+        activity?.let {
+            val dialog = AlertDialog.Builder(it)
+                .setTitle(getString(R.string.deleteEventsTitle))
+                .setMessage(getString(R.string.deleteEventsMessage))
+                .setPositiveButton(R.string.delete_all) { _, _ ->
+                    deleteClientsEvents()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog?.cancel()
+                }
+                .create()
+            dialog.show()
         }
     }
 
@@ -72,18 +92,21 @@ class CalendarFragment : Fragment() {
                 ),
                 dispatcher = Dispatchers.Default
             )
-            val curYear = Calendar.getInstance().get(Calendar.YEAR).toString()
-            holidays = getHolidaysUseCase(curYear) as MutableList<Event>
+            val curYear = Calendar.getInstance().get(Calendar.YEAR)
+            holidays = getHolidaysUseCase(curYear.toString()) as MutableList<Event>
             val dateMapper = DateMapper()
             FriendsState.friends.forEach { friend ->
-                friend.bdate?.let {
-                    holidays.add(
-                        Event(
-                            dateMapper.parseStringToCalendar(it),
-                            getString(R.string.friend_bday, friend.name)
+                if (!friend.bdate.isNullOrBlank())
+                    friend.bdate?.let {
+                        val calendar = dateMapper.parseStringToCalendar(it)
+                        calendar.set(Calendar.YEAR, curYear)
+                        holidays.add(
+                            Event(
+                                calendar,
+                                getString(R.string.friend_bday, friend.name)
+                            )
                         )
-                    )
-                }
+                    }
             }
             bindCalendar()
             client?.let { client ->
@@ -105,7 +128,7 @@ class CalendarFragment : Fragment() {
         calendar.setOnDayClickListener { event ->
             tvDate.text = dateFormat.format(event.calendar.time)
             val eventsDesc =
-                holidays.filter { it.date == event.calendar }.map { it.desc }.joinToString(", ")
+                holidays.filter { it.date == event.calendar }.map { it.desc }.joinToString("\n")
             tvDescription.text = eventsDesc
         }
     }
@@ -119,5 +142,10 @@ class CalendarFragment : Fragment() {
         clients.updateCalendar(client.vkId, holidays)
         ClientState.client?.calendar?.events = holidays
         bindCalendar()
+    }
+
+    private fun deleteClientsEvents() {
+        holidays.clear()
+        getDefaultHolidays()
     }
 }

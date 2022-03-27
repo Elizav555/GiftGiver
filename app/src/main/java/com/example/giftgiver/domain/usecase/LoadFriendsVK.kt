@@ -30,7 +30,7 @@ class LoadFriendsVK(
 
     suspend fun loadFriends(vkId: Long): List<UserInfo> {
         val friendsVK = loadAllFriends(vkId)
-//        return friendsVK.sortedBy { user -> user.name }
+  //      return friendsVK.sortedBy { user -> user.name }
         return friendsVK.filter { friend -> clientsRep.getClientByVkId(friend.vkId) != null }
             .sortedByDescending { user -> user.name }
     }

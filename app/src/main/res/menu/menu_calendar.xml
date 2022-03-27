@@ -6,4 +6,10 @@
         android:icon="@drawable/ic_add_foreground"
         android:title="@string/add"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_delete_foreground"
+        android:title="@string/delete_all"
+        app:showAsAction="always" />
 </menu>

@@ -2,7 +2,6 @@
     <string name="app_name">GiftGiver</string>
     <string name="user_photo">User Photo</string>
     <integer name="com_vk_sdk_AppId">8087245</integer>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading_friends_list">Loading friends list</string>
     <string name="friends_list">Friends List</string>
     <string name="account">Account</string>
@@ -26,39 +25,41 @@
     <string name="description">Description</string>
     <string name="enter_wishlist_s_name">Enter Wishlist\'s name</string>
     <string name="logout">Logout</string>
-    <string name="log_in_using_vk">Log in using Vk</string>
+    <string name="log_in_using_vk">Log in using VK</string>
     <string name="friend_wishlist">%1$s\'s %2$s Wishlist</string>
     <string name="friend_bday">%1$s\'s bday</string>
     <string name="search">Search</string>
     <string name="add_delete_from_fav">Add/Delete from fav</string>
     <string name="change_image">Change image</string>
-    <string name="goback">GoBack</string>
+    <string name="goBack">Go Back</string>
     <string name="save">Save</string>
 
-    <string name="material_calendar_monday">П</string>
-    <string name="material_calendar_tuesday">В</string>
-    <string name="material_calendar_wednesday">С</string>
-    <string name="material_calendar_thursday">Ч</string>
-    <string name="material_calendar_friday">П</string>
-    <string name="material_calendar_saturday">С</string>
-    <string name="material_calendar_sunday">В</string>
+    <string name="material_calendar_monday">M</string>
+    <string name="material_calendar_tuesday">T</string>
+    <string name="material_calendar_wednesday">W</string>
+    <string name="material_calendar_thursday">T</string>
+    <string name="material_calendar_friday">F</string>
+    <string name="material_calendar_saturday">S</string>
+    <string name="material_calendar_sunday">S</string>
 
     <array name="material_calendar_months_array">
-        <item>Январь</item>
-        <item>Февраль</item>
-        <item>Март</item>
-        <item>Апрель</item>
-        <item>Май</item>
-        <item>Июнь</item>
-        <item>Июль</item>
-        <item>Август</item>
-        <item>Сентябрь</item>
-        <item>Октябрь</item>
-        <item>Ноябрь</item>
-        <item>Декабрь</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </array>
 
-    <string name="material_calendar_today_button">Сегодня</string>
+    <string name="material_calendar_today_button">Today</string>
     <string name="material_calendar_positive_button">OK</string>
-    <string name="material_calendar_negative_button">Отмена</string>
+    <string name="material_calendar_negative_button">Cancel</string>
+    <string name="deleteEventsTitle">Delete all events you added?</string>
+    <string name="deleteEventsMessage">All friends\' bdays and holidays will stay</string>
 </resources>

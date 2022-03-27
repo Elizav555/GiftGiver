@@ -14,7 +14,7 @@ class VKFriendsRequest(id: Long?) : VKRequest<List<UserInfo>>("friends.get") {
             addParam("user_id", id)
         }
         addParam("lang", 0)
-        addParam("fields", "photo_100")
+        addParam("fields", "bdate,photo_100")
     }
 
     override fun parse(r: JSONObject): List<UserInfo> {

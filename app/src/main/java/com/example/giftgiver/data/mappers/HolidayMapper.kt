@@ -9,7 +9,7 @@ class HolidayMapper {
         return holidays.map { holiday ->
             Event(
                 date = dateMapper.parseStringToCalendar(holiday.date),
-                desc = holiday.localName
+                desc = holiday.name //change to localName if want Russian
             )
         }
     }
