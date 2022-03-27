@@ -25,7 +25,6 @@
         <item name="itemBackground">@color/white</item>
         <item name="labelVisibilityMode">selected</item>
         <item name="itemIconTint">@drawable/nav_color_state</item>
-        <item name="itemIconSize">35dp</item>
         <item name="itemTextColor">@color/accent</item>
         <item name="labelBehavior">floating</item>
     </style>
