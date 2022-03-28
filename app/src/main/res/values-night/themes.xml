@@ -16,7 +16,7 @@
     </style>
 
     <style name="MyActionBarTheme" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/primary_light</item>
+        <item name="android:backgroundTint">@color/primary_light</item>
         <item name="titleTextColor">@color/primary_text</item>
         <item name="titleCentered">true</item>
     </style>
@@ -35,5 +35,11 @@
 
     <style name="ThemeOverlay.GiftGiver.FloatingActionButton" parent="ThemeOverlay.Material3.FloatingActionButton.Primary">
         <item name="colorOnSecondary">@color/icons</item>
+    </style>
+
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:backgroundTint">@color/inputsBack</item>
     </style>
 </resources>

@@ -70,7 +70,7 @@ class CalendarFragment : Fragment() {
 
     private fun showDeleteDialog() {
         activity?.let {
-            val dialog = AlertDialog.Builder(it)
+            val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
                 .setTitle(getString(R.string.deleteEventsTitle))
                 .setMessage(getString(R.string.deleteEventsMessage))
                 .setPositiveButton(R.string.delete_all) { _, _ ->

@@ -57,7 +57,7 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
         //todo validate birthdate mb change input
         with(binding) {
             return activity?.let {
-                val dialog = AlertDialog.Builder(it).setView(root)
+                val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton(getString(R.string.save)) { _, _ ->
                         (parentFragment as? AccountFragment)?.updateInfo(
                             etName.text.toString(),

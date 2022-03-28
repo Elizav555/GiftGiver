@@ -36,4 +36,9 @@
     <style name="ThemeOverlay.GiftGiver.FloatingActionButton" parent="ThemeOverlay.Material3.FloatingActionButton.Primary">
         <item name="colorOnSecondary">@color/black</item>
     </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:backgroundTint">@color/inputsBack</item>
+    </style>
 </resources>

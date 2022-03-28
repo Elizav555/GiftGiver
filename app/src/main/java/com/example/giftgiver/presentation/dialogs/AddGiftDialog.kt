@@ -49,7 +49,7 @@ class AddGiftDialog(private val submitAction: (String, String, File?) -> Unit?) 
         }
         with(binding) {
             return activity?.let {
-                val dialog = AlertDialog.Builder(it).setView(root)
+                val dialog = AlertDialog.Builder(it,R.style.MyDialogTheme).setView(root)
                     .setPositiveButton(getString(R.string.save)) { _, _ ->
                         submitAction(etName.text.toString(), etDesc.text.toString(), imageFile)
                     }

@@ -55,7 +55,7 @@ class WishlistFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.add -> {
+            R.id.edit -> {
                 enterEditMode()
                 true
             }
