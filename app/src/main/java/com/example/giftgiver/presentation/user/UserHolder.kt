@@ -7,7 +7,7 @@ import com.example.giftgiver.domain.entities.UserInfo
 
 class UserHolder(
     private val binding: ItemUserBinding,
-    private val action: (position: Int) -> Unit
+    private val action: (id: Long) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(user: UserInfo) {
@@ -15,7 +15,7 @@ class UserHolder(
             tvUserName.text = user.name
             ivUserPhoto.load(user.photo)
             root.setOnClickListener {
-                action(adapterPosition)
+                action(user.vkId)
             }
         }
     }

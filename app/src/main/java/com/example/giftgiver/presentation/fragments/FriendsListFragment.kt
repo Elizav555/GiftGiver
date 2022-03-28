@@ -103,8 +103,8 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     }
 
     private fun init() {
-        val goToProfile = { position: Int ->
-            navigateToProfile(friends[position].vkId)
+        val goToProfile = { id: Long ->
+            navigateToProfile(id)
         }
         userAdapter = UserAdapter(goToProfile, friends)
         with(binding.recyclerView) {

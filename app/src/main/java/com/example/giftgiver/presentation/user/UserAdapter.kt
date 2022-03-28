@@ -9,7 +9,7 @@ import com.example.giftgiver.databinding.ItemUserBinding
 import com.example.giftgiver.domain.entities.UserInfo
 
 class UserAdapter(
-    private val action: (position: Int) -> Unit,
+    private val action: (id: Long) -> Unit,
     private val friends: List<UserInfo>,
 ) : ListAdapter<UserInfo, UserHolder>(UserDiffItemCallback()), Filterable {
 
