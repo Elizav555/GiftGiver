@@ -24,7 +24,7 @@
     <string name="enter_wishlist_s_name">Enter Wishlist\'s name</string>
     <string name="logout">Logout</string>
     <string name="log_in_using_vk">Log in using VK</string>
-    <string name="friend_wishlist">%1$s\'s %2$s Wishlist</string>
+    <string name="friend_wishlist">%1$s\'s %2$s</string>
     <string name="friend_bday">%1$s\'s bday</string>
     <string name="search">Search</string>
     <string name="add_delete_from_fav">Add/Delete from fav</string>
@@ -69,4 +69,6 @@
     <string name="material_calendar_today_button">Today</string>
     <string name="material_calendar_positive_button">OK</string>
     <string name="material_calendar_negative_button">Cancel</string>
+    <string name="gift_image">Gift image</string>
+    <string name="for_gift">For :</string>
 </resources>

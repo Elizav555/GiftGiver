@@ -1,7 +1,9 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -75,6 +77,9 @@ class GiftFragment : Fragment() {
 
     private fun bindInfo(gift: Gift) {
         with(binding) {
+            groupFor.isVisible = !isClient
+            tvForName.text = gift.forName
+            tvDesc.movementMethod = ScrollingMovementMethod()
             setHasOptionsMenu(isClient)
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc

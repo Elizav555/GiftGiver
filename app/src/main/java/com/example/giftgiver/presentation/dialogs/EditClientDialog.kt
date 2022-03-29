@@ -19,8 +19,16 @@ import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.presentation.ImageViewModel
 import com.example.giftgiver.presentation.fragments.AccountFragment
 import java.io.File
+import java.text.DateFormat
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EditClientDialog(private val client: Client) : DialogFragment() {
+    private val dateRegex =
+        Regex("^(1[0-9]|0[1-9]|3[0-1]|2[1-9]|[1-9]).(0[1-9]|1[0-2]|[1-9]).[0-9]{4}$")
+    private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val todayDate = Calendar.getInstance()
     private lateinit var binding: DialogEditClientBinding
     private var cameraImageFile: File? = null
     private val viewModel by viewModels<ImageViewModel>()
@@ -54,7 +62,6 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
             Log.d("ImageFile", it?.absolutePath.toString())
             imageFile = it
         }
-        //todo validate birthdate mb change input
         with(binding) {
             return activity?.let {
                 val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
@@ -91,7 +98,24 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
     private fun checkInputs(dialog: AlertDialog) {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = with(binding) {
             etName.text.toString().isNotBlank() && etInfo.text.toString()
-                .isNotBlank() && etBirth.text.toString().isNotBlank()
+                .isNotBlank() && validateBirthDate(etBirth.text.toString())
+        }
+    }
+
+    private fun validateBirthDate(date: String): Boolean {
+        if (!date.matches(dateRegex))
+            return false;
+        return try {
+            val birthDate = dateFormat.parse(date)
+            if (birthDate.after(todayDate.time)) {
+                false
+            } else {
+                val birthCalendar = Calendar.getInstance()
+                birthCalendar.time = birthDate
+                todayDate.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR) <= 100
+            }
+        } catch (ex: ParseException) {
+            false
         }
     }
 

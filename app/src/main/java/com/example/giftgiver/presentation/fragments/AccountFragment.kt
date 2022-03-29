@@ -1,6 +1,7 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -71,6 +72,8 @@ class AccountFragment : Fragment() {
                 AddWishlistDialog()
                     .show(childFragmentManager, "dialog")
             }
+            tvInfo.movementMethod = ScrollingMovementMethod()
+            tvName.movementMethod = ScrollingMovementMethod()
             bindInfo()
             initWishlists(curClient.wishlists)
             progressBar.visibility = View.GONE

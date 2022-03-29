@@ -2,6 +2,7 @@ package com.example.giftgiver.presentation.fragments
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -125,12 +126,13 @@ class CalendarFragment : Fragment() {
                 R.color.accent
             )
         }
+        tvDescription.movementMethod = ScrollingMovementMethod()
         calendar.setEvents(eventDays)
         calendar.setHighlightedDays(eventDays.map { it.calendar })
         calendar.setOnDayClickListener { event ->
             tvDate.text = dateFormat.format(event.calendar.time)
             val eventsDesc =
-                holidays.filter { it.date == event.calendar }.map { it.desc }.joinToString("\n")
+                holidays.filter { it.date == event.calendar }.map { it.desc }.joinToString(",\n")
             tvDescription.text = eventsDesc
         }
     }

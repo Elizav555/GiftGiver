@@ -6,66 +6,75 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragments.GiftFragment">
     <!--todo think about info fields and make them scrollable if necessary -->
-    <TextView
-        android:id="@+id/tv_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/info"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_imp_info" />
 
     <TextView
-        android:id="@+id/tv_imp_info"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_forName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/info"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_most_imp_info" />
-
-    <TextView
-        android:id="@+id/tv_most_imp_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/info"
+        android:text="@string/name"
+        android:textAlignment="textEnd"
         android:textColor="@color/primary_text"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toEndOf="@+id/iv_photo"
+        app:layout_constraintTop_toBottomOf="@+id/tv_for" />
 
     <ImageView
         android:id="@+id/iv_photo"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:contentDescription="@string/gift_image"
+        app:layout_constraintEnd_toStartOf="@+id/tv_for"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_for"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="120dp"
+        android:text="@string/for_gift"
+        android:textAlignment="textStart"
+        android:textColor="@color/primary_text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/iv_photo"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_desc"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
         android:text="@string/description"
+        android:textColor="@color/primary_text"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_photo" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_for"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_for,tv_forName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

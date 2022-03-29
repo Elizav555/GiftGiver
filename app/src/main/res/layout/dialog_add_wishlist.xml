@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/inputsBack"
             android:hint="@string/enter_wishlist_s_name"
+            android:maxLines="5"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,6 +34,8 @@
             android:id="@+id/et_event_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_event_desc" />
+            android:hint="@string/enter_event_desc"
+            android:maxLines="3"
+            android:scrollbars="vertical" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

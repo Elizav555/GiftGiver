@@ -1,6 +1,7 @@
 package com.example.giftgiver.presentation.fragments
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -101,6 +102,8 @@ class UserFragment : Fragment() {
             ivAvatar.load(info.photo)
             tvBirthdate.text = info.bdate
             tvInfo.text = info.about
+            tvInfo.movementMethod = ScrollingMovementMethod()
+            tvName.movementMethod = ScrollingMovementMethod()
             tvName.text = info.name
             progressBar.visibility = View.GONE
             views.visibility = View.VISIBLE
