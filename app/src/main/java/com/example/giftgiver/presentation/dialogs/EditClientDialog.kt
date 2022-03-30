@@ -10,19 +10,22 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import coil.api.load
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogEditClientBinding
 import com.example.giftgiver.domain.entities.Client
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.ImageViewModel
+import com.example.giftgiver.presentation.ViewModelFactory
 import com.example.giftgiver.presentation.fragments.AccountFragment
 import java.io.File
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class EditClientDialog(private val client: Client) : DialogFragment() {
     private val dateRegex =
@@ -31,23 +34,31 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
     private val todayDate = Calendar.getInstance()
     private lateinit var binding: DialogEditClientBinding
     private var cameraImageFile: File? = null
-    private val viewModel by viewModels<ImageViewModel>()
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var imageViewModel: ImageViewModel
     private var imageFile: File? = null
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {
-            viewModel.onGalleryImagePicked(it)
+            imageViewModel.onGalleryImagePicked(it)
         }
     }
 
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
             cameraImageFile?.let { file ->
-                viewModel.onCameraImagePicked(file)
+                imageViewModel.onCameraImagePicked(file)
             }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        App.mainComponent.inject(this)
+        imageViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[ImageViewModel::class.java]
         binding = DialogEditClientBinding.inflate(layoutInflater)
         binding.btnCamera.setOnClickListener { openCamera() }
         binding.btnGallery.setOnClickListener { openGallery() }
@@ -55,10 +66,10 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
         binding.etInfo.setText(client.info.about)
         binding.etBirth.setText(client.info.bdate)
         binding.ivImage.load(client.info.photo)
-        viewModel.imageBitmapLiveData.observe(this) {
+        imageViewModel.imageBitmapLiveData.observe(this) {
             binding.ivImage.setImageBitmap(it)
         }
-        viewModel.imageFileLiveData.observe(this) {
+        imageViewModel.imageFileLiveData.observe(this) {
             Log.d("ImageFile", it?.absolutePath.toString())
             imageFile = it
         }

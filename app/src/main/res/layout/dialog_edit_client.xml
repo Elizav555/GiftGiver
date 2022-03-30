@@ -44,6 +44,7 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/til_info"
         app:layout_constraintStart_toStartOf="parent"

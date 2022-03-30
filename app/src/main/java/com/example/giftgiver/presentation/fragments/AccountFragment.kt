@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.firebase.ImageStorage
-import com.example.giftgiver.data.mappers.FBMapper
+import com.example.giftgiver.data.firebase.ImageStorageImpl
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.domain.usecase.UpdateClientsInfoUseCase
+import com.example.giftgiver.domain.usecase.UpdateWishlistUseCase
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.dialogs.AddWishlistDialog
 import com.example.giftgiver.presentation.dialogs.EditClientDialog
 import com.example.giftgiver.presentation.wishlist.WishlistAdapter
@@ -24,17 +25,24 @@ import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 class AccountFragment : Fragment() {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
-    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
+
+    @Inject
+    lateinit var updateWishlists: UpdateWishlistUseCase
+
+    @Inject
+    lateinit var updateInfo: UpdateClientsInfoUseCase
     private val client = ClientState.client
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        App.mainComponent.inject(this)
         binding = FragmentAccountBinding.inflate(inflater)
         return binding.root
     }
@@ -94,7 +102,7 @@ class AccountFragment : Fragment() {
         client?.let {
             it.wishlists.add(wishlist)
             lifecycleScope.launch {
-                clients.updateWishlists(it.vkId, it.wishlists)
+                updateWishlists(it.vkId, it.wishlists)
             }
             wishlistAdapter.submitList(it.wishlists)
         }
@@ -125,7 +133,7 @@ class AccountFragment : Fragment() {
         client?.let {
             it.wishlists.remove(wishlist)
             lifecycleScope.launch {
-                clients.updateWishlists(client.vkId, it.wishlists)
+                updateWishlists(client.vkId, it.wishlists)
             }
             wishlistAdapter.submitList(it.wishlists)
         }
@@ -146,12 +154,12 @@ class AccountFragment : Fragment() {
         client?.let {
             lifecycleScope.launch {
                 imageFile?.let { file ->
-                    it.info.photo = ImageStorage().addImage(file).toString()
+                    it.info.photo = ImageStorageImpl().addImage(file).toString()
                 }
                 it.info.name = newName
                 it.info.about = newInfo
                 it.info.bdate = newBirthDate
-                clients.updateInfo(it.vkId, it.info)
+                updateInfo(it.vkId, it.info)
                 ClientState.client = it
                 bindInfo()
             }

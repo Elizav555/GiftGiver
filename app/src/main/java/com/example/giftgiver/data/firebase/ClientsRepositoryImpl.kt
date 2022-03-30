@@ -31,11 +31,6 @@ class ClientsRepositoryImpl(
         val clientRef = clients.document(client.vkId.toString())
         val clientFB = fbMapper.mapClientToFB(client)
         clientRef.set(clientFB)
-//        clientFB.info?.let { clientRef.set(it) }
-//        clientFB.wishlists.forEach { clientRef.collection(WISHLISTS).add(it) }
-//        clientFB.favFriendsIds.forEach { clientRef.collection(FAV_FRIENDS).add(it) }
-//        clientRef.collection(CALENDAR).document(EVENTS).set(clientFB.calendar.events)
-//        clientRef.collection(CART).document(GIFTS).set(clientFB.cart.gifts)
     }
 
     override suspend fun deleteClient(client: Client) =
@@ -47,7 +42,7 @@ class ClientsRepositoryImpl(
         return clientFB?.let { fbMapper.mapClientFromFB(it) }
     }
 
-    private suspend fun getDataSnapshot(vkId: Long): DocumentSnapshot {
+    override suspend fun getDataSnapshot(vkId: Long): DocumentSnapshot {
         return suspendCoroutine { continuation ->
             clients.document(vkId.toString()).get().addOnSuccessListener {
                 continuation.resume(it)
@@ -61,7 +56,7 @@ class ClientsRepositoryImpl(
         clients.document(vkId.toString()).update(changes)
     }
 
-    fun updateInfo(vkId: Long, info: UserInfo) {
+    override suspend fun updateInfo(vkId: Long, info: UserInfo) {
         val infoFB = UserInfoFB(
             info.name,
             info.photo,
@@ -71,22 +66,22 @@ class ClientsRepositoryImpl(
         clients.document(vkId.toString()).update(INFO, infoFB)
     }
 
-    fun updateWishlists(vkId: Long, wishlists: List<Wishlist>) {
+    override suspend fun updateWishlists(vkId: Long, wishlists: List<Wishlist>) {
         val wishlistsFB = wishlists.map { fbMapper.mapWishlistToFB(it) }
         clients.document(vkId.toString()).update(WISHLISTS, wishlistsFB)
     }
 
-    fun updateCart(vkId: Long, gifts: List<Gift>) {
+    override suspend fun updateCart(vkId: Long, gifts: List<Gift>) {
         val giftsFB = gifts.map { fbMapper.mapGiftToFB(it) }
-        clients.document(vkId.toString()).update("${FieldPath.of(CART,GIFTS)}", giftsFB)
+        clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS)}", giftsFB)
     }
 
-    fun updateCalendar(vkId: Long, events: List<Event>) {
+    override suspend fun updateCalendar(vkId: Long, events: List<Event>) {
         val eventsFB = events.map { fbMapper.mapEventToFB(it) }
         clients.document("$vkId").update("${FieldPath.of(CALENDAR, EVENTS)}", eventsFB)
     }
 
-    fun updateFavFriends(vkId: Long, friends: List<Client>) {
+    override suspend fun updateFavFriends(vkId: Long, friends: List<Client>) {
         val friendsFB = friends.map { it.vkId }
         clients.document("$vkId").update(FAV_FRIENDS, friendsFB)
     }

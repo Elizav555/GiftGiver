@@ -16,7 +16,7 @@ class ChangeWishlistDialog : DialogFragment() {
 
         with(binding) {
             return activity?.let {
-                val dialog = AlertDialog.Builder(it,R.style.MyDialogTheme).setView(root)
+                val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton("Change name") { _, _ ->
                         (parentFragment as WishlistFragment).changeWishlistName(
                             etName.text.toString()

@@ -9,26 +9,35 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentStartBinding
 import com.example.giftgiver.domain.entities.Calendar
 import com.example.giftgiver.domain.entities.Cart
 import com.example.giftgiver.domain.entities.Client
+import com.example.giftgiver.domain.usecase.AddClientUseCase
+import com.example.giftgiver.domain.usecase.GetClientByVkId
 import com.example.giftgiver.domain.usecase.LoadFriendsVK
 import com.example.giftgiver.domain.usecase.LoadUserInfoVK
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.FriendsState
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class StartFragment : Fragment() {
     private lateinit var binding: FragmentStartBinding
-    private val clientsRep = ClientsRepositoryImpl(fbMapper = FBMapper())
-    private val scope = CoroutineScope(Job() + Dispatchers.Main)
+
+    @Inject
+    lateinit var getClientByVkId: GetClientByVkId
+
+    @Inject
+    lateinit var loadFriendsVK: LoadFriendsVK
+
+    @Inject
+    lateinit var addClient: AddClientUseCase
     private val activityLauncher =
         registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
             when (result) {
@@ -47,6 +56,7 @@ class StartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        App.mainComponent.inject(this)
         binding = FragmentStartBinding.inflate(inflater)
         return binding.root
     }
@@ -74,9 +84,7 @@ class StartFragment : Fragment() {
                         info = LoadUserInfoVK().loadInfo(vkId),
                         cart = Cart()
                     )
-                    clientsRep.addClient(
-                        client
-                    )
+                    addClient(client)
                     ClientState.client = client
                 }
             } else lifecycleScope.launch {
@@ -86,9 +94,7 @@ class StartFragment : Fragment() {
     }
 
     private suspend fun checkClient(vkId: Long) =
-        withContext(scope.coroutineContext) {
-            clientsRep.getClientByVkId(vkId)
-        }
+        getClientByVkId(vkId)
 
     private fun initVK() {
         if (VK.isLoggedIn()) {
@@ -106,7 +112,6 @@ class StartFragment : Fragment() {
     }
 
     private fun navigateToList() {
-        val loadFriendsVK = LoadFriendsVK(clientsRep)
         lifecycleScope.launch {
             binding.btnLogin.isVisible = false
             binding.progressBar.isVisible = true

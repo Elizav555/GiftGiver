@@ -6,11 +6,12 @@ import com.example.giftgiver.domain.entities.UserInfo
 import com.example.giftgiver.domain.repositories.ClientsRepository
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LoadFriendsVK(
+class LoadFriendsVK @Inject constructor(
     private val clientsRep: ClientsRepository
 ) {
     fun loadFriends(vkId: Long, successAction: (List<UserInfo>) -> Unit) {
@@ -30,7 +31,7 @@ class LoadFriendsVK(
 
     suspend fun loadFriends(vkId: Long): List<UserInfo> {
         val friendsVK = loadAllFriends(vkId)
-       return friendsVK.sortedBy { user -> user.name }//todo change back
+        return friendsVK.sortedBy { user -> user.name }//todo change back
 //        return friendsVK.filter { friend -> clientsRep.getClientByVkId(friend.vkId) != null }
 //            .sortedByDescending { user -> user.name }
     }

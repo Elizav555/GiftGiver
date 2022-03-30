@@ -18,7 +18,7 @@ class AddEventDialog : DialogFragment() {
 
         with(binding) {
             return activity?.let {
-                val dialog = AlertDialog.Builder(it,R.style.MyDialogTheme).setView(root)
+                val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton(R.string.add) { _, _ ->
                         (parentFragment as CalendarFragment).addEvent(
                             Event(

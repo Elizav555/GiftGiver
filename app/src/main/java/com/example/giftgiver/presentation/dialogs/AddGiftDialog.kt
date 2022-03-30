@@ -10,46 +10,57 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogAddGiftBinding
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.ImageViewModel
+import com.example.giftgiver.presentation.ViewModelFactory
 import java.io.File
+import javax.inject.Inject
 
 class AddGiftDialog(private val submitAction: (String, String, File?) -> Unit?) : DialogFragment() {
     private lateinit var binding: DialogAddGiftBinding
     private var cameraImageFile: File? = null
-    private val viewModel by viewModels<ImageViewModel>()
     private var imageFile: File? = null
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var imageViewModel: ImageViewModel
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {
-            viewModel.onGalleryImagePicked(it)
+            imageViewModel.onGalleryImagePicked(it)
         }
     }
 
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
             cameraImageFile?.let { file ->
-                viewModel.onCameraImagePicked(file)
+                imageViewModel.onCameraImagePicked(file)
             }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        App.mainComponent.inject(this)
+        imageViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[ImageViewModel::class.java]
         binding = DialogAddGiftBinding.inflate(layoutInflater)
         binding.btnCamera.setOnClickListener { openCamera() }
         binding.btnGallery.setOnClickListener { openGallery() }
-        viewModel.imageBitmapLiveData.observe(this) {
+        imageViewModel.imageBitmapLiveData.observe(this) {
             binding.ivImage.setImageBitmap(it)
         }
-        viewModel.imageFileLiveData.observe(this) {
+        imageViewModel.imageFileLiveData.observe(this) {
             Log.d("ImageFile", it?.absolutePath.toString())
             imageFile = it
         }
         with(binding) {
             return activity?.let {
-                val dialog = AlertDialog.Builder(it,R.style.MyDialogTheme).setView(root)
+                val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton(getString(R.string.save)) { _, _ ->
                         submitAction(etName.text.toString(), etDesc.text.toString(), imageFile)
                     }

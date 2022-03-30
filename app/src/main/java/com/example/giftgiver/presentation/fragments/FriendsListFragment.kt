@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.user.UserAdapter
 import com.example.giftgiver.utils.ClientState
@@ -30,6 +31,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        App.mainComponent.inject(this)
         binding = FragmentFriendsListBinding.inflate(inflater)
         return binding.root
     }

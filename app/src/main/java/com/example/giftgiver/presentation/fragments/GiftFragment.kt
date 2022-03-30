@@ -5,22 +5,24 @@ import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.firebase.ImageStorage
-import com.example.giftgiver.data.mappers.FBMapper
+import com.example.giftgiver.data.firebase.ImageStorageImpl
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.domain.entities.Gift
+import com.example.giftgiver.domain.usecase.UpdateWishlistUseCase
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.ImageViewModel
 import com.example.giftgiver.presentation.MainActivity
+import com.example.giftgiver.presentation.ViewModelFactory
 import com.example.giftgiver.presentation.dialogs.AddGiftDialog
 import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 class GiftFragment : Fragment() {
     private lateinit var binding: FragmentGiftBinding
@@ -29,13 +31,23 @@ class GiftFragment : Fragment() {
     private var giftIndex = 0
     private var gifts = mutableListOf<Gift>()
     private var isClient = false
-    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
-    private val viewModel by viewModels<ImageViewModel>()
+
+    @Inject
+    lateinit var updateWishlists: UpdateWishlistUseCase
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var imageViewModel: ImageViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        App.mainComponent.inject(this)
+        imageViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[ImageViewModel::class.java]
         binding = FragmentGiftBinding.inflate(inflater)
         return binding.root
     }
@@ -84,7 +96,7 @@ class GiftFragment : Fragment() {
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc
             ivPhoto.load(gift.imageUrl)
-            viewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
+            imageViewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
                 ivPhoto.setImageBitmap(it)
             }
         }
@@ -97,11 +109,11 @@ class GiftFragment : Fragment() {
         lifecycleScope.launch {
             val gift = client.wishlists[index].gifts[giftIndex]
             newImageFile?.let {
-                gift.imageUrl = ImageStorage().addImage(newImageFile).toString()
+                gift.imageUrl = ImageStorageImpl().addImage(newImageFile).toString()
             }
             client.wishlists[index].gifts[giftIndex] =
                 Gift(newName, gift.forId, gift.forName, newDesc, gift.imageUrl, gift.isChosen)
-            clients.updateWishlists(client.vkId, client.wishlists)
+            updateWishlists(client.vkId, client.wishlists)
             bindInfo(client.wishlists[index].gifts[giftIndex])
         }
     }
