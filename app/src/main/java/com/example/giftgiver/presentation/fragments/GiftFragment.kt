@@ -5,7 +5,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import coil.api.load
@@ -17,6 +17,7 @@ import com.example.giftgiver.domain.usecase.UpdateWishlistUseCase
 import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.ImageViewModel
 import com.example.giftgiver.presentation.MainActivity
+import com.example.giftgiver.presentation.ViewModelFactory
 import com.example.giftgiver.presentation.dialogs.AddGiftDialog
 import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
@@ -33,13 +34,20 @@ class GiftFragment : Fragment() {
 
     @Inject
     lateinit var updateWishlists: UpdateWishlistUseCase
-    private val viewModel by viewModels<ImageViewModel>()
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var imageViewModel: ImageViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         App.mainComponent.inject(this)
+        imageViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[ImageViewModel::class.java]
         binding = FragmentGiftBinding.inflate(inflater)
         return binding.root
     }
@@ -88,7 +96,7 @@ class GiftFragment : Fragment() {
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc
             ivPhoto.load(gift.imageUrl)
-            viewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
+            imageViewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
                 ivPhoto.setImageBitmap(it)
             }
         }

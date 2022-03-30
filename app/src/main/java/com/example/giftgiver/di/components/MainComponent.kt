@@ -2,6 +2,8 @@ package com.example.giftgiver.di.components
 
 import com.example.giftgiver.di.ActivityScope
 import com.example.giftgiver.presentation.MainActivity
+import com.example.giftgiver.presentation.dialogs.AddGiftDialog
+import com.example.giftgiver.presentation.dialogs.EditClientDialog
 import com.example.giftgiver.presentation.fragments.*
 import dagger.Component
 
@@ -20,4 +22,7 @@ interface MainComponent {
     fun inject(startFragment: StartFragment)
     fun inject(userFragment: UserFragment)
     fun inject(wishlistFragment: WishlistFragment)
+
+    fun inject(addGiftDialog: AddGiftDialog)
+    fun inject(editClientDialog: EditClientDialog)
 }
