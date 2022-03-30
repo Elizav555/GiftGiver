@@ -11,17 +11,19 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentFriendsWishlistBinding
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.Gift
 import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.domain.usecase.UpdateCartUseCase
+import com.example.giftgiver.domain.usecase.UpdateWishlistUseCase
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.gift.GiftAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class FriendsWishlistFragment : Fragment() {
     lateinit var binding: FragmentFriendsWishlistBinding
@@ -29,13 +31,19 @@ class FriendsWishlistFragment : Fragment() {
     private var giftAdapter: GiftAdapter by autoCleared()
     private var wishlistIndex = -1
     private var friend: Client? = null
-    private val clients = ClientsRepositoryImpl(FBMapper())
+
+    @Inject
+    lateinit var updateWishlists: UpdateWishlistUseCase
+
+    @Inject
+    lateinit var updateCart: UpdateCartUseCase
     private val client = ClientState.client
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        App.mainComponent.inject(this)
         binding = FragmentFriendsWishlistBinding.inflate(inflater)
         return binding.root
     }
@@ -91,8 +99,8 @@ class FriendsWishlistFragment : Fragment() {
         if (isChecked) client?.cart?.gifts?.add(gift)
         else client?.cart?.gifts?.remove(gift)
         lifecycleScope.launch {
-            clients.updateWishlists(friend.vkId, friend.wishlists)
-            client?.let { clients.updateCart(it.vkId, it.cart.gifts) }
+            updateWishlists(friend.vkId, friend.wishlists)
+            client?.let { updateCart(it.vkId, it.cart.gifts) }
         }
         giftAdapter.submitList(friend.wishlists[wishlistIndex].gifts)
     }

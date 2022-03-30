@@ -31,7 +31,7 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
     private val todayDate = Calendar.getInstance()
     private lateinit var binding: DialogEditClientBinding
     private var cameraImageFile: File? = null
-    private val viewModel by viewModels<ImageViewModel>()
+    private val viewModel by viewModels<ImageViewModel>()//todo inject with dagger2
     private var imageFile: File? = null
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {

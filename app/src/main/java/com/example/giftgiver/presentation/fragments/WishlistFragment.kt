@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.firebase.ImageStorage
-import com.example.giftgiver.data.mappers.FBMapper
+import com.example.giftgiver.data.firebase.ImageStorageImpl
 import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.domain.entities.Gift
+import com.example.giftgiver.domain.usecase.UpdateWishlistUseCase
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.dialogs.AddGiftDialog
 import com.example.giftgiver.presentation.dialogs.ChangeWishlistDialog
@@ -25,6 +25,7 @@ import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 class WishlistFragment : Fragment() {
     lateinit var binding: FragmentWishlistBinding
@@ -33,12 +34,15 @@ class WishlistFragment : Fragment() {
     private val client = ClientState.client
     private var index = 0
     private var defaultImageUri = ""
-    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
+
+    @Inject
+    lateinit var updateWishlists: UpdateWishlistUseCase
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        App.mainComponent.inject(this)
         binding = FragmentWishlistBinding.inflate(inflater)
         return binding.root
     }
@@ -46,7 +50,7 @@ class WishlistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindInfo()
-        lifecycleScope.launch { defaultImageUri = ImageStorage().getDefaultUrl().toString() }
+        lifecycleScope.launch { defaultImageUri = ImageStorageImpl().getDefaultUrl().toString() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -120,10 +124,10 @@ class WishlistFragment : Fragment() {
         val gift = Gift(newName, it.vkId, it.info.name, newDesc, defaultImageUri)
         lifecycleScope.launch {
             newImageFile?.let {
-                gift.imageUrl = ImageStorage().addImage(newImageFile).toString()
+                gift.imageUrl = ImageStorageImpl().addImage(newImageFile).toString()
             }
             it.wishlists[index].gifts.add(gift)
-            clients.updateWishlists(client.vkId, it.wishlists)
+            updateWishlists(client.vkId, it.wishlists)
             giftAdapter.submitList(it.wishlists[index].gifts)
         }
         return@let
@@ -132,7 +136,7 @@ class WishlistFragment : Fragment() {
     private fun deleteGift(gift: Gift) = client?.let {
         it.wishlists[index].gifts.remove(gift)
         lifecycleScope.launch {
-            clients.updateWishlists(client.vkId, it.wishlists)
+            updateWishlists(client.vkId, it.wishlists)
         }
         giftAdapter.submitList(it.wishlists[index].gifts)
     }
@@ -153,7 +157,7 @@ class WishlistFragment : Fragment() {
     fun changeWishlistName(newName: String) = client?.let {
         it.wishlists[index].name = newName
         lifecycleScope.launch {
-            clients.updateWishlists(client.vkId, it.wishlists)
+            updateWishlists(client.vkId, it.wishlists)
         }
         (activity as MainActivity).supportActionBar?.title = newName
     }

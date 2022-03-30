@@ -20,7 +20,7 @@ import java.io.File
 class AddGiftDialog(private val submitAction: (String, String, File?) -> Unit?) : DialogFragment() {
     private lateinit var binding: DialogAddGiftBinding
     private var cameraImageFile: File? = null
-    private val viewModel by viewModels<ImageViewModel>()
+    private val viewModel by viewModels<ImageViewModel>() //todo inject dagger2
     private var imageFile: File? = null
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {
@@ -49,7 +49,7 @@ class AddGiftDialog(private val submitAction: (String, String, File?) -> Unit?) 
         }
         with(binding) {
             return activity?.let {
-                val dialog = AlertDialog.Builder(it,R.style.MyDialogTheme).setView(root)
+                val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton(getString(R.string.save)) { _, _ ->
                         submitAction(etName.text.toString(), etDesc.text.toString(), imageFile)
                     }

@@ -12,17 +12,19 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentUserBinding
 import com.example.giftgiver.domain.entities.Client
 import com.example.giftgiver.domain.entities.UserInfo
 import com.example.giftgiver.domain.entities.Wishlist
+import com.example.giftgiver.domain.usecase.GetClientByVkId
+import com.example.giftgiver.domain.usecase.UpdateFavFriendsUseCase
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.MainActivity
 import com.example.giftgiver.presentation.wishlist.WishlistAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class UserFragment : Fragment() {
     private lateinit var binding: FragmentUserBinding
@@ -30,13 +32,19 @@ class UserFragment : Fragment() {
     private val args: UserFragmentArgs by navArgs()
     private var isFav = false
     private var friend: Client? = null
-    private val clients = ClientsRepositoryImpl(FBMapper())
+
+    @Inject
+    lateinit var getClientByVkId: GetClientByVkId
+
+    @Inject
+    lateinit var updateFavFriends: UpdateFavFriendsUseCase
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        App.mainComponent.inject(this)
         binding = FragmentUserBinding.inflate(inflater)
         return binding.root
     }
@@ -44,7 +52,7 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
-            friend = clients.getClientByVkId(args.vkId)
+            friend = getClientByVkId(args.vkId)
             friend?.let {
                 bindInfo(it.info)
                 initWishlists(it.wishlists)
@@ -61,12 +69,13 @@ class UserFragment : Fragment() {
     }
 
     private fun changeFavBtn(item: MenuItem) {
-        item.icon = if (isFav)
+        item.icon = if (isFav) {
             ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.ic_fav_filed,
                 null
-            ) else ResourcesCompat.getDrawable(
+            )
+        } else ResourcesCompat.getDrawable(
             resources,
             R.drawable.ic_fav_border,
             null
@@ -90,13 +99,12 @@ class UserFragment : Fragment() {
             friend?.let { friend -> it.favFriends.add(friend) }
         } else friend?.let { friend -> it.favFriends.remove(friend) }
         lifecycleScope.launch {
-            clients.updateFavFriends(it.vkId, it.favFriends)
+            updateFavFriends(it.vkId, it.favFriends)
         }
     }
 
     private fun bindInfo(info: UserInfo) {
-        with(binding)
-        {
+        with(binding) {
             setHasOptionsMenu(true)
             (activity as MainActivity).supportActionBar?.title = info.name
             ivAvatar.load(info.photo)

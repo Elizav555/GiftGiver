@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs'
     id 'com.google.gms.google-services'
+    id "kotlin-kapt"
 }
 
 android {
@@ -83,6 +84,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
     //for calendar
     implementation 'com.applandeo:material-calendar-view:1.7.0'
+    //dagger
+    def dagger = "2.41"
+    implementation "com.google.dagger:dagger:${dagger}"
+    kapt "com.google.dagger:dagger-compiler:${dagger}"
 }
 
 detekt {

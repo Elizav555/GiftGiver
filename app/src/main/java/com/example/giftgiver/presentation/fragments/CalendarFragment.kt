@@ -8,28 +8,30 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.applandeo.materialcalendarview.EventDay
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.holidaysApi.HolidayRepositoryImpl
 import com.example.giftgiver.data.mappers.DateMapper
-import com.example.giftgiver.data.mappers.FBMapper
-import com.example.giftgiver.data.mappers.HolidayMapper
 import com.example.giftgiver.databinding.FragmentCalendarBinding
-import com.example.giftgiver.di.DIContainer
 import com.example.giftgiver.domain.entities.Event
-import com.example.giftgiver.domain.usecase.GetHolidays
+import com.example.giftgiver.domain.usecase.GetHolidaysUseCase
+import com.example.giftgiver.domain.usecase.UpdateCalendarUseCase
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.dialogs.AddEventDialog
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.FriendsState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class CalendarFragment : Fragment() {
     private lateinit var binding: FragmentCalendarBinding
     private val client = ClientState.client
-    private val clients = ClientsRepositoryImpl(FBMapper())
+
+    @Inject
+    lateinit var getHolidaysUseCase: GetHolidaysUseCase
+
+    @Inject
+    lateinit var updateCalendar: UpdateCalendarUseCase
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     private var holidays = mutableListOf<Event>()
 
@@ -38,6 +40,7 @@ class CalendarFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        App.mainComponent.inject(this)
         binding = FragmentCalendarBinding.inflate(inflater)
         return binding.root
     }
@@ -87,13 +90,6 @@ class CalendarFragment : Fragment() {
 
     private fun getDefaultHolidays() {
         lifecycleScope.launch {
-            val getHolidaysUseCase = GetHolidays(
-                holidayRepository = HolidayRepositoryImpl(
-                    api = DIContainer().api,
-                    holidayMapper = HolidayMapper(),
-                ),
-                dispatcher = Dispatchers.Default
-            )
             val curYear = Calendar.getInstance().get(Calendar.YEAR)
             holidays = getHolidaysUseCase(curYear.toString()) as MutableList<Event>
             val dateMapper = DateMapper()
@@ -113,7 +109,7 @@ class CalendarFragment : Fragment() {
             }
             bindCalendar()
             client?.let { client ->
-                clients.updateCalendar(client.vkId, holidays)
+                updateCalendar(client.vkId, holidays)
                 ClientState.client?.calendar?.events = holidays
             }
         }
@@ -143,7 +139,7 @@ class CalendarFragment : Fragment() {
 
     fun addEvent(event: Event) = client?.let { client ->
         holidays.add(event)
-        clients.updateCalendar(client.vkId, holidays)
+        lifecycleScope.launch { updateCalendar(client.vkId, holidays) }
         ClientState.client?.calendar?.events = holidays
         bindCalendar()
     }

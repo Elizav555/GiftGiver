@@ -5,11 +5,12 @@ import com.example.giftgiver.data.vk.VKUserWithInfoRequest
 import com.example.giftgiver.domain.entities.UserInfo
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LoadUserInfoVK {
+class LoadUserInfoVK @Inject constructor() {
     fun loadInfo(vkId: Long, successAction: (UserInfo) -> Unit) {
         VK.execute(
             VKUserWithInfoRequest(vkId),

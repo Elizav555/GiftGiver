@@ -15,8 +15,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import javax.inject.Inject
 
-class ImageViewModel(application: Application) : AndroidViewModel(application) {
+class ImageViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
 
     private val _imageFileLiveData = MutableLiveData<File?>()
     val imageFileLiveData: LiveData<File?> = _imageFileLiveData

@@ -10,27 +10,35 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.R
-import com.example.giftgiver.data.firebase.ClientsRepositoryImpl
-import com.example.giftgiver.data.mappers.FBMapper
 import com.example.giftgiver.databinding.FragmentCartBinding
 import com.example.giftgiver.domain.entities.Gift
+import com.example.giftgiver.domain.usecase.GetClientByVkId
+import com.example.giftgiver.domain.usecase.UpdateCartUseCase
+import com.example.giftgiver.presentation.App
 import com.example.giftgiver.presentation.gift.GiftAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class CartFragment : Fragment() {
     private lateinit var binding: FragmentCartBinding
     private val client = ClientState.client
     private var giftAdapter: GiftAdapter by autoCleared()
-    private val clients = ClientsRepositoryImpl(fbMapper = FBMapper())
+
+    @Inject
+    lateinit var updateCart: UpdateCartUseCase
+
+    @Inject
+    lateinit var getClientByVkId: GetClientByVkId
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        App.mainComponent.inject(this)
         binding = FragmentCartBinding.inflate(inflater)
         return binding.root
     }
@@ -58,7 +66,7 @@ class CartFragment : Fragment() {
     private fun deleteAll() = client?.let {
         client.cart.gifts.clear()
         lifecycleScope.launch {
-            clients.updateCart(client.vkId, client.cart.gifts)
+            updateCart(client.vkId, client.cart.gifts)
         }
         giftAdapter.submitList(client.cart.gifts)
     }
@@ -92,12 +100,12 @@ class CartFragment : Fragment() {
     }
 
     private fun getClientByVkIdAsync(vkId: Long) =
-        lifecycleScope.async { clients.getClientByVkId(vkId) }
+        lifecycleScope.async { getClientByVkId(vkId) }
 
     private fun deleteGift(gift: Gift) = client?.let {
         client.cart.gifts.remove(gift)
         lifecycleScope.launch {
-            clients.updateCart(client.vkId, client.cart.gifts)
+            updateCart(client.vkId, client.cart.gifts)
         }
         giftAdapter.submitList(client.cart.gifts)
     }
