@@ -1,29 +1,36 @@
 package com.example.giftgiver.features.user.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
+import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
+import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.presentation.list.UserAdapter
-import com.example.giftgiver.utils.ClientState
-import com.example.giftgiver.utils.FriendsState
+import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
 import com.example.giftgiver.utils.autoCleared
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
     private var userAdapter: UserAdapter by autoCleared()
-    private var friends = FriendsState.friends
+    private var friends = listOf<UserInfo>()
+    private var isAdapterInited = false
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var friendsViewModel: FriendsViewModel
     private var isFav = false
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +39,10 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         App.mainComponent.inject(this)
+        friendsViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[FriendsViewModel::class.java]
         binding = FragmentFriendsListBinding.inflate(inflater)
         return binding.root
     }
@@ -41,7 +52,8 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         (activity as MainActivity).setBottomNavigationVisibility(View.VISIBLE)
         setHasOptionsMenu(true)
         (activity as MainActivity).supportActionBar?.show()
-        init()
+        initObservers()
+        friendsViewModel.getFriends()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -79,28 +91,19 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
 
     private fun filterFriends(item: MenuItem) {
         isFav = !isFav
+        friendsViewModel.filterFriends(isFav)
         if (isFav) {
             item.icon = ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.ic_fav_filed,
                 null
             )
-            val client = ClientState.client
-            client?.let {
-                friends =
-                    it.favFriends.map { friend -> friend.info }.sortedBy { friend -> friend.name }
-            }
-            updateList()
         } else {
             item.icon = ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.ic_fav_border,
                 null
             )
-            lifecycleScope.launch {
-                friends = FriendsState.friends
-                updateList()
-            }
         }
     }
 
@@ -124,6 +127,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     }
 
     private fun navigateToProfile(vkId: Long) {
+        isAdapterInited = false
         val action = FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(
             vkId
         )
@@ -133,5 +137,21 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private fun updateList() {
         binding.tvEmpty.isVisible = friends.isEmpty()
         userAdapter.submitList(friends)
+    }
+
+    private fun initObservers() {
+        friendsViewModel.friends.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = {
+                friends = it
+                if (isAdapterInited) {
+                    updateList()
+                } else {
+                    isAdapterInited = true
+                    init()
+                }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
+        }
     }
 }

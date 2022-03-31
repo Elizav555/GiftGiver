@@ -33,8 +33,8 @@ class UserViewModel @Inject constructor(
             if (isFav) {
                 clientFriend?.let { friend -> it.favFriends.add(friend) }
             } else clientFriend?.let { friend -> it.favFriends.remove(friend) }
-            updateFavFriends(client.vkId, client.favFriends)
-            ClientState.client?.favFriends = client.favFriends
+            updateFavFriends(client.vkId, it.favFriends)
+            ClientState.client?.favFriends = it.favFriends
         }
     }
 }
