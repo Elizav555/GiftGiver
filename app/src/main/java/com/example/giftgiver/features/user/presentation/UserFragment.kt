@@ -2,10 +2,11 @@ package com.example.giftgiver.features.user.presentation
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,16 +15,15 @@ import coil.api.load
 import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
+import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentUserBinding
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.user.domain.UserInfo
-import com.example.giftgiver.features.user.domain.useCases.UpdateFavFriendsUseCase
+import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class UserFragment : Fragment() {
@@ -34,10 +34,8 @@ class UserFragment : Fragment() {
     private var friend: Client? = null
 
     @Inject
-    lateinit var getClientByVkId: GetClientByVkId
-
-    @Inject
-    lateinit var updateFavFriends: UpdateFavFriendsUseCase
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var userViewModel: UserViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,19 +43,18 @@ class UserFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         App.mainComponent.inject(this)
+        userViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[UserViewModel::class.java]
         binding = FragmentUserBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
-            friend = getClientByVkId(args.vkId)
-            friend?.let {
-                bindInfo(it.info)
-                initWishlists(it.wishlists)
-            }
-        }
+        initObservers()
+        userViewModel.getFriend(args.vkId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -92,16 +89,10 @@ class UserFragment : Fragment() {
         }
     }
 
-    private fun onFavClick(item: MenuItem) = ClientState.client?.let {
+    private fun onFavClick(item: MenuItem) {
         isFav = !isFav
         changeFavBtn(item)
-        if (isFav) {
-            friend?.let { friend -> it.favFriends.add(friend) }
-        } else friend?.let { friend -> it.favFriends.remove(friend) }
-        lifecycleScope.launch {
-            updateFavFriends(it.vkId, it.favFriends)
-            ClientState.client?.favFriends = it.favFriends
-        }
+        userViewModel.updateFavFriends(isFav)
     }
 
     private fun bindInfo(info: UserInfo) {
@@ -144,6 +135,20 @@ class UserFragment : Fragment() {
                 it
             )
             findNavController().navigate(action)
+        }
+    }
+
+    private fun initObservers() {
+        userViewModel.friend.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = { client ->
+                friend = client
+                friend?.let {
+                    bindInfo(it.info)
+                    initWishlists(it.wishlists)
+                }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
         }
     }
 }

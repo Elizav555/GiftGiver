@@ -18,6 +18,8 @@ import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.gift.presentation.GiftViewModel
 import com.example.giftgiver.features.start.presentation.StartViewModel
 import com.example.giftgiver.features.user.domain.useCases.LoadFriendsVK
+import com.example.giftgiver.features.user.domain.useCases.UpdateFavFriendsUseCase
+import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
 import javax.inject.Inject
 
@@ -32,6 +34,7 @@ class ViewModelFactory @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val loadFriendsVK: LoadFriendsVK,
     private val addClient: AddClientUseCase,
+    private val updateFavFriends: UpdateFavFriendsUseCase
 ) : ViewModelProvider.Factory {
     val error = App.appComponent.getContext().getString(R.string.unknownViewModel)
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
@@ -53,6 +56,9 @@ class ViewModelFactory @Inject constructor(
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(StartViewModel::class.java) ->
                 StartViewModel(getClientByVkId, loadFriendsVK, addClient) as? T
+                    ?: throw IllegalArgumentException(error)
+            modelClass.isAssignableFrom(UserViewModel::class.java) ->
+                UserViewModel(getClientByVkId, updateFavFriends) as? T
                     ?: throw IllegalArgumentException(error)
             else ->
                 throw IllegalArgumentException(error)

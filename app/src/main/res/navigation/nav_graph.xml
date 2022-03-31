@@ -25,7 +25,6 @@
         <fragment
             android:id="@+id/user_fragment"
             android:name="com.example.giftgiver.features.user.presentation.UserFragment"
-            android:label="fragment_user"
             tools:layout="@layout/fragment_user">
             <argument
                 android:name="vkId"
@@ -37,7 +36,6 @@
         <fragment
             android:id="@+id/giftFragment"
             android:name="com.example.giftgiver.features.gift.presentation.GiftFragment"
-            android:label="fragment_gift"
             tools:layout="@layout/fragment_gift">
             <argument
                 android:name="giftIndex"
@@ -55,7 +53,6 @@
         <fragment
             android:id="@+id/friendsWishlistFragment"
             android:name="com.example.giftgiver.features.wishlist.presentation.fragments.FriendsWishlistFragment"
-            android:label="fragment_friends_wishlist"
             tools:layout="@layout/fragment_friends_wishlist">
             <argument
                 android:name="wishlistIndex"
@@ -76,7 +73,6 @@
     <fragment
         android:id="@+id/startFragment"
         android:name="com.example.giftgiver.features.start.presentation.StartFragment"
-        android:label="fragment_start"
         tools:layout="@layout/fragment_start">
         <action
             android:id="@+id/action_startFragment_to_friends"
@@ -100,7 +96,6 @@
         <fragment
             android:id="@+id/myWishlistFragment"
             android:name="com.example.giftgiver.features.wishlist.presentation.fragments.WishlistFragment"
-            android:label="fragment_my_wishlist"
             tools:layout="@layout/fragment_wishlist">
             <argument
                 android:name="wishlistIndex"
@@ -112,7 +107,6 @@
         <fragment
             android:id="@+id/myGiftFragment"
             android:name="com.example.giftgiver.features.gift.presentation.GiftFragment"
-            android:label="fragment_gift"
             tools:layout="@layout/fragment_gift">
             <argument
                 android:name="giftIndex"
@@ -142,7 +136,6 @@
         <fragment
             android:id="@+id/cartGiftFragment"
             android:name="com.example.giftgiver.features.gift.presentation.GiftFragment"
-            android:label="fragment_gift"
             tools:layout="@layout/fragment_gift">
             <argument
                 android:name="giftIndex"
