@@ -2,40 +2,36 @@ package com.example.giftgiver.features.client.presentation
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
 import com.example.giftgiver.App
 import com.example.giftgiver.R
-import com.example.giftgiver.common.db.fileStorage.ImageStorageImpl
+import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentAccountBinding
-import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.UpdateClientsInfoUseCase
-import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
+import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.AddWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
 import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
-import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
 class AccountFragment : Fragment() {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
+    private var isAdapterInited = false
 
     @Inject
-    lateinit var updateWishlists: UpdateWishlistUseCase
-
-    @Inject
-    lateinit var updateInfo: UpdateClientsInfoUseCase
-    private val client = ClientState.client
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var clientViewModel: ClientViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +44,14 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        client?.let { bindAll(it) }
+        clientViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[ClientViewModel::class.java]
+        initObservers()
+        clientViewModel.getInfo()
+        clientViewModel.getWishlists()
+        bindAll()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -69,7 +72,7 @@ class AccountFragment : Fragment() {
         ClientState.client?.let { EditClientDialog(it).show(childFragmentManager, "dialog") }
     }
 
-    private fun bindAll(curClient: Client) {
+    private fun bindAll() {
         with(binding) {
             setHasOptionsMenu(true)
             btnLogout.setOnClickListener {
@@ -81,33 +84,22 @@ class AccountFragment : Fragment() {
             }
             tvInfo.movementMethod = ScrollingMovementMethod()
             tvName.movementMethod = ScrollingMovementMethod()
-            bindInfo()
-            initWishlists(curClient.wishlists)
             progressBar.visibility = View.GONE
             views.visibility = View.VISIBLE
         }
     }
 
-    private fun bindInfo() = client?.let {
-        with(it.info) {
+    private fun bindInfo(userInfo: UserInfo) =
+        with(userInfo) {
             binding.ivAvatar.load(photo)
             binding.tvBirthdate.text = bdate
             binding.tvInfo.text = about
             binding.tvName.text = name
         }
-    }
 
-    fun addWishlist(wishlist: Wishlist) {
-        client?.let {
-            it.wishlists.add(wishlist)
-            lifecycleScope.launch {
-                updateWishlists(it.vkId, it.wishlists)
-            }
-            wishlistAdapter.submitList(it.wishlists)
-        }
-    }
+    fun addWishlist(wishlist: Wishlist) = clientViewModel.addWishlist(wishlist)
 
-    private fun initWishlists(wishlists: MutableList<Wishlist>) {
+    private fun initAdapter(wishlists: List<Wishlist>) {
         val goToWishlist = { position: Int ->
             navigateToWishlist(position)
         }
@@ -128,17 +120,10 @@ class AccountFragment : Fragment() {
         wishlistAdapter.submitList(wishlists)
     }
 
-    private fun deleteWishlist(wishlist: Wishlist) {
-        client?.let {
-            it.wishlists.remove(wishlist)
-            lifecycleScope.launch {
-                updateWishlists(client.vkId, it.wishlists)
-            }
-            wishlistAdapter.submitList(it.wishlists)
-        }
-    }
+    private fun deleteWishlist(wishlist: Wishlist) = clientViewModel.deleteWishlist(wishlist)
 
     private fun navigateToWishlist(wishlistIndex: Int) {
+        isAdapterInited = false
         val action =
             AccountFragmentDirections.actionAccountToMyWishlistFragment(
                 wishlistIndex
@@ -146,24 +131,37 @@ class AccountFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun logout() {
+    private fun logout() { //todo check mb change
         VK.logout()
         ClientState.client = null
+        isAdapterInited = false
         findNavController().navigate(AccountFragmentDirections.actionAccountToStartFragment())
     }
 
     fun updateInfo(newName: String, newInfo: String, newBirthDate: String, imageFile: File?) =
-        client?.let {
-            lifecycleScope.launch {
-                imageFile?.let { file ->
-                    it.info.photo = ImageStorageImpl().addImage(file).toString()
+        clientViewModel.updateInfo(newName, newInfo, newBirthDate, imageFile)
+
+    private fun initObservers() {
+        clientViewModel.wishlists.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = {
+                val wishlists = it
+                if (isAdapterInited) {
+                    wishlistAdapter.submitList(wishlists)
+                } else {
+                    isAdapterInited = true
+                    initAdapter(wishlists)
                 }
-                it.info.name = newName
-                it.info.about = newInfo
-                it.info.bdate = newBirthDate
-                updateInfo(it.vkId, it.info)
-                ClientState.client = it
-                bindInfo()
-            }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
         }
+
+        clientViewModel.info.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = { info ->
+                info?.let { bindInfo(it) }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
+        }
+    }
 }
