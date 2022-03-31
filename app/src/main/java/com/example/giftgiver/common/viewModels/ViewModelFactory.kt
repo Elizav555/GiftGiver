@@ -10,10 +10,14 @@ import com.example.giftgiver.features.calendar.domain.useCases.UpdateCalendarUse
 import com.example.giftgiver.features.calendar.presentation.CalendarViewModel
 import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
 import com.example.giftgiver.features.cart.presentation.CartViewModel
+import com.example.giftgiver.features.client.domain.useCases.AddClientUseCase
+import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.UpdateClientsInfoUseCase
 import com.example.giftgiver.features.client.presentation.ClientViewModel
 import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.gift.presentation.GiftViewModel
+import com.example.giftgiver.features.start.presentation.StartViewModel
+import com.example.giftgiver.features.user.domain.useCases.LoadFriendsVK
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
 import javax.inject.Inject
 
@@ -24,7 +28,10 @@ class ViewModelFactory @Inject constructor(
     private val updateCart: UpdateCartUseCase,
     private val updateWishlists: UpdateWishlistUseCase,
     private val updateInfo: UpdateClientsInfoUseCase,
-    private val imageStorage: ImageStorage
+    private val imageStorage: ImageStorage,
+    private val getClientByVkId: GetClientByVkId,
+    private val loadFriendsVK: LoadFriendsVK,
+    private val addClient: AddClientUseCase,
 ) : ViewModelProvider.Factory {
     val error = App.appComponent.getContext().getString(R.string.unknownViewModel)
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
@@ -43,6 +50,9 @@ class ViewModelFactory @Inject constructor(
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(GiftViewModel::class.java) ->
                 GiftViewModel(updateWishlists, imageStorage) as? T
+                    ?: throw IllegalArgumentException(error)
+            modelClass.isAssignableFrom(StartViewModel::class.java) ->
+                StartViewModel(getClientByVkId, loadFriendsVK, addClient) as? T
                     ?: throw IllegalArgumentException(error)
             else ->
                 throw IllegalArgumentException(error)
