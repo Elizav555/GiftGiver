@@ -8,6 +8,7 @@ import com.example.giftgiver.common.di.modules.NetModule
 import com.example.giftgiver.features.client.domain.ClientsRepository
 import com.example.giftgiver.features.calendar.domain.HolidayRepository
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
+import com.example.giftgiver.features.event.data.DateMapper
 import dagger.Component
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
@@ -25,4 +26,6 @@ interface AppComponent {
     fun getClientsRepository(): ClientsRepository
 
     fun getImageStorage(): ImageStorage
+
+    fun getDateMapper(): DateMapper
 }

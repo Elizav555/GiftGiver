@@ -3,21 +3,17 @@ package com.example.giftgiver.features.calendar.presentation
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import com.applandeo.materialcalendarview.EventDay
 import com.example.giftgiver.App
 import com.example.giftgiver.R
+import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentCalendarBinding
-import com.example.giftgiver.features.calendar.domain.useCases.GetHolidaysUseCase
-import com.example.giftgiver.features.calendar.domain.useCases.UpdateCalendarUseCase
-import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.event.domain.Event
 import com.example.giftgiver.features.event.presentation.AddEventDialog
-import com.example.giftgiver.utils.ClientState
-import com.example.giftgiver.utils.FriendsState
-import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,15 +21,11 @@ import javax.inject.Inject
 
 class CalendarFragment : Fragment() {
     private lateinit var binding: FragmentCalendarBinding
-    private val client = ClientState.client
-
-    @Inject
-    lateinit var getHolidaysUseCase: GetHolidaysUseCase
-
-    @Inject
-    lateinit var updateCalendar: UpdateCalendarUseCase
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-    private var holidays = mutableListOf<Event>()
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var calendarViewModel: CalendarViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +33,10 @@ class CalendarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         App.mainComponent.inject(this)
+        calendarViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[CalendarViewModel::class.java]
         binding = FragmentCalendarBinding.inflate(inflater)
         return binding.root
     }
@@ -52,10 +48,8 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        holidays = client?.calendar?.events ?: mutableListOf()
-        if (holidays.isNullOrEmpty()) {
-            getDefaultHolidays()
-        } else bindCalendar()
+        initObservers()
+        calendarViewModel.getHolidays()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -78,7 +72,7 @@ class CalendarFragment : Fragment() {
                 .setTitle(getString(R.string.deleteEventsTitle))
                 .setMessage(getString(R.string.deleteEventsMessage))
                 .setPositiveButton(R.string.delete_all) { _, _ ->
-                    deleteClientsEvents()
+                    calendarViewModel.deleteClientsEvents()
                 }
                 .setNegativeButton(R.string.cancel) { dialog, _ ->
                     dialog?.cancel()
@@ -88,36 +82,9 @@ class CalendarFragment : Fragment() {
         }
     }
 
-    private fun getDefaultHolidays() {
-        lifecycleScope.launch {
-            val curYear = Calendar.getInstance().get(Calendar.YEAR)
-            holidays = getHolidaysUseCase(curYear.toString()) as MutableList<Event>
-            val dateMapper = DateMapper()
-            FriendsState.friends.forEach { friend ->
-                if (!friend.bdate.isNullOrBlank()) {
-                    friend.bdate?.let {
-                        val calendar = dateMapper.parseStringToCalendar(it)
-                        calendar.set(Calendar.YEAR, curYear)
-                        holidays.add(
-                            Event(
-                                calendar,
-                                getString(R.string.friend_bday, friend.name)
-                            )
-                        )
-                    }
-                }
-            }
-            bindCalendar()
-            client?.let { client ->
-                updateCalendar(client.vkId, holidays)
-                ClientState.client?.calendar?.events = holidays
-            }
-        }
-    }
-
-    private fun bindCalendar() = with(binding) {
+    private fun bindCalendar(holidays: List<Event>) = with(binding) {
         val eventDays: List<EventDay> = holidays.map {
-            EventDay(
+            EventDay(                            //todo get rid of all these maps
                 it.date,
                 R.color.accent
             )
@@ -127,8 +94,9 @@ class CalendarFragment : Fragment() {
         calendar.setHighlightedDays(eventDays.map { it.calendar })
         calendar.setOnDayClickListener { event ->
             tvDate.text = dateFormat.format(event.calendar.time)
-            val eventsDesc =
-                holidays.filter { it.date == event.calendar }.map { it.desc }.joinToString(",\n")
+            val eventsDesc = holidays.filter { it.date == event.calendar }
+                .map { it.desc }
+                .joinToString(",\n")
             tvDescription.text = eventsDesc
         }
     }
@@ -137,15 +105,16 @@ class CalendarFragment : Fragment() {
         AddEventDialog().show(childFragmentManager, "dialog")
     }
 
-    fun addEvent(event: Event) = client?.let { client ->
-        holidays.add(event)
-        lifecycleScope.launch { updateCalendar(client.vkId, holidays) }
-        ClientState.client?.calendar?.events = holidays
-        bindCalendar()
-    }
+    fun addEvent(event: Event) = calendarViewModel.addEvent(event)
 
-    private fun deleteClientsEvents() {
-        holidays.clear()
-        getDefaultHolidays()
+    private fun initObservers() {
+        calendarViewModel.holidays.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = {
+                val holidays = it
+                bindCalendar(holidays)
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
+        }
     }
 }
