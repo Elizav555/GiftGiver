@@ -17,8 +17,8 @@ import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentUserBinding
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
-import com.example.giftgiver.features.user.domain.useCases.UpdateFavFriendsUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
+import com.example.giftgiver.features.user.domain.useCases.UpdateFavFriendsUseCase
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
 import com.example.giftgiver.utils.ClientState
@@ -100,6 +100,7 @@ class UserFragment : Fragment() {
         } else friend?.let { friend -> it.favFriends.remove(friend) }
         lifecycleScope.launch {
             updateFavFriends(it.vkId, it.favFriends)
+            ClientState.client?.favFriends = it.favFriends
         }
     }
 

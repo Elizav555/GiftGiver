@@ -100,7 +100,10 @@ class FriendsWishlistFragment : Fragment() {
         else client?.cart?.gifts?.remove(gift)
         lifecycleScope.launch {
             updateWishlists(friend.vkId, friend.wishlists)
-            client?.let { updateCart(it.vkId, it.cart.gifts) }
+            client?.let {
+                updateCart(it.vkId, it.cart.gifts)
+                ClientState.client?.cart?.gifts = it.cart.gifts
+            }
         }
         giftAdapter.submitList(friend.wishlists[wishlistIndex].gifts)
     }
