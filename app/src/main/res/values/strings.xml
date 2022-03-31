@@ -71,4 +71,5 @@
     <string name="material_calendar_negative_button">Cancel</string>
     <string name="gift_image">Gift image</string>
     <string name="for_gift">For :</string>
+    <string name="unknownViewModel">Unknown ViewModel class</string>
 </resources>

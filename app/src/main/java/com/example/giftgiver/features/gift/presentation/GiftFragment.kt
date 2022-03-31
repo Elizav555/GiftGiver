@@ -2,41 +2,34 @@ package com.example.giftgiver.features.gift.presentation
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
-import com.example.giftgiver.common.db.fileStorage.ImageStorageImpl
 import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
-import com.example.giftgiver.utils.ClientState
-import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
 class GiftFragment : Fragment() {
     private lateinit var binding: FragmentGiftBinding
     private val args: GiftFragmentArgs by navArgs()
-    private val client = ClientState.client
     private var giftIndex = 0
     private var gifts = mutableListOf<Gift>()
     private var isClient = false
 
     @Inject
-    lateinit var updateWishlists: UpdateWishlistUseCase
-
-    @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var imageViewModel: ImageViewModel
+    private lateinit var giftViewModel: GiftViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,12 +40,17 @@ class GiftFragment : Fragment() {
             viewModelStore,
             viewModelFactory
         )[ImageViewModel::class.java]
+        giftViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[GiftViewModel::class.java]
         binding = FragmentGiftBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObservers()
         isClient = args.isClient
         giftIndex = args.giftIndex
         gifts = args.gifts.toMutableList()
@@ -101,20 +99,17 @@ class GiftFragment : Fragment() {
         }
     }
 
-    private fun changeGift(newName: String, newDesc: String, newImageFile: File?) = client?.let {
-        val index = args.wishlistIndex
-        if (!isClient) {
-            return@let
-        }
-        lifecycleScope.launch {
-            val gift = client.wishlists[index].gifts[giftIndex]
-            newImageFile?.let {
-                gift.imageUrl = ImageStorageImpl().addImage(newImageFile).toString()
-            }
-            client.wishlists[index].gifts[giftIndex] =
-                Gift(newName, gift.forId, gift.forName, newDesc, gift.imageUrl, gift.isChosen)
-            updateWishlists(client.vkId, client.wishlists)
-            bindInfo(client.wishlists[index].gifts[giftIndex])
+    private fun changeGift(newName: String, newDesc: String, newImageFile: File?) {
+        giftViewModel.changeGift(newName, newDesc, newImageFile)
+    }
+
+    private fun initObservers() {
+        giftViewModel.gift.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = { gift ->
+                gift?.let { bindInfo(it) }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
         }
     }
 }

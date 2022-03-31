@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.giftgiver.common.db.fileStorage.ImageStorageImpl
+import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.client.domain.useCases.UpdateClientsInfoUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
@@ -17,20 +17,20 @@ import javax.inject.Inject
 class ClientViewModel @Inject constructor(
     private val updateWishlists: UpdateWishlistUseCase,
     private val updateInfo: UpdateClientsInfoUseCase,
+    private val imageStorage: ImageStorage
 ) : ViewModel() {
     private val client = ClientState.client
     private var _wishlists: MutableLiveData<Result<List<Wishlist>>> = MutableLiveData()
     val wishlists: LiveData<Result<List<Wishlist>>> = _wishlists
     private var clientWishlists: MutableList<Wishlist> = mutableListOf()
 
-    fun getWishlists() = viewModelScope.launch {
+    fun getWishlists() =
         try {
             clientWishlists = client?.wishlists ?: mutableListOf()
             _wishlists.value = Result.success(clientWishlists)
         } catch (ex: Exception) {
             _wishlists.value = Result.failure(ex)
         }
-    }
 
     private fun updateClientsWishlists() = viewModelScope.launch {
         client?.let { client ->
@@ -81,7 +81,7 @@ class ClientViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 imageFile?.let { file ->
-                    clientInfo?.photo = ImageStorageImpl().addImage(file).toString()
+                    clientInfo?.photo = imageStorage.addImage(file).toString()
                 }
                 clientInfo?.name = newName
                 clientInfo?.about = newInfo
