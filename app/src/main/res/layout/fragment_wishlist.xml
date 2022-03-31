@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foregroundTint="@color/primary_text"
-    tools:context=".presentation.fragments.WishlistFragment">
+    tools:context=".features.wishlist.presentation.fragments.WishlistFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_gifts"

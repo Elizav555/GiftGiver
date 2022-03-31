@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/primary_light"
-    tools:context=".presentation.dialogs.AddWishlistDialog">
+    tools:context=".features.wishlist.presentation.dialogs.AddWishlistDialog">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_name"
