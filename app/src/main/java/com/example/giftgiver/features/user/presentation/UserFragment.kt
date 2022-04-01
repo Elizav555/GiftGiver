@@ -132,7 +132,7 @@ class UserFragment : Fragment() {
         friend?.let {
             val action = UserFragmentDirections.actionUserFragmentToFriendsWishlistFragment(
                 wishlistIndex,
-                it
+                it.vkId
             )
             findNavController().navigate(action)
         }

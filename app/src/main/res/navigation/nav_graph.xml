@@ -61,8 +61,8 @@
                 android:id="@+id/action_friendsWishlistFragment_to_myGiftFragment"
                 app:destination="@id/giftFragment" />
             <argument
-                android:name="friend"
-                app:argType="com.example.giftgiver.features.client.domain.Client" />
+                android:name="friendVkId"
+                app:argType="long" />
         </fragment>
     </navigation>
     <dialog

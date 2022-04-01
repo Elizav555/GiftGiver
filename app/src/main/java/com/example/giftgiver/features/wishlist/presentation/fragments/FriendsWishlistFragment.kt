@@ -1,11 +1,12 @@
 package com.example.giftgiver.features.wishlist.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,16 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
+import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentFriendsWishlistBinding
-import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
-import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
-import com.example.giftgiver.features.wishlist.domain.Wishlist
-import com.example.giftgiver.utils.ClientState
+import com.example.giftgiver.features.wishlist.presentation.viewModels.FriendsWishlistViewModel
 import com.example.giftgiver.utils.autoCleared
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FriendsWishlistFragment : Fragment() {
@@ -30,41 +28,46 @@ class FriendsWishlistFragment : Fragment() {
     private val args: FriendsWishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
     private var wishlistIndex = -1
-    private var friend: Client? = null
+    private var isAdapterInited = false
 
     @Inject
-    lateinit var updateWishlists: UpdateWishlistUseCase
-
-    @Inject
-    lateinit var updateCart: UpdateCartUseCase
-    private val client = ClientState.client
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var friendsWishlistViewModel: FriendsWishlistViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         App.mainComponent.inject(this)
+        friendsWishlistViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[FriendsWishlistViewModel::class.java]
         binding = FragmentFriendsWishlistBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObservers()
+        friendsWishlistViewModel.getFriend(args.friendVkId)
         wishlistIndex = args.wishlistIndex
-        friend = args.friend
-        friend?.let { bindInfo(it.wishlists[wishlistIndex]) }
     }
 
-    private fun bindInfo(wishlist: Wishlist) {
+    private fun bindInfo(friend: Client) {
         setHasOptionsMenu(false)
         (activity as MainActivity).supportActionBar?.title =
-            getString(R.string.friend_wishlist, friend?.info?.name, wishlist.name)
-        initAdapter(wishlist.gifts)
+            getString(
+                R.string.friend_wishlist,
+                friend.info.name,
+                friend.wishlists[wishlistIndex].name
+            )
+        initAdapter(friend.wishlists[wishlistIndex].gifts)
     }
 
     private fun initAdapter(gifts: MutableList<Gift>) {
         val goToItem = { position: Int ->
-            navigateToItem(position)
+            navigateToItem(position, gifts)
         }
         giftAdapter = GiftAdapter(goToItem, gifts, ::checkedFunc)
         with(binding.rvGifts) {
@@ -80,31 +83,36 @@ class FriendsWishlistFragment : Fragment() {
         giftAdapter.submitList(gifts)
     }
 
-    private fun navigateToItem(giftIndex: Int) {
-        friend?.let {
-            val action =
-                FriendsWishlistFragmentDirections.actionFriendsWishlistFragmentToMyGiftFragment(
-                    giftIndex,
-                    it.wishlists[wishlistIndex].gifts.toTypedArray(),
-                    false,
-                    wishlistIndex
-                )
-            findNavController().navigate(action)
-        }
+    private fun navigateToItem(giftIndex: Int, gifts: List<Gift>) {
+        isAdapterInited = false
+        val action =
+            FriendsWishlistFragmentDirections.actionFriendsWishlistFragmentToMyGiftFragment(
+                giftIndex,
+                gifts.toTypedArray(),
+                false,
+                wishlistIndex
+            )
+        findNavController().navigate(action)
     }
 
-    private fun checkedFunc(pos: Int, isChecked: Boolean) = friend?.let { friend ->
-        friend.wishlists[wishlistIndex].gifts[pos].isChosen = isChecked
-        val gift = friend.wishlists[wishlistIndex].gifts[pos]
-        if (isChecked) client?.cart?.gifts?.add(gift)
-        else client?.cart?.gifts?.remove(gift)
-        lifecycleScope.launch {
-            updateWishlists(friend.vkId, friend.wishlists)
-            client?.let {
-                updateCart(it.vkId, it.cart.gifts)
-                ClientState.client?.cart?.gifts = it.cart.gifts
-            }
+    private fun checkedFunc(pos: Int, isChecked: Boolean) {
+        friendsWishlistViewModel.checkedFunc(pos, isChecked, wishlistIndex)
+    }
+
+    private fun initObservers() {
+        friendsWishlistViewModel.friend.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = { friend ->
+                friend?.let {
+                    if (isAdapterInited) {
+                        giftAdapter.submitList(it.wishlists[wishlistIndex].gifts)
+                    } else {
+                        isAdapterInited = true
+                        bindInfo(it)
+                    }
+                }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
         }
-        giftAdapter.submitList(friend.wishlists[wishlistIndex].gifts)
     }
 }
