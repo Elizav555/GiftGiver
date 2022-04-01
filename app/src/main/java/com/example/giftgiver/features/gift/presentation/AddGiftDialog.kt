@@ -11,16 +11,21 @@ import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import coil.api.load
 import com.example.giftgiver.App
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.DialogAddGiftBinding
+import com.example.giftgiver.features.gift.domain.Gift
 import java.io.File
 import javax.inject.Inject
 
-class AddGiftDialog(private val submitAction: (String, String, File?) -> Unit?) : DialogFragment() {
+class AddGiftDialog(
+    private val submitAction: (String, String, File?) -> Unit?,
+    private val gift: Gift? = null
+) : DialogFragment() {
     private lateinit var binding: DialogAddGiftBinding
     private var cameraImageFile: File? = null
     private var imageFile: File? = null
@@ -57,6 +62,11 @@ class AddGiftDialog(private val submitAction: (String, String, File?) -> Unit?) 
         imageViewModel.imageFileLiveData.observe(this) {
             Log.d("ImageFile", it?.absolutePath.toString())
             imageFile = it
+        }
+        gift?.let {
+            binding.etName.setText(it.name)
+            binding.etDesc.setText(it.desc)
+            binding.ivImage.load(it.imageUrl)
         }
         with(binding) {
             return activity?.let {

@@ -25,6 +25,7 @@ class GiftFragment : Fragment() {
     private var giftIndex = 0
     private var gifts = mutableListOf<Gift>()
     private var isClient = false
+    private var curGift: Gift? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -54,8 +55,8 @@ class GiftFragment : Fragment() {
         isClient = args.isClient
         giftIndex = args.giftIndex
         gifts = args.gifts.toMutableList()
-        val gift = gifts[giftIndex]
-        bindInfo(gift)
+        curGift = gifts[giftIndex]
+        curGift?.let { bindInfo(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -80,7 +81,7 @@ class GiftFragment : Fragment() {
                 newFile
             )
         }
-        AddGiftDialog(submitAction)
+        AddGiftDialog(submitAction, curGift)
             .show(childFragmentManager, "dialog")
     }
 
@@ -106,6 +107,7 @@ class GiftFragment : Fragment() {
     private fun initObservers() {
         giftViewModel.gift.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = { gift ->
+                curGift = gift
                 gift?.let { bindInfo(it) }
             }, onFailure = {
                 Log.e("asd", it.message.toString())
