@@ -36,6 +36,8 @@ class StartFragment : Fragment() {
         registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
             when (result) {
                 is VKAuthenticationResult.Success -> {
+                    binding.btnLogin.isVisible = false
+                    binding.progressBar.isVisible = true
                     makeToast("Welcome!")
                     startViewModel.getClient(VK.getUserId().value)
                 }
@@ -92,6 +94,8 @@ class StartFragment : Fragment() {
         if (VK.isLoggedIn()) {
             startViewModel.getClient(VK.getUserId().value)
         } else {
+            binding.progressBar.isVisible = false
+            binding.btnLogin.isVisible = true
             activityLauncher.launch(
                 arrayListOf(
                     VKScope.FRIENDS,
@@ -104,8 +108,6 @@ class StartFragment : Fragment() {
 
     private fun navigateToList() {
         lifecycleScope.launch {
-            binding.btnLogin.isVisible = false
-            binding.progressBar.isVisible = true
             val action = StartFragmentDirections.actionStartFragmentToFriends()
             findNavController().navigate(action)
         }
@@ -120,7 +122,11 @@ class StartFragment : Fragment() {
         startViewModel.client.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
                 getClientState(it)
-                startViewModel.loadFriends()
+                if (it != null) {
+                    binding.btnLogin.isVisible = false
+                    binding.progressBar.isVisible = true
+                    startViewModel.loadFriends()
+                }
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })

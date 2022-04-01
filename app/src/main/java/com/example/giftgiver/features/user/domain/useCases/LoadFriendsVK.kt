@@ -1,8 +1,8 @@
 package com.example.giftgiver.features.user.domain.useCases
 
 import android.util.Log
-import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
 import com.example.giftgiver.features.client.domain.ClientsRepository
+import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
@@ -31,9 +31,9 @@ class LoadFriendsVK @Inject constructor(
 
     suspend fun loadFriends(vkId: Long): List<UserInfo> {
         val friendsVK = loadAllFriends(vkId)
-        return friendsVK.sortedBy { user -> user.name }//todo change back
-//        return friendsVK.filter { friend -> clientsRep.getClientByVkId(friend.vkId) != null }
-//            .sortedByDescending { user -> user.name }
+        //       return friendsVK.sortedBy { user -> user.name }//todo change back
+        return friendsVK.mapNotNull { friend -> clientsRep.getClientByVkId(friend.vkId)?.info }
+            .sortedByDescending { user -> user.name }
     }
 
     private suspend fun loadAllFriends(vkId: Long): List<UserInfo> {
