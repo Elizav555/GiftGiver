@@ -22,6 +22,8 @@ import com.example.giftgiver.features.user.domain.useCases.UpdateFavFriendsUseCa
 import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
 import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
+import com.example.giftgiver.features.wishlist.presentation.viewModels.FriendsWishlistViewModel
+import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
 import javax.inject.Inject
 
 class ViewModelFactory @Inject constructor(
@@ -63,6 +65,12 @@ class ViewModelFactory @Inject constructor(
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(FriendsViewModel::class.java) ->
                 FriendsViewModel() as? T
+                    ?: throw IllegalArgumentException(error)
+            modelClass.isAssignableFrom(FriendsWishlistViewModel::class.java) ->
+                FriendsWishlistViewModel() as? T
+                    ?: throw IllegalArgumentException(error)
+            modelClass.isAssignableFrom(WishlistViewModel::class.java) ->
+                WishlistViewModel(updateWishlists, imageStorage) as? T
                     ?: throw IllegalArgumentException(error)
             else ->
                 throw IllegalArgumentException(error)

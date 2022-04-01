@@ -1,9 +1,10 @@
 package com.example.giftgiver.features.wishlist.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,17 +14,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
-import com.example.giftgiver.common.db.fileStorage.ImageStorageImpl
+import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.AddGiftDialog
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
-import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
+import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.ChangeWishlistDialog
-import com.example.giftgiver.utils.ClientState
+import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
-import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -31,26 +31,31 @@ class WishlistFragment : Fragment() {
     lateinit var binding: FragmentWishlistBinding
     private val args: WishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
-    private val client = ClientState.client
     private var index = 0
-    private var defaultImageUri = ""
+    private var isAdapterInited = false
 
     @Inject
-    lateinit var updateWishlists: UpdateWishlistUseCase
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var wishlistViewModel: WishlistViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         App.mainComponent.inject(this)
+        wishlistViewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory
+        )[WishlistViewModel::class.java]
         binding = FragmentWishlistBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindInfo()
-        lifecycleScope.launch { defaultImageUri = ImageStorageImpl().getDefaultUrl().toString() }
+        initObservers()
+        index = args.wishlistIndex
+        wishlistViewModel.getWishlist(index)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -71,30 +76,26 @@ class WishlistFragment : Fragment() {
         ChangeWishlistDialog().show(childFragmentManager, "dialog")
     }
 
-    private fun bindInfo() {
-        client?.let {
-            index = args.wishlistIndex
-            val wishlist = it.wishlists[index]
-            setHasOptionsMenu(true)
-            (activity as MainActivity).supportActionBar?.title = wishlist.name
-            binding.addItem.setOnClickListener {
-                val submitAction = { newName: String, newDesc: String, newFile: File? ->
-                    addGift(
-                        newName,
-                        newDesc,
-                        newFile
-                    )
-                }
-                AddGiftDialog(submitAction)
-                    .show(childFragmentManager, "dialog")
+    private fun bindInfo(wishlist: Wishlist) {
+        setHasOptionsMenu(true)
+        (activity as MainActivity).supportActionBar?.title = wishlist.name
+        binding.addItem.setOnClickListener {
+            val submitAction = { newName: String, newDesc: String, newFile: File? ->
+                addGift(
+                    newName,
+                    newDesc,
+                    newFile
+                )
             }
-            initAdapter(wishlist.gifts)
+            AddGiftDialog(submitAction)
+                .show(childFragmentManager, "dialog")
         }
+        initAdapter(wishlist.gifts)
     }
 
     private fun initAdapter(gifts: MutableList<Gift>) {
         val goToItem = { position: Int ->
-            navigateToItem(position)
+            navigateToItem(position, gifts)
         }
         giftAdapter = GiftAdapter(goToItem, gifts)
         with(binding.rvGifts) {
@@ -120,44 +121,44 @@ class WishlistFragment : Fragment() {
         giftAdapter.submitList(gifts)
     }
 
-    private fun addGift(newName: String, newDesc: String, newImageFile: File?) = client?.let {
-        val gift = Gift(newName, it.vkId, it.info.name, newDesc, defaultImageUri)
-        lifecycleScope.launch {
-            newImageFile?.let {
-                gift.imageUrl = ImageStorageImpl().addImage(newImageFile).toString()
-            }
-            it.wishlists[index].gifts.add(gift)
-            updateWishlists(client.vkId, it.wishlists)
-            giftAdapter.submitList(it.wishlists[index].gifts)
-        }
-        return@let
+    private fun addGift(newName: String, newDesc: String, newImageFile: File?) {
+        wishlistViewModel.addGift(newName, newDesc, newImageFile)
     }
 
-    private fun deleteGift(gift: Gift) = client?.let {
-        it.wishlists[index].gifts.remove(gift)
-        lifecycleScope.launch {
-            updateWishlists(client.vkId, it.wishlists)
-        }
-        giftAdapter.submitList(it.wishlists[index].gifts)
+    private fun deleteGift(gift: Gift) {
+        wishlistViewModel.deleteGift(gift)
     }
 
-    private fun navigateToItem(giftIndex: Int) {
-        client?.let {
-            val action = WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
-                giftIndex,
-                it.wishlists[index].gifts.toTypedArray(),
-                true,
-                index
-            )
-            findNavController().navigate(action)
-        }
+    private fun navigateToItem(giftIndex: Int, gifts: MutableList<Gift>) {
+        isAdapterInited = false
+        val action = WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
+            giftIndex,
+            gifts.toTypedArray(),
+            true,
+            index
+        )
+        findNavController().navigate(action)
     }
 
-    fun changeWishlistName(newName: String) = client?.let {
-        it.wishlists[index].name = newName
-        lifecycleScope.launch {
-            updateWishlists(client.vkId, it.wishlists)
-        }
+    fun changeWishlistName(newName: String) {
+        wishlistViewModel.changeWishlistName(newName)
         (activity as MainActivity).supportActionBar?.title = newName
+    }
+
+    private fun initObservers() {
+        wishlistViewModel.wishlist.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = { wishlist ->
+                wishlist?.let {
+                    if (isAdapterInited) {
+                        giftAdapter.submitList(wishlist.gifts)
+                    } else {
+                        isAdapterInited = true
+                        bindInfo(it)
+                    }
+                }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
+        }
     }
 }
