@@ -31,9 +31,9 @@ class LoadFriendsVK @Inject constructor(
 
     suspend fun loadFriends(vkId: Long): List<UserInfo> {
         val friendsVK = loadAllFriends(vkId)
-        //       return friendsVK.sortedBy { user -> user.name }//todo change back
-        return friendsVK.mapNotNull { friend -> clientsRep.getClientByVkId(friend.vkId)?.info }
-            .sortedByDescending { user -> user.name }
+        return friendsVK.sortedBy { user -> user.name }//todo change back
+//        return friendsVK.mapNotNull { friend -> clientsRep.getClientByVkId(friend.vkId)?.info }
+//            .sortedByDescending { user -> user.name }
     }
 
     private suspend fun loadAllFriends(vkId: Long): List<UserInfo> {
