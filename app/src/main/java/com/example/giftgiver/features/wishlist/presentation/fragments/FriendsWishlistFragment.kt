@@ -69,7 +69,8 @@ class FriendsWishlistFragment : Fragment() {
         val goToItem = { position: Int ->
             navigateToItem(position)
         }
-        giftAdapter = GiftAdapter(goToItem, gifts, ::checkedFunc)
+        giftAdapter =
+            GiftAdapter(goToItem, gifts, ::checkedFunc, friendsWishlistViewModel.getClientCart())
         with(binding.rvGifts) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())

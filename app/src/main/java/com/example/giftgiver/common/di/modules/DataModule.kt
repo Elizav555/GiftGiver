@@ -6,9 +6,13 @@ import com.example.giftgiver.features.calendar.data.holidaysApi.HolidayApi
 import com.example.giftgiver.features.calendar.data.holidaysApi.HolidayRepositoryImpl
 import com.example.giftgiver.features.calendar.data.mappers.HolidayMapper
 import com.example.giftgiver.features.calendar.domain.HolidayRepository
+import com.example.giftgiver.features.client.data.ClientStateRepImpl
 import com.example.giftgiver.features.client.data.fb.ClientsRepositoryImpl
 import com.example.giftgiver.features.client.data.fb.FBMapper
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.ClientsRepository
+import com.example.giftgiver.features.user.data.FriendsStateRepImpl
+import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -41,6 +45,14 @@ class DataModule {
     @Singleton
     fun provideImageStorage(storageReference: StorageReference): ImageStorage =
         ImageStorageImpl(storageReference)
+
+    @Provides
+    @Singleton
+    fun provideClientStateRep(): ClientStateRep = ClientStateRepImpl()
+
+    @Provides
+    @Singleton
+    fun provideFriendsStateRep(): FriendsStateRep = FriendsStateRepImpl()
 
     @Provides
     @Singleton

@@ -5,15 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CartViewModel @Inject constructor(
     private val updateCart: UpdateCartUseCase,
+    private val clientStateRep: ClientStateRep,
 ) : ViewModel() {
-    private val client = ClientState.client
+    private val client = clientStateRep.getClient()
 
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts
@@ -31,7 +32,8 @@ class CartViewModel @Inject constructor(
     private fun updateClient() = viewModelScope.launch {
         client?.let { client ->
             updateCart(client.vkId, clientGifts)
-            ClientState.client?.cart?.gifts = clientGifts
+            client.cart.gifts = clientGifts
+            clientStateRep.addClient(client)
         }
     }
 

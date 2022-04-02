@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
-import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -16,9 +16,10 @@ import javax.inject.Inject
 class GiftViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val updateWishlists: UpdateWishlistUseCase,
-    private val imageStorage: ImageStorage
+    private val imageStorage: ImageStorage,
+    private val clientStateRep: ClientStateRep,
 ) : ViewModel() {
-    private val client = ClientState.client
+    private val client = clientStateRep.getClient()
     private var wishlistIndex = 0
     private var giftIndex = 0
 
@@ -55,7 +56,8 @@ class GiftViewModel @Inject constructor(
             clientGift?.let {
                 client.wishlists[wishlistIndex].gifts[giftIndex] = it
                 updateWishlists(client.vkId, client.wishlists)
-                ClientState.client?.wishlists = client.wishlists
+                client.wishlists = client.wishlists
+                clientStateRep.addClient(client)
             }
         }
     }

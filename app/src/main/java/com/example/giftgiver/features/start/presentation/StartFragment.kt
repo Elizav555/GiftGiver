@@ -18,8 +18,8 @@ import com.example.giftgiver.databinding.FragmentStartBinding
 import com.example.giftgiver.features.calendar.domain.Calendar
 import com.example.giftgiver.features.cart.domain.Cart
 import com.example.giftgiver.features.client.domain.Client
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
-import com.example.giftgiver.utils.ClientState
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
@@ -28,6 +28,9 @@ import javax.inject.Inject
 
 class StartFragment : Fragment() {
     private lateinit var binding: FragmentStartBinding
+
+    @Inject
+    lateinit var clientStateRep: ClientStateRep
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -84,9 +87,9 @@ class StartFragment : Fragment() {
                         cart = Cart()
                     )
                     startViewModel.addClient(client)
-                    ClientState.client = client
+                    clientStateRep.addClient(client)
                 }
-            } else ClientState.client = clientFromFB
+            } else clientStateRep.addClient(clientFromFB)
         }
     }
 

@@ -8,9 +8,11 @@ import com.example.giftgiver.common.di.modules.MappersModule
 import com.example.giftgiver.common.di.modules.NetModule
 import com.example.giftgiver.features.calendar.domain.HolidayRepository
 import com.example.giftgiver.features.client.data.fb.FBMapper
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.ClientsRepository
 import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.user.data.vk.VkMapper
+import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Component
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,6 +29,10 @@ interface AppComponent {
     fun getHolidayRepository(): HolidayRepository
 
     fun getClientsRepository(): ClientsRepository
+
+    fun getClientStateRepository(): ClientStateRep
+
+    fun getFriendsStateRepository(): FriendsStateRep
 
     fun getImageStorage(): ImageStorage
 

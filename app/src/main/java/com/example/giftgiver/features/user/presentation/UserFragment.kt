@@ -22,7 +22,6 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
-import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
 import javax.inject.Inject
 
@@ -59,10 +58,8 @@ class UserFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_fav, menu)
-        ClientState.client?.let { client ->
-            isFav = client.favFriendsIds.contains(friend?.vkId)
-            changeFavBtn(menu.findItem(R.id.fav))
-        }
+        isFav = userViewModel.checkIsFav() == true
+        changeFavBtn(menu.findItem(R.id.fav))
     }
 
     private fun changeFavBtn(item: MenuItem) {

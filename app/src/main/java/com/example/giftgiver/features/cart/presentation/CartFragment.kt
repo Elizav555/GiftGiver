@@ -15,14 +15,14 @@ import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
+import com.example.giftgiver.features.gift.presentation.list.forCart.GiftCartAdapter
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
 import javax.inject.Inject
 
 class CartFragment : Fragment() {
     private lateinit var binding: FragmentCartBinding
-    private var giftAdapter: GiftAdapter by autoCleared()
+    private var giftAdapter: GiftCartAdapter by autoCleared()
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -69,7 +69,7 @@ class CartFragment : Fragment() {
         val goToItem = { position: Int ->
             navigateToItem(position, gifts[position])
         }
-        giftAdapter = GiftAdapter(goToItem, gifts, null, true)
+        giftAdapter = GiftCartAdapter(goToItem, gifts)
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())

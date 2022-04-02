@@ -14,11 +14,11 @@ import com.example.giftgiver.App
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentAccountBinding
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.AddWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
-import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.autoCleared
 import com.vk.api.sdk.VK
 import java.io.File
@@ -28,6 +28,9 @@ class AccountFragment : Fragment() {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
     private var isAdapterInited = false
+
+    @Inject
+    lateinit var clientStateRep: ClientStateRep
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -69,7 +72,8 @@ class AccountFragment : Fragment() {
     }
 
     private fun enterEditMode() {
-        ClientState.client?.let { EditClientDialog(it).show(childFragmentManager, "dialog") }
+        clientStateRep.getClient()
+            ?.let { EditClientDialog(it).show(childFragmentManager, "dialog") }
     }
 
     private fun bindAll() {
@@ -133,7 +137,7 @@ class AccountFragment : Fragment() {
 
     private fun logout() { //todo check mb change
         VK.logout()
-        ClientState.client = null
+        clientStateRep.deleteClient()
         isAdapterInited = false
         findNavController().navigate(AccountFragmentDirections.actionAccountToStartFragment())
     }

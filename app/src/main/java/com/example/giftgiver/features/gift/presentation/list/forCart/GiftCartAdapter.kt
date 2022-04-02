@@ -1,34 +1,31 @@
-package com.example.giftgiver.features.gift.presentation.list
+package com.example.giftgiver.features.gift.presentation.list.forCart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.giftgiver.databinding.ItemGiftBinding
+import com.example.giftgiver.databinding.ItemGiftCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.gift.presentation.list.GiftDiffItemCallback
 
-class GiftAdapter(
+class GiftCartAdapter(
     private val action: (position: Int) -> Unit,
     private val gifts: List<Gift>,
-    private val checkedFunc: ((Int, Boolean) -> Unit)? = null,
-    private val clientCart: List<Gift>? = null
-) : ListAdapter<Gift, GiftHolder>(GiftDiffItemCallback()) {
+) : ListAdapter<Gift, GiftCartHolder>(GiftDiffItemCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): GiftHolder = GiftHolder(
-        ItemGiftBinding.inflate(
+    ): GiftCartHolder = GiftCartHolder(
+        ItemGiftCartBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         ),
-        action,
-        checkedFunc,
-        clientCart
+        action
     )
 
     override fun onBindViewHolder(
-        holder: GiftHolder,
+        holder: GiftCartHolder,
         position: Int
     ) {
         val gift = gifts[position]

@@ -5,19 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
 import com.example.giftgiver.features.wishlist.domain.Wishlist
-import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
 class WishlistViewModel @Inject constructor(
     private val updateWishlists: UpdateWishlistUseCase,
-    private val imageStorage: ImageStorage
+    private val imageStorage: ImageStorage,
+    private val clientStateRep: ClientStateRep
 ) : ViewModel() {
-    private val client = ClientState.client
+    private val client = clientStateRep.getClient()
     private var wishlistIndex = 0
     private var _wishlist: MutableLiveData<Result<Wishlist?>> = MutableLiveData()
     val wishlist: LiveData<Result<Wishlist?>> = _wishlist
@@ -36,7 +37,8 @@ class WishlistViewModel @Inject constructor(
     private fun updateClient() = viewModelScope.launch {
         client?.let { client ->
             updateWishlists(client.vkId, client.wishlists)
-            ClientState.client?.wishlists = client.wishlists
+            client.wishlists = client.wishlists
+            clientStateRep.addClient(client)
         }
     }
 

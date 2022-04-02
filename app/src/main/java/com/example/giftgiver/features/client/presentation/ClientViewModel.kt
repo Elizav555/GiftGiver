@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.useCases.UpdateClientsInfoUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
 import com.example.giftgiver.features.wishlist.domain.Wishlist
-import com.example.giftgiver.utils.ClientState
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -17,9 +17,10 @@ import javax.inject.Inject
 class ClientViewModel @Inject constructor(
     private val updateWishlists: UpdateWishlistUseCase,
     private val updateInfo: UpdateClientsInfoUseCase,
-    private val imageStorage: ImageStorage
+    private val imageStorage: ImageStorage,
+    private val clientStateRep: ClientStateRep
 ) : ViewModel() {
-    private val client = ClientState.client
+    private val client = clientStateRep.getClient()
     private var _wishlists: MutableLiveData<Result<List<Wishlist>>> = MutableLiveData()
     val wishlists: LiveData<Result<List<Wishlist>>> = _wishlists
     private var clientWishlists: MutableList<Wishlist> = mutableListOf()
@@ -35,7 +36,8 @@ class ClientViewModel @Inject constructor(
     private fun updateClientsWishlists() = viewModelScope.launch {
         client?.let { client ->
             updateWishlists(client.vkId, clientWishlists)
-            ClientState.client?.wishlists = clientWishlists
+            client.wishlists = clientWishlists
+            clientStateRep.addClient(client)
         }
     }
 
@@ -72,7 +74,8 @@ class ClientViewModel @Inject constructor(
         client?.let { client ->
             clientInfo?.let {
                 updateInfo(client.vkId, it)
-                ClientState.client?.info = it
+                client.info = it
+                clientStateRep.addClient(client)
             }
         }
     }

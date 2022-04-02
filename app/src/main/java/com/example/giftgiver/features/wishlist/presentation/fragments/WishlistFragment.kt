@@ -16,13 +16,13 @@ import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentWishlistBinding
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.AddGiftDialog
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.ChangeWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
-import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
 import java.io.File
@@ -34,6 +34,9 @@ class WishlistFragment : Fragment() {
     private var giftAdapter: GiftAdapter by autoCleared()
     private var index = 0
     private var isAdapterInited = false
+
+    @Inject
+    lateinit var clientStateRep: ClientStateRep
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -131,7 +134,7 @@ class WishlistFragment : Fragment() {
     }
 
     private fun navigateToItem(giftIndex: Int) {
-        ClientState.client?.vkId?.let {
+        clientStateRep.getClient()?.vkId?.let {
             isAdapterInited = false
             val action =
                 WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
