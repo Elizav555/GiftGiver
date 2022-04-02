@@ -1,6 +1,7 @@
 package com.example.giftgiver
 
 import android.app.Application
+import android.util.Log
 import com.example.giftgiver.common.di.components.AppComponent
 import com.example.giftgiver.common.di.components.DaggerAppComponent
 import com.example.giftgiver.common.di.components.DaggerMainComponent
@@ -31,7 +32,8 @@ class App : Application() {
 
     private val tokenTracker = object : VKTokenExpiredHandler {
         override fun onTokenExpired() {
-            //todo handle token inspiration
+            Log.e("vk", "token expired")
+            MainActivity.startFrom(this@App)
         }
     }
 

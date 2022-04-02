@@ -1,5 +1,7 @@
 package com.example.giftgiver
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -42,5 +44,13 @@ class MainActivity : AppCompatActivity() {
 
     fun setBottomNavigationVisibility(visibility: Int) {
         binding.bottomNav.visibility = visibility
+    }
+
+    companion object {
+        fun startFrom(context: Context) {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            context.startActivity(intent)
+        }
     }
 }
