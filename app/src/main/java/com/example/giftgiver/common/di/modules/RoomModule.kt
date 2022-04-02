@@ -9,9 +9,11 @@ import com.example.giftgiver.features.event.data.room.EventDao
 import com.example.giftgiver.features.gift.data.room.GiftDao
 import com.example.giftgiver.features.user.data.room.UserInfoDao
 import com.example.giftgiver.features.wishlist.data.room.WishlistDao
+import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
+@Module
 class RoomModule {
     @Provides
     @Singleton
