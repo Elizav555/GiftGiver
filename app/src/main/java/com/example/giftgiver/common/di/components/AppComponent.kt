@@ -2,10 +2,7 @@ package com.example.giftgiver.common.di.components
 
 import android.content.Context
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
-import com.example.giftgiver.common.di.modules.AppModule
-import com.example.giftgiver.common.di.modules.DataModule
-import com.example.giftgiver.common.di.modules.MappersModule
-import com.example.giftgiver.common.di.modules.NetModule
+import com.example.giftgiver.common.di.modules.*
 import com.example.giftgiver.features.calendar.domain.HolidayRepository
 import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.client.domain.ClientStateRep
@@ -19,7 +16,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, DataModule::class, NetModule::class, MappersModule::class])
+@Component(modules = [AppModule::class, DataModule::class, NetModule::class, MappersModule::class, RoomModule::class])
 interface AppComponent {
 
     fun getContext(): Context

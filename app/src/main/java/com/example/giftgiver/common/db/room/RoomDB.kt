@@ -5,15 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.giftgiver.features.event.data.converters.DateConverter
 import com.example.giftgiver.features.calendar.data.room.CalendarDao
 import com.example.giftgiver.features.calendar.data.room.CalendarR
-import com.example.giftgiver.features.event.data.room.EventDao
-import com.example.giftgiver.features.event.data.room.EventR
 import com.example.giftgiver.features.cart.data.room.CartDao
 import com.example.giftgiver.features.cart.data.room.CartR
 import com.example.giftgiver.features.client.data.room.ClientDao
 import com.example.giftgiver.features.client.data.room.ClientR
+import com.example.giftgiver.features.event.data.converters.DateConverter
+import com.example.giftgiver.features.event.data.room.EventDao
+import com.example.giftgiver.features.event.data.room.EventR
 import com.example.giftgiver.features.gift.data.room.GiftDao
 import com.example.giftgiver.features.gift.data.room.GiftR
 import com.example.giftgiver.features.user.data.room.UserInfoDao
@@ -36,8 +36,6 @@ abstract class RoomDB : RoomDatabase() {
     abstract fun clientDao(): ClientDao
     abstract fun eventDao(): EventDao
     abstract fun giftDao(): GiftDao
-
-    //    abstract fun userDao(): UserDao
     abstract fun userInfoDao(): UserInfoDao
     abstract fun wishlistDao(): WishlistDao
 
