@@ -60,7 +60,7 @@ class UserFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_fav, menu)
         ClientState.client?.let { client ->
-            isFav = client.favFriends.map { it.vkId }.contains(friend?.vkId)
+            isFav = client.favFriendsIds.contains(friend?.vkId)
             changeFavBtn(menu.findItem(R.id.fav))
         }
     }

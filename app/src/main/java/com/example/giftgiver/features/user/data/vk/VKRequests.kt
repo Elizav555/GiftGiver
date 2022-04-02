@@ -6,6 +6,7 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
+//todo inject somehow vkmapper
 
 class VKFriendsRequest(id: Long?) : VKRequest<List<UserInfo>>("friends.get") {
     init {

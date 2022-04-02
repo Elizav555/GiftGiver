@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
-import com.example.giftgiver.common.db.fileStorage.ImageStorageImpl
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
 import com.example.giftgiver.features.wishlist.domain.Wishlist
@@ -47,7 +46,7 @@ class WishlistViewModel @Inject constructor(
                 val defaultImageUri = getDefaultUri()
                 val gift = Gift(newName, client.vkId, client.info.name, newDesc, defaultImageUri)
                 newImageFile?.let {
-                    gift.imageUrl = ImageStorageImpl().addImage(newImageFile).toString()
+                    gift.imageUrl = imageStorage.addImage(newImageFile).toString()
                     client.wishlists[wishlistIndex].gifts.add(gift)
                     updateClient()
                     _wishlist.value = Result.success(client.wishlists[wishlistIndex])

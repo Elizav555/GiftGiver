@@ -1,10 +1,10 @@
 package com.example.giftgiver.features.client.data.fb
 
-import com.example.giftgiver.features.user.data.fb.UserInfoFB
+import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.ClientsRepository
 import com.example.giftgiver.features.event.domain.Event
-import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.user.data.fb.UserInfoFB
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.google.firebase.firestore.DocumentSnapshot
@@ -25,9 +25,10 @@ const val GIFTS = "gifts"
 const val INFO = "info"
 
 class ClientsRepositoryImpl(
-    private val fbMapper: FBMapper
+    private val fbMapper: FBMapper,
+    private val firebaseFirestore: FirebaseFirestore
 ) : ClientsRepository {
-    private val clients = FirebaseFirestore.getInstance().collection(CLIENTS)
+    private val clients = firebaseFirestore.collection(CLIENTS)
 
     override suspend fun addClient(client: Client) {
         val clientRef = clients.document(client.vkId.toString())
@@ -83,8 +84,7 @@ class ClientsRepositoryImpl(
         clients.document("$vkId").update("${FieldPath.of(CALENDAR, EVENTS)}", eventsFB)
     }
 
-    override suspend fun updateFavFriends(vkId: Long, friends: List<Client>) {
-        val friendsFB = friends.map { it.vkId }
-        clients.document("$vkId").update(FAV_FRIENDS, friendsFB)
+    override suspend fun updateFavFriends(vkId: Long, friendsIds: List<Long>) {
+        clients.document("$vkId").update(FAV_FRIENDS, friendsIds)
     }
 }

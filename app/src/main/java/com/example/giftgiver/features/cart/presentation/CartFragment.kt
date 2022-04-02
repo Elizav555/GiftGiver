@@ -98,7 +98,7 @@ class CartFragment : Fragment() {
         isAdapterInited = false
         val action = CartFragmentDirections.actionCartToCartGiftFragment(
             giftIndex,
-            gifts.toTypedArray(),
+            gifts.toTypedArray(),//todo change to id
             false,
             -1
         )

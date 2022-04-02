@@ -31,10 +31,10 @@ class UserViewModel @Inject constructor(
     fun updateFavFriends(isFav: Boolean) = viewModelScope.launch {
         client?.let {
             if (isFav) {
-                clientFriend?.let { friend -> it.favFriends.add(friend) }
-            } else clientFriend?.let { friend -> it.favFriends.remove(friend) }
-            updateFavFriends(client.vkId, it.favFriends)
-            ClientState.client?.favFriends = it.favFriends
+                clientFriend?.let { friend -> it.favFriendsIds.add(friend.vkId) }
+            } else clientFriend?.let { friend -> it.favFriendsIds.remove(friend.vkId) }
+            updateFavFriends(client.vkId, it.favFriendsIds)
+            ClientState.client?.favFriendsIds = it.favFriendsIds
         }
     }
 }

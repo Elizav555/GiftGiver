@@ -1,14 +1,15 @@
 package com.example.giftgiver.common.db.fileStorage
 
 import android.net.Uri
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class ImageStorageImpl : ImageStorage {
-    private val storageRef = FirebaseStorage.getInstance().reference
+class ImageStorageImpl(
+    private val storageRef: StorageReference,
+) : ImageStorage {
     private val imagesRef = storageRef.child("images")
 
     override suspend fun addImage(newFile: File): Uri? {

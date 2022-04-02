@@ -10,6 +10,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+//todo inject somehow requests
 class LoadUserInfoVK @Inject constructor() {
     fun loadInfo(vkId: Long, successAction: (UserInfo) -> Unit) {
         VK.execute(

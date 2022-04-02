@@ -2,6 +2,7 @@ package com.example.giftgiver.features.user.domain.useCases
 
 import android.util.Log
 import com.example.giftgiver.features.client.domain.ClientsRepository
+import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.vk.api.sdk.VK
@@ -11,8 +12,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+//todo inject somehow requests
 class LoadFriendsVK @Inject constructor(
-    private val clientsRep: ClientsRepository
+    private val getClientByVkId: GetClientByVkId
 ) {
     fun loadFriends(vkId: Long, successAction: (List<UserInfo>) -> Unit) {
         VK.execute(
@@ -32,7 +34,7 @@ class LoadFriendsVK @Inject constructor(
     suspend fun loadFriends(vkId: Long): List<UserInfo> {
         val friendsVK = loadAllFriends(vkId)
         return friendsVK.sortedBy { user -> user.name }//todo change back
-//        return friendsVK.mapNotNull { friend -> clientsRep.getClientByVkId(friend.vkId)?.info }
+//        return friendsVK.mapNotNull { friend -> getClientByVkId(friend.vkId)?.info }
 //            .sortedByDescending { user -> user.name }
     }
 

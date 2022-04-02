@@ -17,5 +17,5 @@ interface ClientsRepository {
     suspend fun updateWishlists(vkId: Long, wishlists: List<Wishlist>)
     suspend fun updateCart(vkId: Long, gifts: List<Gift>)
     suspend fun updateCalendar(vkId: Long, events: List<Event>)
-    suspend fun updateFavFriends(vkId: Long, friends: List<Client>)
+    suspend fun updateFavFriends(vkId: Long, friendsIds: List<Long>)
 }

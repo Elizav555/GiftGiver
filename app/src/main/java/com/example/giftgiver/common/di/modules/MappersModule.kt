@@ -1,22 +1,28 @@
 package com.example.giftgiver.common.di.modules
 
-import com.example.giftgiver.features.event.data.DateMapper
-import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.calendar.data.mappers.HolidayMapper
+import com.example.giftgiver.features.client.data.fb.FBMapper
+import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.user.data.vk.VkMapper
+import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
 class MappersModule {
     @Provides
     @Singleton
-    fun provideHolidayMapper(): HolidayMapper = HolidayMapper()
+    fun provideHolidayMapper(dateMapper: DateMapper): HolidayMapper = HolidayMapper(dateMapper)
 
     @Provides
     @Singleton
-    fun provideFBMapper(): FBMapper = FBMapper()
+    fun provideFBMapper(
+        dispatcher: CoroutineDispatcher,
+        loadUserInfoVK: LoadUserInfoVK
+    ): FBMapper =
+        FBMapper(dispatcher, loadUserInfoVK)
 
     @Provides
     @Singleton
