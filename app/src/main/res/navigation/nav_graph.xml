@@ -41,11 +41,8 @@
                 android:name="giftIndex"
                 app:argType="integer" />
             <argument
-                android:name="gifts"
-                app:argType="com.example.giftgiver.features.gift.domain.Gift[]" />
-            <argument
-                android:name="isClient"
-                app:argType="boolean" />
+                android:name="userId"
+                app:argType="long" />
             <argument
                 android:name="wishlistIndex"
                 app:argType="integer" />
@@ -112,11 +109,8 @@
                 android:name="giftIndex"
                 app:argType="integer" />
             <argument
-                android:name="gifts"
-                app:argType="com.example.giftgiver.features.gift.domain.Gift[]" />
-            <argument
-                android:name="isClient"
-                app:argType="boolean" />
+                android:name="userId"
+                app:argType="long" />
             <argument
                 android:name="wishlistIndex"
                 app:argType="integer" />
@@ -141,11 +135,8 @@
                 android:name="giftIndex"
                 app:argType="integer" />
             <argument
-                android:name="gifts"
-                app:argType="com.example.giftgiver.features.gift.domain.Gift[]" />
-            <argument
-                android:name="isClient"
-                app:argType="boolean" />
+                android:name="userId"
+                app:argType="long" />
             <argument
                 android:name="wishlistIndex"
                 app:argType="integer" />

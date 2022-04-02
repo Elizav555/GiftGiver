@@ -23,8 +23,7 @@ class GiftFragment : Fragment() {
     private lateinit var binding: FragmentGiftBinding
     private val args: GiftFragmentArgs by navArgs()
     private var giftIndex = 0
-    private var gifts = mutableListOf<Gift>()
-    private var isClient = false
+    private var wishlistIndex = 0
     private var curGift: Gift? = null
 
     @Inject
@@ -52,11 +51,11 @@ class GiftFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        isClient = args.isClient
+        wishlistIndex = args.wishlistIndex
         giftIndex = args.giftIndex
-        gifts = args.gifts.toMutableList()
-        curGift = gifts[giftIndex]
-        curGift?.let { bindInfo(it) }
+        val vkId = args.userId
+        giftViewModel.checkUser(vkId)
+        giftViewModel.getGift(vkId, wishlistIndex, giftIndex)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -87,16 +86,16 @@ class GiftFragment : Fragment() {
 
     private fun bindInfo(gift: Gift) {
         with(binding) {
-            groupFor.isVisible = !isClient
             tvForName.text = gift.forName
             tvDesc.movementMethod = ScrollingMovementMethod()
-            setHasOptionsMenu(isClient)
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc
             ivPhoto.load(gift.imageUrl)
             imageViewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
                 ivPhoto.setImageBitmap(it)
             }
+            progressBar.isVisible = false
+            groupAll.isVisible = true
         }
     }
 
@@ -109,6 +108,15 @@ class GiftFragment : Fragment() {
             result.fold(onSuccess = { gift ->
                 curGift = gift
                 gift?.let { bindInfo(it) }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
+        }
+        giftViewModel.isClient.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = {
+                val isClient = it
+                binding.groupFor.isVisible = !isClient
+                setHasOptionsMenu(isClient)
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })

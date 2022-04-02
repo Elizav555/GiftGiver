@@ -22,6 +22,7 @@ import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.ChangeWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
+import com.example.giftgiver.utils.ClientState
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
 import java.io.File
@@ -95,7 +96,7 @@ class WishlistFragment : Fragment() {
 
     private fun initAdapter(gifts: MutableList<Gift>) {
         val goToItem = { position: Int ->
-            navigateToItem(position, gifts)
+            navigateToItem(position)
         }
         giftAdapter = GiftAdapter(goToItem, gifts)
         with(binding.rvGifts) {
@@ -129,15 +130,17 @@ class WishlistFragment : Fragment() {
         wishlistViewModel.deleteGift(gift)
     }
 
-    private fun navigateToItem(giftIndex: Int, gifts: MutableList<Gift>) {
-        isAdapterInited = false
-        val action = WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
-            giftIndex,
-            gifts.toTypedArray(),
-            true,
-            index
-        )
-        findNavController().navigate(action)
+    private fun navigateToItem(giftIndex: Int) {
+        ClientState.client?.vkId?.let {
+            isAdapterInited = false
+            val action =
+                WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(
+                    giftIndex,
+                    it,
+                    index
+                )
+            findNavController().navigate(action)
+        }
     }
 
     fun changeWishlistName(newName: String) {

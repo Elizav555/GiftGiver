@@ -7,6 +7,17 @@
     tools:context=".features.gift.presentation.GiftFragment">
     <!--todo think about info fields and make them scrollable if necessary -->
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="283dp"
+        android:layout_height="280dp"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_forName"
         android:layout_width="0dp"
@@ -75,6 +86,14 @@
         android:id="@+id/group_for"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:constraint_referenced_ids="tv_for,tv_forName" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:constraint_referenced_ids="iv_photo,tv_desc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

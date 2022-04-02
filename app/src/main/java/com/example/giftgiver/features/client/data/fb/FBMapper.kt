@@ -54,7 +54,8 @@ class FBMapper(
         forName = gift.forName,
         desc = gift.desc,
         imageUrl = gift.imageUrl,
-        isChosen = gift.isChosen
+        isChosen = gift.isChosen,
+        wishlistIndex = gift.wishlistIndex
     )
 
     private fun mapEventFromFB(event: EventFB): Event {
@@ -69,7 +70,8 @@ class FBMapper(
         forName = gift.forName,
         desc = gift.desc,
         imageUrl = gift.imageUrl,
-        isChosen = gift.isChosen
+        isChosen = gift.isChosen,
+        wishlistIndex = gift.wishlistIndex
     )
 
     suspend fun mapClientFromFB(clientFB: ClientFB): Client {

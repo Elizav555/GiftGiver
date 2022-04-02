@@ -44,7 +44,14 @@ class WishlistViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val defaultImageUri = getDefaultUri()
-                val gift = Gift(newName, client.vkId, client.info.name, newDesc, defaultImageUri)
+                val gift = Gift(
+                    newName,
+                    client.vkId,
+                    client.info.name,
+                    newDesc,
+                    defaultImageUri,
+                    wishlistIndex = wishlistIndex
+                )
                 newImageFile?.let {
                     gift.imageUrl = imageStorage.addImage(newImageFile).toString()
                     client.wishlists[wishlistIndex].gifts.add(gift)

@@ -67,7 +67,7 @@ class FriendsWishlistFragment : Fragment() {
 
     private fun initAdapter(gifts: MutableList<Gift>) {
         val goToItem = { position: Int ->
-            navigateToItem(position, gifts)
+            navigateToItem(position)
         }
         giftAdapter = GiftAdapter(goToItem, gifts, ::checkedFunc)
         with(binding.rvGifts) {
@@ -83,13 +83,12 @@ class FriendsWishlistFragment : Fragment() {
         giftAdapter.submitList(gifts)
     }
 
-    private fun navigateToItem(giftIndex: Int, gifts: List<Gift>) {
+    private fun navigateToItem(giftIndex: Int) {
         isAdapterInited = false
         val action =
             FriendsWishlistFragmentDirections.actionFriendsWishlistFragmentToMyGiftFragment(
                 giftIndex,
-                gifts.toTypedArray(),
-                false,
+                args.friendVkId,
                 wishlistIndex
             )
         findNavController().navigate(action)

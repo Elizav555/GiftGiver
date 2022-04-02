@@ -66,8 +66,8 @@ class CartFragment : Fragment() {
     private fun deleteAll() = cartViewModel.deleteAll()
 
     private fun initAdapter(gifts: List<Gift>) {
-        val goToItem = { position: Int -> //todo change from pos
-            navigateToItem(position, gifts)
+        val goToItem = { position: Int ->
+            navigateToItem(position, gifts[position])
         }
         giftAdapter = GiftAdapter(goToItem, gifts, null, true)
         with(binding.rvCart) {
@@ -94,13 +94,12 @@ class CartFragment : Fragment() {
 
     private fun deleteGift(gift: Gift) = cartViewModel.delete(gift)
 
-    private fun navigateToItem(giftIndex: Int, gifts: List<Gift>) {
+    private fun navigateToItem(giftIndex: Int, gift: Gift) {
         isAdapterInited = false
         val action = CartFragmentDirections.actionCartToCartGiftFragment(
             giftIndex,
-            gifts.toTypedArray(),//todo change to id
-            false,
-            -1
+            gift.forId,
+            gift.wishlistIndex
         )
         findNavController().navigate(action)
     }

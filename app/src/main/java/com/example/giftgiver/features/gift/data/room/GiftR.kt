@@ -15,4 +15,5 @@ data class GiftR(
     val desc: String?,
     val imageUrl: String?,
     var isChosen: Boolean = false,
+    val wishlistIndex: Int = 0
 ) : Parcelable

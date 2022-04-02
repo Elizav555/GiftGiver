@@ -55,7 +55,7 @@ class ViewModelFactory @Inject constructor(
                 ClientViewModel(updateWishlists, updateInfo, imageStorage) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(GiftViewModel::class.java) ->
-                GiftViewModel(updateWishlists, imageStorage) as? T
+                GiftViewModel(getClientByVkId, updateWishlists, imageStorage) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(StartViewModel::class.java) ->
                 StartViewModel(getClientByVkId, loadFriendsVK, addClient) as? T
