@@ -8,20 +8,20 @@ import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.UpdateGiftUseCase
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
 class GiftViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
-    private val updateWishlists: UpdateWishlistUseCase,
     private val imageStorage: ImageStorage,
     private val clientStateRep: ClientStateRep,
+    private val getGiftUseCase: GetGiftUseCase,
+    private val updateGiftUseCase: UpdateGiftUseCase
 ) : ViewModel() {
     private val client = clientStateRep.getClient()
-    private var wishlistIndex = 0
-    private var giftIndex = 0
 
     private var _gift: MutableLiveData<Result<Gift?>> = MutableLiveData()
     val gift: LiveData<Result<Gift?>> = _gift
@@ -39,51 +39,29 @@ class GiftViewModel @Inject constructor(
         }
     }
 
-    fun getGift(userId: Long, wIndex: Int, gIndex: Int) = viewModelScope.launch {
+    fun getGift(userId: Long, giftId: String) = viewModelScope.launch {
         try {
-            val clientReceived = getClientByVkId(userId)
-            wishlistIndex = wIndex
-            giftIndex = gIndex
-            clientGift = clientReceived?.wishlists?.get(wishlistIndex)?.gifts?.get(giftIndex)
+            clientGift = getGiftUseCase(userId, giftId)
             _gift.value = Result.success(clientGift)
         } catch (ex: Exception) {
             _gift.value = Result.failure(ex)
         }
     }
 
-    private fun updateClientsWishlists() = viewModelScope.launch {
-        client?.let { client ->
-            clientGift?.let {
-                client.wishlists[wishlistIndex].gifts[giftIndex] = it
-                updateWishlists(client.vkId, client.wishlists)
-                client.wishlists = client.wishlists
-                clientStateRep.addClient(client)
-            }
-        }
-    }
-
-    fun changeGift(newName: String, newDesc: String, newImageFile: File?) = client?.let {
+    fun changeGift(newName: String, newDesc: String, newImageFile: File?) =
         viewModelScope.launch {
             try {
-                val gift = client.wishlists[wishlistIndex].gifts[giftIndex]
-                newImageFile?.let {
-                    gift.imageUrl = imageStorage.addImage(newImageFile).toString()
+                clientGift?.let {
+                    newImageFile?.let { file ->
+                        it.imageUrl = imageStorage.addImage(file).toString()
+                    }
+                    it.name = newName
+                    it.desc = newDesc
+                    client?.vkId?.let { vkId -> updateGiftUseCase(vkId, it) }
+                    _gift.value = Result.success(it)
                 }
-                clientGift =
-                    Gift(
-                        newName,
-                        gift.forId,
-                        gift.forName,
-                        newDesc,
-                        gift.imageUrl,
-                        gift.isChosen,
-                        wishlistIndex
-                    )
-                updateClientsWishlists()
-                _gift.value = Result.success(clientGift)
             } catch (ex: Exception) {
                 _gift.value = Result.failure(ex)
             }
         }
-    }
 }

@@ -27,6 +27,7 @@ class CartFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var cartViewModel: CartViewModel
+    private var giftsForList: List<Gift>? = null
     private var isAdapterInited = false
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,7 +68,7 @@ class CartFragment : Fragment() {
 
     private fun initAdapter(gifts: List<Gift>) {
         val goToItem = { position: Int ->
-            navigateToItem(position, gifts[position])
+            navigateToItem(giftsForList?.get(position))
         }
         giftAdapter = GiftCartAdapter(goToItem, gifts)
         with(binding.rvCart) {
@@ -94,25 +95,26 @@ class CartFragment : Fragment() {
 
     private fun deleteGift(gift: Gift) = cartViewModel.delete(gift)
 
-    private fun navigateToItem(giftIndex: Int, gift: Gift) {
-        isAdapterInited = false
-        val action = CartFragmentDirections.actionCartToCartGiftFragment(
-            giftIndex,
-            gift.forId,
-            gift.wishlistIndex
-        )
-        findNavController().navigate(action)
+    private fun navigateToItem(gift: Gift?) {
+        gift?.let {
+            isAdapterInited = false
+            val action = CartFragmentDirections.actionCartToCartGiftFragment(
+                gift.id,
+                gift.forId
+            )
+            findNavController().navigate(action)
+        }
     }
 
     private fun initObservers() {
         cartViewModel.gifts.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
-                val gifts = it
+                giftsForList = it
                 if (isAdapterInited) {
-                    giftAdapter.submitList(gifts)
+                    giftAdapter.submitList(it)
                 } else {
                     isAdapterInited = true
-                    initAdapter(gifts)
+                    initAdapter(it)
                 }
             }, onFailure = {
                 Log.e("asd", it.message.toString())

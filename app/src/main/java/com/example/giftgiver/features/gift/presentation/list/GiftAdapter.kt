@@ -7,10 +7,10 @@ import com.example.giftgiver.databinding.ItemGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
 
 class GiftAdapter(
-    private val action: (position: Int) -> Unit,
+    private val action: (id: String) -> Unit,
     private val gifts: List<Gift>,
     private val checkedFunc: ((Int, Boolean) -> Unit)? = null,
-    private val clientCart: List<Gift>? = null
+    private val clientCart: List<Pair<String, Long>>? = null
 ) : ListAdapter<Gift, GiftHolder>(GiftDiffItemCallback()) {
 
     override fun onCreateViewHolder(
@@ -31,7 +31,7 @@ class GiftAdapter(
         holder: GiftHolder,
         position: Int
     ) {
-        val gift = gifts[position]
+        val gift = getItem(position)
         holder.bind(gift)
     }
 

@@ -34,7 +34,7 @@ class ImageStorageImpl(
         }
     }
 
-    override suspend fun getDefaultUrl() {
+    override suspend fun getDefaultUrl() =
         suspendCoroutine<Uri?> { continuation ->
             imagesRef.child("icon 105x150.png").downloadUrl.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -45,5 +45,4 @@ class ImageStorageImpl(
                 }
             }
         }
-    }
 }

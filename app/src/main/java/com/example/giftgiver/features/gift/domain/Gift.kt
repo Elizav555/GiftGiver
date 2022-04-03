@@ -5,10 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Gift(
-    val name: String,
+    val id: String,
+    var name: String,
     val forId: Long = 0,
     val forName: String? = null,
-    val desc: String?,
+    var desc: String?,
     var imageUrl: String?,
     var isChosen: Boolean = false,
     val wishlistIndex: Int

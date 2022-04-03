@@ -62,12 +62,11 @@ class FriendsWishlistFragment : Fragment() {
                 friend.info.name,
                 friend.wishlists[wishlistIndex].name
             )
-        initAdapter(friend.wishlists[wishlistIndex].gifts)
     }
 
     private fun initAdapter(gifts: MutableList<Gift>) {
-        val goToItem = { position: Int ->
-            navigateToItem(position)
+        val goToItem = { id: String ->
+            navigateToItem(id)
         }
         giftAdapter =
             GiftAdapter(goToItem, gifts, ::checkedFunc, friendsWishlistViewModel.getClientCart())
@@ -84,13 +83,12 @@ class FriendsWishlistFragment : Fragment() {
         giftAdapter.submitList(gifts)
     }
 
-    private fun navigateToItem(giftIndex: Int) {
+    private fun navigateToItem(giftId: String) {
         isAdapterInited = false
         val action =
             FriendsWishlistFragmentDirections.actionFriendsWishlistFragmentToMyGiftFragment(
-                giftIndex,
+                giftId,
                 args.friendVkId,
-                wishlistIndex
             )
         findNavController().navigate(action)
     }
@@ -103,12 +101,20 @@ class FriendsWishlistFragment : Fragment() {
         friendsWishlistViewModel.friend.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = { friend ->
                 friend?.let {
-                    if (isAdapterInited) {
-                        giftAdapter.submitList(it.wishlists[wishlistIndex].gifts)
-                    } else {
-                        isAdapterInited = true
-                        bindInfo(it)
-                    }
+                    bindInfo(it)
+                    friendsWishlistViewModel.getGifts(it.vkId, it.wishlists[wishlistIndex].giftsIds)
+                }
+            }, onFailure = {
+                Log.e("asd", it.message.toString())
+            })
+        }
+        friendsWishlistViewModel.gifts.observe(viewLifecycleOwner) { result ->
+            result.fold(onSuccess = {
+                if (isAdapterInited) {
+                    giftAdapter.submitList(it)
+                } else {
+                    isAdapterInited = true
+                    initAdapter(it as MutableList<Gift>)
                 }
             }, onFailure = {
                 Log.e("asd", it.message.toString())

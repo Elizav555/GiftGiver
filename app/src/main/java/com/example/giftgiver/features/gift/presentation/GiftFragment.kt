@@ -22,8 +22,6 @@ import javax.inject.Inject
 class GiftFragment : Fragment() {
     private lateinit var binding: FragmentGiftBinding
     private val args: GiftFragmentArgs by navArgs()
-    private var giftIndex = 0
-    private var wishlistIndex = 0
     private var curGift: Gift? = null
 
     @Inject
@@ -51,11 +49,9 @@ class GiftFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        wishlistIndex = args.wishlistIndex
-        giftIndex = args.giftIndex
         val vkId = args.userId
         giftViewModel.checkUser(vkId)
-        giftViewModel.getGift(vkId, wishlistIndex, giftIndex)
+        giftViewModel.getGift(vkId, args.giftId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

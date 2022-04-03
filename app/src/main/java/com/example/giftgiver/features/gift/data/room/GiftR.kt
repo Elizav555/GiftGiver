@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "gifts")
 @Parcelize
 data class GiftR(
-    @PrimaryKey(autoGenerate = false) val id: Long,
+    @PrimaryKey(autoGenerate = false) val id: String,
     val name: String,
     val forId: Long = 0,
     val forName: String? = null,

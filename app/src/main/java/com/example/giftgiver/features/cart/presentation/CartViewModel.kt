@@ -7,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
 import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CartViewModel @Inject constructor(
     private val updateCart: UpdateCartUseCase,
     private val clientStateRep: ClientStateRep,
+    private val getGiftUseCase: GetGiftUseCase
 ) : ViewModel() {
     private val client = clientStateRep.getClient()
 
@@ -22,7 +24,13 @@ class CartViewModel @Inject constructor(
 
     fun getGifts() = viewModelScope.launch {
         try {
-            clientGifts = client?.cart?.gifts ?: mutableListOf()
+            val giftsMapped = client?.cart?.giftsIdsAndFor?.mapNotNull {
+                getGiftUseCase(
+                    it.second,
+                    it.first
+                )
+            }
+            clientGifts = (giftsMapped ?: listOf()) as MutableList<Gift>
             _gifts.value = Result.success(clientGifts)
         } catch (ex: Exception) {
             _gifts.value = Result.failure(ex)
@@ -31,8 +39,9 @@ class CartViewModel @Inject constructor(
 
     private fun updateClient() = viewModelScope.launch {
         client?.let { client ->
-            updateCart(client.vkId, clientGifts)
-            client.cart.gifts = clientGifts
+            val ids = clientGifts.map { it.id to it.forId }
+            updateCart(client.vkId, ids)
+            client.cart.giftsIdsAndFor = ids as MutableList<Pair<String, Long>>
             clientStateRep.addClient(client)
         }
     }

@@ -8,6 +8,7 @@ import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.ClientsRepository
 import com.example.giftgiver.features.event.data.DateMapper
+import com.example.giftgiver.features.gift.domain.GiftsRepository
 import com.example.giftgiver.features.user.data.vk.VkMapper
 import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,6 +27,8 @@ interface AppComponent {
     fun getHolidayRepository(): HolidayRepository
 
     fun getClientsRepository(): ClientsRepository
+
+    fun getGiftsRepository(): GiftsRepository
 
     fun getClientStateRepository(): ClientStateRep
 

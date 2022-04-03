@@ -7,7 +7,7 @@ class GiftDiffItemCallback : DiffUtil.ItemCallback<Gift>() {
     override fun areItemsTheSame(
         oldItem: Gift,
         newItem: Gift
-    ): Boolean = oldItem.name == newItem.name
+    ): Boolean = oldItem.id == newItem.id
 
     override fun areContentsTheSame(
         oldItem: Gift,

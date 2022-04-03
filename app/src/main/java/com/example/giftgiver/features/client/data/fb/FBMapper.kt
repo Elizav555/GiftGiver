@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.client.data.fb
 
+import com.example.giftgiver.features.cart.data.fb.GiftInfo
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.event.data.fb.EventFB
 import com.example.giftgiver.features.event.domain.Event
@@ -21,7 +22,8 @@ class FBMapper(
     fun mapClientToFB(client: Client): ClientFB {
         val clientFB = ClientFB(client.vkId)
         clientFB.calendar.events = client.calendar.events.map { mapEventToFB(it) }
-        clientFB.cart.gifts = client.cart.gifts.map { mapGiftToFB(it) }
+        clientFB.cart.giftsIdsAndFor =
+            client.cart.giftsIdsAndFor.map { GiftInfo(it.first, it.second) }
         clientFB.favFriendsIds = client.favFriendsIds
         clientFB.wishlists = client.wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
         clientFB.info = with(client.info) {
@@ -37,12 +39,12 @@ class FBMapper(
 
     fun mapWishlistToFB(wishlist: Wishlist) = WishlistFB(
         name = wishlist.name,
-        gifts = wishlist.gifts.map { mapGiftToFB(it) },
+        giftsIds = wishlist.giftsIds
     )
 
     private fun mapWishlistFromFB(wishlist: WishlistFB) = Wishlist(
         name = wishlist.name,
-        gifts = wishlist.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>,
+        giftsIds = wishlist.giftsIds as MutableList<String>
     )
 
     fun mapEventToFB(event: Event): EventFB =
@@ -64,7 +66,8 @@ class FBMapper(
         return Event(date = calendar, desc = event.desc)
     }
 
-    private fun mapGiftFromFB(gift: GiftFB): Gift = Gift(
+    fun mapGiftFromFB(gift: GiftFB, giftId: String): Gift = Gift(
+        id = giftId,
         name = gift.name,
         forId = gift.forId,
         forName = gift.forName,
@@ -91,7 +94,7 @@ class FBMapper(
         client.wishlists = clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
         client.calendar.events =
             clientFB.calendar.events.map { mapEventFromFB(it) } as MutableList<Event>
-        client.cart.gifts = clientFB.cart.gifts.map { mapGiftFromFB(it) } as MutableList<Gift>
+        client.cart.giftsIdsAndFor = clientFB.cart.giftsIdsAndFor as MutableList<Pair<String, Long>>
         client.favFriendsIds = clientFB.favFriendsIds
         return client
     }
