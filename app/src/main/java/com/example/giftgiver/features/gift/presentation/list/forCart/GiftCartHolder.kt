@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.gift.presentation.list.forCart
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.example.giftgiver.databinding.ItemGiftCartBinding
@@ -18,6 +19,7 @@ class GiftCartHolder(
 
     fun bind(gift: Gift) {
         with(binding) {
+            ivChanged.isVisible = gift.isChanged
             tvFor.text = gift.forName
             tvName.text = gift.name
             ivPhoto.load(gift.imageUrl)

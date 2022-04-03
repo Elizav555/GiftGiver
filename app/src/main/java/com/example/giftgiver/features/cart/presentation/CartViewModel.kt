@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
 import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,10 +25,10 @@ class CartViewModel @Inject constructor(
 
     fun getGifts() = viewModelScope.launch {
         try {
-            val giftsMapped = client?.cart?.giftsIdsAndFor?.mapNotNull {
+            val giftsMapped = client?.cart?.giftsInfo?.mapNotNull {
                 getGiftUseCase(
-                    it.second,
-                    it.first
+                    it.forId,
+                    it.giftId
                 )
             }
             clientGifts = (giftsMapped ?: listOf()) as MutableList<Gift>
@@ -39,9 +40,9 @@ class CartViewModel @Inject constructor(
 
     private fun updateClient() = viewModelScope.launch {
         client?.let { client ->
-            val ids = clientGifts.map { it.id to it.forId }
+            val ids = clientGifts.map { GiftInfo(it.id, it.forId) }
             updateCart(client.vkId, ids)
-            client.cart.giftsIdsAndFor = ids as MutableList<Pair<String, Long>>
+            client.cart.giftsInfo = ids as MutableList<GiftInfo>
             clientStateRep.addClient(client)
         }
     }

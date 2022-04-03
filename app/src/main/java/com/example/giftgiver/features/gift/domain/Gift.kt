@@ -12,5 +12,6 @@ data class Gift(
     var desc: String?,
     var imageUrl: String?,
     var isChosen: Boolean = false,
+    var isChanged: Boolean = false,
     val wishlistIndex: Int
 ) : Parcelable

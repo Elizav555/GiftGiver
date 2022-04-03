@@ -15,6 +15,7 @@ import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.AddWishlistDialog
@@ -31,6 +32,9 @@ class AccountFragment : Fragment() {
 
     @Inject
     lateinit var clientStateRep: ClientStateRep
+
+    @Inject
+    lateinit var friendsStateRep: FriendsStateRep
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -138,6 +142,7 @@ class AccountFragment : Fragment() {
     private fun logout() { //todo check mb change
         VK.logout()
         clientStateRep.deleteClient()
+        friendsStateRep.deleteFriends()
         isAdapterInited = false
         findNavController().navigate(AccountFragmentDirections.actionAccountToStartFragment())
     }

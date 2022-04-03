@@ -42,6 +42,9 @@ class GiftViewModel @Inject constructor(
     fun getGift(userId: Long, giftId: String) = viewModelScope.launch {
         try {
             clientGift = getGiftUseCase(userId, giftId)
+            if (clientGift?.forId != userId) {
+                clientGift?.isChanged = false
+            }
             _gift.value = Result.success(clientGift)
         } catch (ex: Exception) {
             _gift.value = Result.failure(ex)
@@ -57,6 +60,7 @@ class GiftViewModel @Inject constructor(
                     }
                     it.name = newName
                     it.desc = newDesc
+                    it.isChanged = true
                     client?.vkId?.let { vkId -> updateGiftUseCase(vkId, it) }
                     _gift.value = Result.success(it)
                 }

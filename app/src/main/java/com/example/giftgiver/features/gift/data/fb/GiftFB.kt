@@ -7,5 +7,6 @@ data class GiftFB(
     val desc: String? = "",
     val imageUrl: String? = "",
     var isChosen: Boolean = false,
+    var isChanged: Boolean = false,
     val wishlistIndex: Int = 0
 )
