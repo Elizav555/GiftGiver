@@ -38,14 +38,11 @@
             android:name="com.example.giftgiver.features.gift.presentation.GiftFragment"
             tools:layout="@layout/fragment_gift">
             <argument
-                android:name="giftIndex"
-                app:argType="integer" />
+                android:name="giftId"
+                app:argType="string" />
             <argument
                 android:name="userId"
                 app:argType="long" />
-            <argument
-                android:name="wishlistIndex"
-                app:argType="integer" />
         </fragment>
         <fragment
             android:id="@+id/friendsWishlistFragment"
@@ -106,14 +103,11 @@
             android:name="com.example.giftgiver.features.gift.presentation.GiftFragment"
             tools:layout="@layout/fragment_gift">
             <argument
-                android:name="giftIndex"
-                app:argType="integer" />
-            <argument
                 android:name="userId"
                 app:argType="long" />
             <argument
-                android:name="wishlistIndex"
-                app:argType="integer" />
+                android:name="giftId"
+                app:argType="string" />
         </fragment>
     </navigation>
     <navigation android:id="@+id/ng_cart"
@@ -132,14 +126,11 @@
             android:name="com.example.giftgiver.features.gift.presentation.GiftFragment"
             tools:layout="@layout/fragment_gift">
             <argument
-                android:name="giftIndex"
-                app:argType="integer" />
+                android:name="giftId"
+                app:argType="string" />
             <argument
                 android:name="userId"
                 app:argType="long" />
-            <argument
-                android:name="wishlistIndex"
-                app:argType="integer" />
         </fragment>
     </navigation>
 </navigation>

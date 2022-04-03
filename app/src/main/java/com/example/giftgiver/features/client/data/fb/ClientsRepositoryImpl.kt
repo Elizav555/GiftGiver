@@ -3,7 +3,6 @@ package com.example.giftgiver.features.client.data.fb
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.ClientsRepository
 import com.example.giftgiver.features.event.domain.Event
-import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.user.data.fb.UserInfoFB
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
@@ -21,7 +20,7 @@ const val CART = "cart"
 const val CALENDAR = "calendar"
 const val FAV_FRIENDS = "favFriendsIds"
 const val EVENTS = "events"
-const val GIFTS = "gifts"
+const val GIFTS_IDS = "giftsIdsAndFor"
 const val INFO = "info"
 
 class ClientsRepositoryImpl(
@@ -74,9 +73,8 @@ class ClientsRepositoryImpl(
         clients.document(vkId.toString()).update(WISHLISTS, wishlistsFB)
     }
 
-    override suspend fun updateCart(vkId: Long, gifts: List<Gift>) {
-        val giftsFB = gifts.map { fbMapper.mapGiftToFB(it) }
-        clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS)}", giftsFB)
+    override suspend fun updateCart(vkId: Long, giftsIds: List<Pair<String, Long>>) {
+        clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS_IDS)}", giftsIds)
     }
 
     override suspend fun updateCalendar(vkId: Long, events: List<Event>) {

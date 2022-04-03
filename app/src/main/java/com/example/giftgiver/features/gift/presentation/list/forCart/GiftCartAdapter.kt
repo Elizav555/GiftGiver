@@ -28,7 +28,7 @@ class GiftCartAdapter(
         holder: GiftCartHolder,
         position: Int
     ) {
-        val gift = gifts[position]
+        val gift = getItem(position)
         holder.bind(gift)
     }
 

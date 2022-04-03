@@ -8,25 +8,20 @@ import com.example.giftgiver.features.gift.domain.Gift
 
 class GiftHolder(
     private val binding: ItemGiftBinding,
-    action: (position: Int) -> Unit,
+    private val action: (id: String) -> Unit,
     private val checkedFunc: ((Int, Boolean) -> Unit)?,
-    private val clientCart: List<Gift>?
+    private val clientCart: List<Pair<String, Long>>? = null
 ) : RecyclerView.ViewHolder(binding.root) {
-
-    init {
-        itemView.setOnClickListener {
-            action(adapterPosition)
-        }
-    }
 
     fun bind(gift: Gift) {
         with(binding) {
+            root.setOnClickListener { action(gift.id) }
             checkedFunc?.let {
                 checkBox.visibility = View.VISIBLE
                 checkBox.isChecked = gift.isChosen
                 if (gift.isChosen) {
                     ivFilter.visibility = View.VISIBLE
-                    checkBox.isClickable = clientCart?.contains(gift) == true
+                    checkBox.isClickable = clientCart?.contains(gift.id to gift.forId) == true
                 }
                 checkBox.setOnCheckedChangeListener { _, isChecked ->
                     it(adapterPosition, isChecked)

@@ -11,6 +11,8 @@ import com.example.giftgiver.features.client.data.fb.ClientsRepositoryImpl
 import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.ClientsRepository
+import com.example.giftgiver.features.gift.data.GiftsRepositoryImpl
+import com.example.giftgiver.features.gift.domain.GiftsRepository
 import com.example.giftgiver.features.user.data.FriendsStateRepImpl
 import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,6 +42,13 @@ class DataModule {
         fbMapper: FBMapper,
         firestore: FirebaseFirestore
     ): ClientsRepository = ClientsRepositoryImpl(fbMapper, firestore)
+
+    @Provides
+    @Singleton
+    fun provideGiftsRepository(
+        fbMapper: FBMapper,
+        firestore: FirebaseFirestore
+    ): GiftsRepository = GiftsRepositoryImpl(fbMapper, firestore)
 
     @Provides
     @Singleton

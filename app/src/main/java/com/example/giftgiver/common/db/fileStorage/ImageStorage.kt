@@ -5,5 +5,5 @@ import java.io.File
 
 interface ImageStorage {
     suspend fun addImage(newFile: File): Uri?
-    suspend fun getDefaultUrl()
+    suspend fun getDefaultUrl(): Uri?
 }
