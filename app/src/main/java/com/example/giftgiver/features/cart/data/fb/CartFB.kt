@@ -1,10 +1,7 @@
 package com.example.giftgiver.features.cart.data.fb
 
-data class CartFB(
-    var giftsIdsAndFor: List<GiftInfo> = listOf(),
-)
+import com.example.giftgiver.features.gift.data.fb.GiftInfoFB
 
-data class GiftInfo(
-    var giftId: String = "",
-    var forId: Long = 0
+data class CartFB(
+    var giftsInfo: List<GiftInfoFB> = listOf(),
 )

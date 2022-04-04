@@ -14,6 +14,7 @@ import com.example.giftgiver.App
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentCartBinding
+import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.forCart.GiftCartAdapter
 import com.example.giftgiver.utils.SwipeToDeleteCallback
@@ -23,6 +24,9 @@ import javax.inject.Inject
 class CartFragment : Fragment() {
     private lateinit var binding: FragmentCartBinding
     private var giftAdapter: GiftCartAdapter by autoCleared()
+
+    @Inject
+    lateinit var clientStateRep: ClientStateRep
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -67,10 +71,10 @@ class CartFragment : Fragment() {
     private fun deleteAll() = cartViewModel.deleteAll()
 
     private fun initAdapter(gifts: List<Gift>) {
-        val goToItem = { position: Int ->
-            navigateToItem(giftsForList?.get(position))
+        val goToItem = { id: String ->
+            navigateToItem(giftsForList?.first { it.id == id })
         }
-        giftAdapter = GiftCartAdapter(goToItem, gifts)
+        giftAdapter = GiftCartAdapter(goToItem, gifts, clientStateRep)
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())

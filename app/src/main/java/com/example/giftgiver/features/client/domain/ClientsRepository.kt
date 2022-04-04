@@ -1,6 +1,7 @@
 package com.example.giftgiver.features.client.domain
 
 import com.example.giftgiver.features.event.domain.Event
+import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.google.android.gms.tasks.Task
@@ -14,7 +15,7 @@ interface ClientsRepository {
     suspend fun getDataSnapshot(vkId: Long): DocumentSnapshot
     suspend fun updateInfo(vkId: Long, info: UserInfo)
     suspend fun updateWishlists(vkId: Long, wishlists: List<Wishlist>)
-    suspend fun updateCart(vkId: Long, giftsIds: List<Pair<String, Long>>)
+    suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>)
     suspend fun updateCalendar(vkId: Long, events: List<Event>)
     suspend fun updateFavFriends(vkId: Long, friendsIds: List<Long>)
 }

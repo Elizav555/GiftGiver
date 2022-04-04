@@ -3,6 +3,7 @@ package com.example.giftgiver.features.client.data.fb
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.ClientsRepository
 import com.example.giftgiver.features.event.domain.Event
+import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.user.data.fb.UserInfoFB
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
@@ -20,7 +21,7 @@ const val CART = "cart"
 const val CALENDAR = "calendar"
 const val FAV_FRIENDS = "favFriendsIds"
 const val EVENTS = "events"
-const val GIFTS_IDS = "giftsIdsAndFor"
+const val GIFTS_IDS = "giftsInfo"
 const val INFO = "info"
 
 class ClientsRepositoryImpl(
@@ -73,7 +74,7 @@ class ClientsRepositoryImpl(
         clients.document(vkId.toString()).update(WISHLISTS, wishlistsFB)
     }
 
-    override suspend fun updateCart(vkId: Long, giftsIds: List<Pair<String, Long>>) {
+    override suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>) {
         clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS_IDS)}", giftsIds)
     }
 

@@ -1,11 +1,12 @@
 package com.example.giftgiver.features.client.data.fb
 
-import com.example.giftgiver.features.cart.data.fb.GiftInfo
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.event.data.fb.EventFB
 import com.example.giftgiver.features.event.domain.Event
 import com.example.giftgiver.features.gift.data.fb.GiftFB
+import com.example.giftgiver.features.gift.data.fb.GiftInfoFB
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.user.data.fb.UserInfoFB
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
@@ -17,13 +18,13 @@ import java.util.*
 
 class FBMapper(
     private val dispatcher: CoroutineDispatcher,
-    private val loadUserInfoVK: LoadUserInfoVK
+    private val loadUserInfoVK: LoadUserInfoVK,
 ) {
     fun mapClientToFB(client: Client): ClientFB {
         val clientFB = ClientFB(client.vkId)
         clientFB.calendar.events = client.calendar.events.map { mapEventToFB(it) }
-        clientFB.cart.giftsIdsAndFor =
-            client.cart.giftsIdsAndFor.map { GiftInfo(it.first, it.second) }
+        clientFB.cart.giftsInfo =
+            client.cart.giftsInfo.map { GiftInfoFB(it.giftId, it.forId, it.lastSeen.time) }
         clientFB.favFriendsIds = client.favFriendsIds
         clientFB.wishlists = client.wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
         clientFB.info = with(client.info) {
@@ -57,6 +58,7 @@ class FBMapper(
         desc = gift.desc,
         imageUrl = gift.imageUrl,
         isChosen = gift.isChosen,
+        lastChanged = gift.lastChanged.time,
         wishlistIndex = gift.wishlistIndex
     )
 
@@ -66,16 +68,21 @@ class FBMapper(
         return Event(date = calendar, desc = event.desc)
     }
 
-    fun mapGiftFromFB(gift: GiftFB, giftId: String): Gift = Gift(
-        id = giftId,
-        name = gift.name,
-        forId = gift.forId,
-        forName = gift.forName,
-        desc = gift.desc,
-        imageUrl = gift.imageUrl,
-        isChosen = gift.isChosen,
-        wishlistIndex = gift.wishlistIndex
-    )
+    fun mapGiftFromFB(gift: GiftFB, giftId: String): Gift {
+        val calendar = Calendar.getInstance()
+        calendar.time = gift.lastChanged
+        return Gift(
+            id = giftId,
+            name = gift.name,
+            forId = gift.forId,
+            forName = gift.forName,
+            desc = gift.desc,
+            imageUrl = gift.imageUrl,
+            isChosen = gift.isChosen,
+            lastChanged = calendar,
+            wishlistIndex = gift.wishlistIndex
+        )
+    }
 
     suspend fun mapClientFromFB(clientFB: ClientFB): Client {
         var info = UserInfo(clientFB.vkId)
@@ -94,7 +101,16 @@ class FBMapper(
         client.wishlists = clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
         client.calendar.events =
             clientFB.calendar.events.map { mapEventFromFB(it) } as MutableList<Event>
-        client.cart.giftsIdsAndFor = clientFB.cart.giftsIdsAndFor as MutableList<Pair<String, Long>>
+        val calendar = Calendar.getInstance()
+        client.cart.giftsInfo =
+            clientFB.cart.giftsInfo.map {
+                calendar.time = it.lastSeen
+                GiftInfo(
+                    it.giftId,
+                    it.forId,
+                    calendar
+                )
+            } as MutableList<GiftInfo>
         client.favFriendsIds = clientFB.favFriendsIds
         return client
     }

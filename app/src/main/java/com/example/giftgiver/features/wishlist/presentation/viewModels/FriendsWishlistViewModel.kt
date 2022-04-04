@@ -9,9 +9,11 @@ import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
 import com.example.giftgiver.features.gift.domain.useCases.UpdateGiftUseCase
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 class FriendsWishlistViewModel @Inject constructor(
@@ -43,12 +45,20 @@ class FriendsWishlistViewModel @Inject constructor(
                 curGift?.let { gift ->
                     gift.isChosen = isChecked
                     if (isChecked) {
-                        client?.cart?.giftsIdsAndFor?.add(gift.id to gift.forId)
+                        client?.cart?.giftsInfo?.add(
+                            GiftInfo(
+                                gift.id,
+                                gift.forId,
+                                Calendar.getInstance()
+                            )
+                        )
                     } else {
-                        client?.cart?.giftsIdsAndFor?.remove(gift.id to gift.forId)
+                        val giftToDelete =
+                            client?.cart?.giftsInfo?.firstOrNull { giftInfo -> giftInfo.giftId == gift.id }
+                        client?.cart?.giftsInfo?.remove(giftToDelete)
                     }
                     client?.let {
-                        updateCart(it.vkId, it.cart.giftsIdsAndFor)
+                        updateCart(it.vkId, it.cart.giftsInfo)
                         clientStateRep.addClient(client)
                         updateGiftUseCase(friend.vkId, gift)
                     }
@@ -60,7 +70,7 @@ class FriendsWishlistViewModel @Inject constructor(
         }
     }
 
-    fun getClientCart(): List<Pair<String, Long>> = client?.cart?.giftsIdsAndFor ?: listOf()
+    fun getClientCart(): List<GiftInfo> = client?.cart?.giftsInfo ?: listOf()
 
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts

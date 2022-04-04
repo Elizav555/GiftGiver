@@ -14,6 +14,7 @@ import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 
 class WishlistViewModel @Inject constructor(
@@ -23,7 +24,7 @@ class WishlistViewModel @Inject constructor(
     private val addGiftUseCase: AddGiftUseCase,
     private val deleteGiftUseCase: DeleteGiftUseCase,
     private val updateWishlist: UpdateWishlistUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
     private val client = clientStateRep.getClient()
     private var wishlistIndex = 0
     private var _wishlist: MutableLiveData<Result<Wishlist?>> = MutableLiveData()
@@ -64,7 +65,8 @@ class WishlistViewModel @Inject constructor(
                     client.info.name,
                     newDesc,
                     defaultImageUri,
-                    wishlistIndex = wishlistIndex
+                    wishlistIndex = wishlistIndex,
+                    lastChanged = Calendar.getInstance()
                 )
                 newImageFile?.let {
                     gift.imageUrl = imageStorage.addImage(newImageFile).toString()
