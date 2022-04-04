@@ -31,7 +31,7 @@ class CalendarViewModel @Inject constructor(
     private val curYear = Calendar.getInstance().get(Calendar.YEAR)
     private val client = clientStateRep.getClient()
     private val friends = friendsStateRep.getFriends()
-
+    private var isNotified = false
     private var _holidays: MutableLiveData<Result<List<Event>>> = MutableLiveData()
     val holidays: LiveData<Result<List<Event>>> = _holidays
     private var clientHolidays: MutableList<Event> = mutableListOf()
@@ -110,18 +110,17 @@ class CalendarViewModel @Inject constructor(
                     tomorrow
                 )
             }
-        if (tomorrowEvents.isNotEmpty()) {
+        if (tomorrowEvents.isNotEmpty() && !isNotified) {
             val desc = tomorrowEvents.mapNotNull { it.desc }.joinToString(",\n")
             scheduleNotification(desc)
         }
     }
+
+    private fun scheduleNotification(eventsDesc: String) {
+        val data = Data.Builder().putString(NotifyWorker.EVENT_NAME, eventsDesc).build()
+        val notificationWork = OneTimeWorkRequestBuilder<NotifyWorker>()
+            .setInitialDelay(15, TimeUnit.SECONDS).setInputData(data).build()
+        WorkManager.getInstance(App.appComponent.getContext()).enqueue(notificationWork)
+        isNotified = true
+    }
 }
-
-private fun scheduleNotification(eventsDesc: String) {
-    val data = Data.Builder().putString(NotifyWorker.EVENT_NAME, eventsDesc).build()
-    val notificationWork = OneTimeWorkRequestBuilder<NotifyWorker>()
-        .setInitialDelay(15, TimeUnit.SECONDS).setInputData(data).build()
-
-    WorkManager.getInstance(App.appComponent.getContext()).enqueue(notificationWork)
-}
-

@@ -7,7 +7,9 @@ import android.content.Context
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.example.giftgiver.App
 import com.example.giftgiver.R
 
@@ -36,9 +38,10 @@ class NotificationService {
         }
 
         val ringURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
+        val largeIcon = AppCompatResources.getDrawable(context, R.mipmap.ic_gift_giver)?.toBitmap()
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_gift_giver)
+            .setLargeIcon(largeIcon)
+            .setSmallIcon(R.drawable.ic_baseline_calendar_month_24)
             .setContentTitle(context.getString(R.string.important_day))
             .setShowWhen(true)
             .setAutoCancel(true)
