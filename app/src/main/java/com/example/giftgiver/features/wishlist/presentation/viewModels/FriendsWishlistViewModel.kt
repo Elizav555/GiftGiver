@@ -13,6 +13,7 @@ import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
 import com.example.giftgiver.features.gift.domain.useCases.UpdateGiftUseCase
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 class FriendsWishlistViewModel @Inject constructor(
@@ -44,7 +45,13 @@ class FriendsWishlistViewModel @Inject constructor(
                 curGift?.let { gift ->
                     gift.isChosen = isChecked
                     if (isChecked) {
-                        client?.cart?.giftsInfo?.add(GiftInfo(gift.id, gift.forId))
+                        client?.cart?.giftsInfo?.add(
+                            GiftInfo(
+                                gift.id,
+                                gift.forId,
+                                Calendar.getInstance()
+                            )
+                        )
                     } else {
                         val giftToDelete =
                             client?.cart?.giftsInfo?.firstOrNull { giftInfo -> giftInfo.giftId == gift.id }

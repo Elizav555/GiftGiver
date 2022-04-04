@@ -10,6 +10,7 @@ import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 class CartViewModel @Inject constructor(
@@ -40,7 +41,7 @@ class CartViewModel @Inject constructor(
 
     private fun updateClient() = viewModelScope.launch {
         client?.let { client ->
-            val ids = clientGifts.map { GiftInfo(it.id, it.forId) }
+            val ids = clientGifts.map { GiftInfo(it.id, it.forId, Calendar.getInstance()) }
             updateCart(client.vkId, ids)
             client.cart.giftsInfo = ids as MutableList<GiftInfo>
             clientStateRep.addClient(client)

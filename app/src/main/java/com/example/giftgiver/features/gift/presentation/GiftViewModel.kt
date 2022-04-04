@@ -12,6 +12,7 @@ import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
 import com.example.giftgiver.features.gift.domain.useCases.UpdateGiftUseCase
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 
 class GiftViewModel @Inject constructor(
@@ -42,9 +43,6 @@ class GiftViewModel @Inject constructor(
     fun getGift(userId: Long, giftId: String) = viewModelScope.launch {
         try {
             clientGift = getGiftUseCase(userId, giftId)
-            if (clientGift?.forId != userId) {
-                clientGift?.isChanged = false
-            }
             _gift.value = Result.success(clientGift)
         } catch (ex: Exception) {
             _gift.value = Result.failure(ex)
@@ -60,7 +58,7 @@ class GiftViewModel @Inject constructor(
                     }
                     it.name = newName
                     it.desc = newDesc
-                    it.isChanged = true
+                    it.lastChanged = Calendar.getInstance()
                     client?.vkId?.let { vkId -> updateGiftUseCase(vkId, it) }
                     _gift.value = Result.success(it)
                 }

@@ -2,6 +2,7 @@ package com.example.giftgiver.features.gift.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 @Parcelize
 data class Gift(
@@ -12,6 +13,6 @@ data class Gift(
     var desc: String?,
     var imageUrl: String?,
     var isChosen: Boolean = false,
-    var isChanged: Boolean = false,
+    var lastChanged: Calendar,
     val wishlistIndex: Int
 ) : Parcelable
