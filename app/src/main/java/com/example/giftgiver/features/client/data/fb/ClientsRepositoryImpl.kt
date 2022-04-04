@@ -75,7 +75,8 @@ class ClientsRepositoryImpl(
     }
 
     override suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>) {
-        clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS_IDS)}", giftsIds)
+        val giftsIdsFB = fbMapper.mapGiftsInfoToFB(giftsIds)
+        clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS_IDS)}", giftsIdsFB)
     }
 
     override suspend fun updateCalendar(vkId: Long, events: List<Event>) {

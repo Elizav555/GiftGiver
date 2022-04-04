@@ -39,7 +39,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    private fun updateClient() = viewModelScope.launch {
+    fun updateClient() = viewModelScope.launch {
         client?.let { client ->
             val ids = clientGifts.map { GiftInfo(it.id, it.forId, Calendar.getInstance()) }
             updateCart(client.vkId, ids)

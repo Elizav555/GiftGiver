@@ -4,14 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.giftgiver.databinding.ItemGiftCartBinding
-import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.gift.presentation.list.GiftDiffItemCallback
 
 class GiftCartAdapter(
     private val action: (id: String) -> Unit,
-    private val gifts: List<Gift>,
-    private val clientStateRep: ClientStateRep
+    private val gifts: List<GiftInfo>?
 ) : ListAdapter<Gift, GiftCartHolder>(GiftDiffItemCallback()) {
 
     override fun onCreateViewHolder(
@@ -24,7 +23,7 @@ class GiftCartAdapter(
             false
         ),
         action,
-        clientStateRep
+        gifts
     )
 
     override fun onBindViewHolder(

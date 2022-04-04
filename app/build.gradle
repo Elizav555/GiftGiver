@@ -50,6 +50,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.room:room-common:2.4.2'
     implementation 'androidx.room:room-ktx:2.4.2'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     def retrofit = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:${retrofit}"

@@ -74,7 +74,7 @@ class CartFragment : Fragment() {
         val goToItem = { id: String ->
             navigateToItem(giftsForList?.first { it.id == id })
         }
-        giftAdapter = GiftCartAdapter(goToItem, gifts, clientStateRep)
+        giftAdapter = GiftCartAdapter(goToItem, clientStateRep.getClient()?.cart?.giftsInfo)
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -100,6 +100,7 @@ class CartFragment : Fragment() {
     private fun deleteGift(gift: Gift) = cartViewModel.delete(gift)
 
     private fun navigateToItem(gift: Gift?) {
+        cartViewModel.updateClient()
         gift?.let {
             isAdapterInited = false
             val action = CartFragmentDirections.actionCartToCartGiftFragment(
