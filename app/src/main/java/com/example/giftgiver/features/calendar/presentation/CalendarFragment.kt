@@ -112,6 +112,7 @@ class CalendarFragment : Fragment() {
             result.fold(onSuccess = {
                 val holidays = it
                 bindCalendar(holidays)
+                calendarViewModel.checkTomorrowEvents()
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })

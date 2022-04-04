@@ -72,4 +72,6 @@
     <string name="gift_image">Gift image</string>
     <string name="for_gift">For :</string>
     <string name="unknownViewModel">Unknown ViewModel class</string>
+    <string name="notific_channel_desc">Notification channel for calendar</string>
+    <string name="important_day">Tomorrow is an important day</string>
 </resources>

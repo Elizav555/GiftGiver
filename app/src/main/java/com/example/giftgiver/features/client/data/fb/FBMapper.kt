@@ -114,4 +114,8 @@ class FBMapper(
         client.favFriendsIds = clientFB.favFriendsIds
         return client
     }
+
+    fun mapGiftsInfoToFB(giftsIds: List<GiftInfo>): List<GiftInfoFB> {
+        return giftsIds.map { GiftInfoFB(it.giftId, it.forId, it.lastSeen.time) }
+    }
 }

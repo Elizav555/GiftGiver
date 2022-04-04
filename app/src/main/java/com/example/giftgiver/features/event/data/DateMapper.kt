@@ -21,4 +21,6 @@ class DateMapper {
         }
         return Calendar.getInstance()
     }
+
+    fun parseCalendarToString(date: Calendar) = dateFormat.format(date.time)
 }
