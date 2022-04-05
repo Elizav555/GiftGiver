@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.AddClientUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
-import com.example.giftgiver.features.user.domain.FriendsStateRep
+import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.domain.useCases.LoadFriendsVK
 import com.vk.api.sdk.VK
@@ -18,7 +18,7 @@ class StartViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val loadFriendsVK: LoadFriendsVK,
     private val addClientUseCase: AddClientUseCase,
-    private val friendsStateRep: FriendsStateRep
+    private val getClientState: GetClientStateUseCase
 ) : ViewModel() {
 
     private var _client: MutableLiveData<Result<Client?>> = MutableLiveData()
@@ -43,7 +43,7 @@ class StartViewModel @Inject constructor(
     fun loadFriends() = viewModelScope.launch {
         try {
             val friendsReceived = loadFriendsVK.loadFriends(VK.getUserId().value)
-            friendsStateRep.addFriends(friendsReceived)
+            getClientState.addFriends(friendsReceived)
             _friends.value = Result.success(friendsReceived)
         } catch (ex: Exception) {
             _friends.value = Result.failure(ex)

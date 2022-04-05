@@ -1,5 +1,6 @@
 package com.example.giftgiver.common.di.modules
 
+import com.example.giftgiver.common.db.room.RoomMapper
 import com.example.giftgiver.features.calendar.data.mappers.HolidayMapper
 import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.event.data.DateMapper
@@ -31,4 +32,8 @@ class MappersModule {
     @Provides
     @Singleton
     fun provideVkMapper(): VkMapper = VkMapper()
+
+    @Provides
+    @Singleton
+    fun provideRoomMapper(): RoomMapper = RoomMapper()
 }

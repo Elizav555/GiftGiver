@@ -4,26 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
+import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo
-import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
-import com.example.giftgiver.features.gift.domain.useCases.UpdateGiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 class FriendsWishlistViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
-    private val updateCart: UpdateCartUseCase,
-    private val clientStateRep: ClientStateRep,
-    private val getGiftUseCase: GetGiftUseCase,
-    private val updateGiftUseCase: UpdateGiftUseCase
+    getClientState: GetClientStateUseCase,
+    private val giftUseCase: GiftUseCase,
+    private val clientFBUseCase: ClientFBUseCase
 ) : ViewModel() {
-    private val client = clientStateRep.getClient()
+    private val client = getClientState()
     private var _friend: MutableLiveData<Result<Client?>> = MutableLiveData()
     val friend: LiveData<Result<Client?>> = _friend
     private var curFriend: Client? = null
@@ -41,7 +39,7 @@ class FriendsWishlistViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val curGift =
-                    getGiftUseCase(friend.vkId, friend.wishlists[wishlistIndex].giftsIds[pos])
+                    giftUseCase.getGift(friend.vkId, friend.wishlists[wishlistIndex].giftsIds[pos])
                 curGift?.let { gift ->
                     gift.isChosen = isChecked
                     if (isChecked) {
@@ -58,9 +56,8 @@ class FriendsWishlistViewModel @Inject constructor(
                         client?.cart?.giftsInfo?.remove(giftToDelete)
                     }
                     client?.let {
-                        updateCart(it.vkId, it.cart.giftsInfo)
-                        clientStateRep.addClient(client)
-                        updateGiftUseCase(friend.vkId, gift)
+                        clientFBUseCase.updateCart(it.vkId, it.cart.giftsInfo)
+                        giftUseCase.updateGift(friend.vkId, gift)
                     }
                     _friend.value = Result.success(curFriend)
                 }
@@ -77,7 +74,7 @@ class FriendsWishlistViewModel @Inject constructor(
 
     fun getGifts(userId: Long, giftsIds: List<String>) = viewModelScope.launch {
         try {
-            val clientGifts = giftsIds.mapNotNull { getGiftUseCase(userId, it) }
+            val clientGifts = giftsIds.mapNotNull { giftUseCase.getGift(userId, it) }
             _gifts.value = Result.success(clientGifts)
         } catch (ex: Exception) {
             _gifts.value = Result.failure(ex)

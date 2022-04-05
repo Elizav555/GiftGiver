@@ -1,7 +1,6 @@
 package com.example.giftgiver.features.user.domain.useCases
 
 import android.util.Log
-import com.example.giftgiver.features.client.domain.ClientsRepository
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
 import com.example.giftgiver.features.user.domain.UserInfo

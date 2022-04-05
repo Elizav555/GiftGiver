@@ -2,15 +2,19 @@ package com.example.giftgiver.common.di.modules
 
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.common.db.fileStorage.ImageStorageImpl
+import com.example.giftgiver.common.db.room.RoomMapper
 import com.example.giftgiver.features.calendar.data.holidaysApi.HolidayApi
 import com.example.giftgiver.features.calendar.data.holidaysApi.HolidayRepositoryImpl
 import com.example.giftgiver.features.calendar.data.mappers.HolidayMapper
 import com.example.giftgiver.features.calendar.domain.HolidayRepository
+import com.example.giftgiver.features.client.data.ClientRepOfflineImpl
 import com.example.giftgiver.features.client.data.ClientStateRepImpl
 import com.example.giftgiver.features.client.data.fb.ClientsRepositoryImpl
 import com.example.giftgiver.features.client.data.fb.FBMapper
-import com.example.giftgiver.features.client.domain.ClientStateRep
-import com.example.giftgiver.features.client.domain.ClientsRepository
+import com.example.giftgiver.features.client.data.room.ClientDao
+import com.example.giftgiver.features.client.domain.repositories.ClientRepOffline
+import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
+import com.example.giftgiver.features.client.domain.repositories.ClientsRepository
 import com.example.giftgiver.features.gift.data.GiftsRepositoryImpl
 import com.example.giftgiver.features.gift.domain.GiftsRepository
 import com.example.giftgiver.features.user.data.FriendsStateRepImpl
@@ -42,6 +46,13 @@ class DataModule {
         fbMapper: FBMapper,
         firestore: FirebaseFirestore
     ): ClientsRepository = ClientsRepositoryImpl(fbMapper, firestore)
+
+    @Provides
+    @Singleton
+    fun provideClientOfflineRepository(
+        clientDao: ClientDao,
+        roomMapper: RoomMapper
+    ): ClientRepOffline = ClientRepOfflineImpl(clientDao, roomMapper)
 
     @Provides
     @Singleton

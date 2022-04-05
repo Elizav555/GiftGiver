@@ -16,7 +16,7 @@ import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentWishlistBinding
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.AddGiftDialog
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter

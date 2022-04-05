@@ -4,21 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
+import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo
-import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 class CartViewModel @Inject constructor(
-    private val updateCart: UpdateCartUseCase,
-    private val clientStateRep: ClientStateRep,
-    private val getGiftUseCase: GetGiftUseCase
+    private val clientFBUseCase: ClientFBUseCase,
+    getClientState: GetClientStateUseCase,
+    private val giftUseCase: GiftUseCase
 ) : ViewModel() {
-    private val client = clientStateRep.getClient()
+    private val client = getClientState()
 
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts
@@ -27,7 +27,7 @@ class CartViewModel @Inject constructor(
     fun getGifts() = viewModelScope.launch {
         try {
             val giftsMapped = client?.cart?.giftsInfo?.mapNotNull {
-                getGiftUseCase(
+                giftUseCase.getGift(
                     it.forId,
                     it.giftId
                 )
@@ -42,9 +42,8 @@ class CartViewModel @Inject constructor(
     fun updateClient() = viewModelScope.launch {
         client?.let { client ->
             val ids = clientGifts.map { GiftInfo(it.id, it.forId, Calendar.getInstance()) }
-            updateCart(client.vkId, ids)
+            clientFBUseCase.updateCart(client.vkId, ids)
             client.cart.giftsInfo = ids as MutableList<GiftInfo>
-            clientStateRep.addClient(client)
         }
     }
 

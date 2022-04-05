@@ -7,7 +7,6 @@ import com.example.giftgiver.features.cart.data.room.CartDao
 import com.example.giftgiver.features.client.data.room.ClientDao
 import com.example.giftgiver.features.event.data.room.EventDao
 import com.example.giftgiver.features.gift.data.room.GiftDao
-import com.example.giftgiver.features.user.data.room.UserInfoDao
 import com.example.giftgiver.features.wishlist.data.room.WishlistDao
 import dagger.Module
 import dagger.Provides
@@ -17,9 +16,7 @@ import javax.inject.Singleton
 class RoomModule {
     @Provides
     @Singleton
-    fun provideRoomDatabase(context: Context): RoomDB {
-        return RoomDB.invoke(context)
-    }
+    fun provideRoomDatabase(context: Context) = RoomDB.invoke(context)
 
     @Provides
     @Singleton
@@ -40,10 +37,6 @@ class RoomModule {
     @Provides
     @Singleton
     fun provideGiftDao(database: RoomDB): GiftDao = database.giftDao()
-
-    @Provides
-    @Singleton
-    fun provideUserInfoDao(database: RoomDB): UserInfoDao = database.userInfoDao()
 
     @Provides
     @Singleton

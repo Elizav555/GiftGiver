@@ -1,4 +1,4 @@
-package com.example.giftgiver.features.event.data.converters
+package com.example.giftgiver.common.db.room.converters
 
 import androidx.room.TypeConverter
 import java.util.*
