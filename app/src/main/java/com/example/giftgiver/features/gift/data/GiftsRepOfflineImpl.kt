@@ -3,7 +3,7 @@ package com.example.giftgiver.features.gift.data
 import com.example.giftgiver.common.db.room.RoomMapper
 import com.example.giftgiver.features.gift.data.room.GiftDao
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.domain.GiftsRepOffline
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
 
 class GiftsRepOfflineImpl(private val giftDao: GiftDao, private val roomMapper: RoomMapper) :
     GiftsRepOffline {

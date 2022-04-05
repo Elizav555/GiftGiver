@@ -18,8 +18,8 @@ import com.example.giftgiver.features.client.domain.repositories.ClientsReposito
 import com.example.giftgiver.features.gift.data.GiftsRepOfflineImpl
 import com.example.giftgiver.features.gift.data.GiftsRepositoryImpl
 import com.example.giftgiver.features.gift.data.room.GiftDao
-import com.example.giftgiver.features.gift.domain.GiftsRepOffline
-import com.example.giftgiver.features.gift.domain.GiftsRepository
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
 import com.example.giftgiver.features.user.data.FriendsStateRepImpl
 import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.google.firebase.firestore.FirebaseFirestore

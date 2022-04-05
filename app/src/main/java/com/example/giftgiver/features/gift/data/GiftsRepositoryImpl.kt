@@ -5,7 +5,7 @@ import com.example.giftgiver.features.client.data.fb.CLIENTS
 import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.gift.data.fb.GiftFB
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.domain.GiftsRepository
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot

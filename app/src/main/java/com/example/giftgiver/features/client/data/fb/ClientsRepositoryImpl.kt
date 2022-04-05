@@ -18,15 +18,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-const val CLIENTS = "clients"
-const val WISHLISTS = "wishlists"
-const val CART = "cart"
-const val CALENDAR = "calendar"
-const val FAV_FRIENDS = "favFriendsIds"
-const val EVENTS = "events"
-const val GIFTS_IDS = "giftsInfo"
-const val INFO = "info"
-
 class ClientsRepositoryImpl(
     private val fbMapper: FBMapper,
     private val firebaseFirestore: FirebaseFirestore
@@ -69,8 +60,7 @@ class ClientsRepositoryImpl(
 
     override suspend fun updateClient(vkId: Long, changes: Map<String, Any>) {
         clients.document(vkId.toString()).update(changes)
-        curClientChanged = vkId == VK.getUserId().value
-        isChanged.postValue(curClientChanged)
+        checkChanges(vkId)
     }
 
     override suspend fun updateInfo(vkId: Long, info: UserInfo) {
@@ -81,34 +71,45 @@ class ClientsRepositoryImpl(
             info.about,
         )
         clients.document(vkId.toString()).update(INFO, infoFB)
-        curClientChanged = vkId == VK.getUserId().value
-        isChanged.postValue(curClientChanged)
+        checkChanges(vkId)
     }
 
     override suspend fun updateWishlists(vkId: Long, wishlists: List<Wishlist>) {
         val wishlistsFB = wishlists.map { fbMapper.mapWishlistToFB(it) }
         clients.document(vkId.toString()).update(WISHLISTS, wishlistsFB)
-        curClientChanged = vkId == VK.getUserId().value
-        isChanged.postValue(curClientChanged)
+        checkChanges(vkId)
     }
 
     override suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>) {
         val giftsIdsFB = fbMapper.mapGiftsInfoToFB(giftsIds)
         clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS_IDS)}", giftsIdsFB)
-        curClientChanged = vkId == VK.getUserId().value
-        isChanged.postValue(curClientChanged)
+        checkChanges(vkId)
     }
 
     override suspend fun updateCalendar(vkId: Long, events: List<Event>) {
         val eventsFB = events.map { fbMapper.mapEventToFB(it) }
         clients.document("$vkId").update("${FieldPath.of(CALENDAR, EVENTS)}", eventsFB)
-        curClientChanged = vkId == VK.getUserId().value
-        isChanged.postValue(curClientChanged)
+        checkChanges(vkId)
     }
 
     override suspend fun updateFavFriends(vkId: Long, friendsIds: List<Long>) {
         clients.document("$vkId").update(FAV_FRIENDS, friendsIds)
+        checkChanges(vkId)
+    }
+
+    private fun checkChanges(vkId: Long) {
         curClientChanged = vkId == VK.getUserId().value
         isChanged.postValue(curClientChanged)
+    }
+
+    companion object {
+        const val CLIENTS = "clients"
+        const val WISHLISTS = "wishlists"
+        const val CART = "cart"
+        const val CALENDAR = "calendar"
+        const val FAV_FRIENDS = "favFriendsIds"
+        const val EVENTS = "events"
+        const val GIFTS_IDS = "giftsInfo"
+        const val INFO = "info"
     }
 }

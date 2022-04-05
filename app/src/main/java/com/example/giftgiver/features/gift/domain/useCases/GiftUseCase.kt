@@ -1,8 +1,8 @@
 package com.example.giftgiver.features.gift.domain.useCases
 
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.domain.GiftsRepOffline
-import com.example.giftgiver.features.gift.domain.GiftsRepository
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
