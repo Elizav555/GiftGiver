@@ -9,6 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "calendars")
 @Parcelize
 data class CalendarR(
-    @PrimaryKey(autoGenerate = false) val id: Long,
-    val events: List<EventR> = listOf(),
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val clientId: Long,
+    val events: List<EventR>
 ) : Parcelable

@@ -8,7 +8,8 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "wishlists")
 @Parcelize
 data class WishlistR(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val clientId: Long,
     val name: String,
     var giftsIds: List<String> = listOf(),
 ) : Parcelable

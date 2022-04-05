@@ -9,6 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "carts")
 @Parcelize
 data class CartR(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    var giftsInfo: List<GiftInfoR> = listOf(),
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val clientId: Long,
+    val giftsInfo: List<GiftInfoR>
 ) : Parcelable
+
