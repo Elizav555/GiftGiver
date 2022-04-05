@@ -10,11 +10,13 @@ import javax.inject.Inject
 class AddClientUseCase @Inject constructor(
     private val clientsRepository: ClientsRepository,
     private val clientsOffline: ClientsRepOffline,
+    private val clientStateUseCase: UpdateClientStateUseCase,
     private val dispatcher: CoroutineDispatcher,
 ) {
     suspend operator fun invoke(client: Client) =
         withContext(dispatcher) {
             clientsRepository.addClient(client)
             clientsOffline.addClient(client)
+            clientStateUseCase(client)
         }
 }

@@ -14,7 +14,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ClientR(
     @PrimaryKey(autoGenerate = false) val vkId: Long = 0,
-    val favFriendsIds: List<Long> = listOf(),
+    val favFriendsIds: List<String> = listOf(),
     @Embedded
     val info: UserInfoR,
     val events: List<EventR> = listOf(),

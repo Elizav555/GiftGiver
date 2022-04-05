@@ -14,6 +14,7 @@ import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
 import com.example.giftgiver.features.gift.presentation.GiftViewModel
 import com.example.giftgiver.features.start.presentation.StartViewModel
+import com.example.giftgiver.features.user.domain.useCases.LoadFriendsUseCase
 import com.example.giftgiver.features.user.domain.useCases.LoadFriendsVK
 import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
 import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
@@ -33,7 +34,8 @@ class ViewModelFactory @Inject constructor(
     private val updateClientStateUseCase: UpdateClientStateUseCase,
     private val updateOfflineClientUseCase: UpdateOfflineClientUseCase,
     private val clientFBUseCase: ClientFBUseCase,
-    private val getClientState: GetClientStateUseCase
+    private val getClientState: GetClientStateUseCase,
+    private val loadFriendsUseCase: LoadFriendsUseCase
 ) : ViewModelProvider.Factory {
     private val error = App.appComponent.getContext().getString(R.string.unknownViewModel)
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
@@ -72,7 +74,7 @@ class ViewModelFactory @Inject constructor(
                 ) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(StartViewModel::class.java) ->
-                StartViewModel(getClientByVkId, loadFriendsVK, addClient, getClientState) as? T
+                StartViewModel(getClientByVkId, loadFriendsUseCase, addClient, getClientState) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(UserViewModel::class.java) ->
                 UserViewModel(

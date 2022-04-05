@@ -9,14 +9,14 @@ import com.example.giftgiver.features.client.domain.useCases.AddClientUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
-import com.example.giftgiver.features.user.domain.useCases.LoadFriendsVK
+import com.example.giftgiver.features.user.domain.useCases.LoadFriendsUseCase
 import com.vk.api.sdk.VK
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StartViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
-    private val loadFriendsVK: LoadFriendsVK,
+    private val loadFriends: LoadFriendsUseCase,
     private val addClientUseCase: AddClientUseCase,
     private val getClientState: GetClientStateUseCase
 ) : ViewModel() {
@@ -42,7 +42,7 @@ class StartViewModel @Inject constructor(
 
     fun loadFriends() = viewModelScope.launch {
         try {
-            val friendsReceived = loadFriendsVK.loadFriends(VK.getUserId().value)
+            val friendsReceived = loadFriends(VK.getUserId().value)
             getClientState.addFriends(friendsReceived)
             _friends.value = Result.success(friendsReceived)
         } catch (ex: Exception) {

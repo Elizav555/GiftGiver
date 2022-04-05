@@ -18,7 +18,7 @@ import com.example.giftgiver.features.gift.data.room.GiftR
         ClientR::class,
         GiftR::class
     ],
-    version = 2
+    version = 3
 )
 abstract class RoomDB : RoomDatabase() {
     abstract fun clientDao(): ClientDao

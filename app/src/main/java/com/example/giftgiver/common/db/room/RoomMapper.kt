@@ -14,12 +14,14 @@ import com.example.giftgiver.features.user.data.room.UserInfoR
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.data.room.WishlistR
 import com.example.giftgiver.features.wishlist.domain.Wishlist
+import java.text.NumberFormat
 
 class RoomMapper {
+    val numberFormat = NumberFormat.getInstance()
     fun mapClientToRoom(client: Client): ClientR {
         return ClientR(
             vkId = client.vkId,
-            favFriendsIds = client.favFriendsIds,
+            favFriendsIds = client.favFriendsIds.map { numberFormat.format(it) },
             info = mapUserInfoToRoom(client.info),
             events = client.calendar.events.map { mapEventToRoom(it) },
             giftsInfo = client.cart.giftsInfo.map { mapGiftInfoToRoom(it) },
@@ -63,7 +65,9 @@ class RoomMapper {
             vkId = client.vkId,
             calendar = Calendar(client.events.map { mapEventFromRoom(it) } as MutableList<Event>),
             cart = Cart(client.giftsInfo.map { mapGiftInfoFromRoom(it) } as MutableList<GiftInfo>),
-            favFriendsIds = client.favFriendsIds as MutableList<Long>,
+            favFriendsIds = client.favFriendsIds.map {
+                numberFormat.parse(it)
+            } as? MutableList<Long> ?: mutableListOf(),
             wishlists = client.wishlists.map { mapWishlistFromRoom(it) } as MutableList<Wishlist>,
             info = mapUserInfoFromRoom(client.info, client.vkId)
         )
@@ -79,7 +83,7 @@ class RoomMapper {
         )
     }
 
-    fun mapWishlistFromRoom(wishlist: WishlistR): Wishlist {
+    private fun mapWishlistFromRoom(wishlist: WishlistR): Wishlist {
         return Wishlist(
             name = wishlist.name,
             giftsIds = wishlist.giftsIds as MutableList<String>
