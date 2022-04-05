@@ -87,9 +87,8 @@ class StartFragment : Fragment() {
                         cart = Cart()
                     )
                     startViewModel.addClient(client)
-                    clientStateRep.addClient(client)
                 }
-            } else clientStateRep.addClient(clientFromFB)
+            } else startViewModel.addClient(clientFromFB)
         }
     }
 

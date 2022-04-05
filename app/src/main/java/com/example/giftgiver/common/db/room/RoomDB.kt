@@ -7,31 +7,22 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.giftgiver.common.db.room.converters.DateConverter
 import com.example.giftgiver.common.db.room.converters.ListsConverter
-import com.example.giftgiver.features.calendar.data.room.CalendarDao
-import com.example.giftgiver.features.calendar.data.room.CalendarR
-import com.example.giftgiver.features.cart.data.room.CartDao
-import com.example.giftgiver.features.cart.data.room.CartR
 import com.example.giftgiver.features.client.data.room.ClientDao
 import com.example.giftgiver.features.client.data.room.ClientR
 import com.example.giftgiver.features.gift.data.room.GiftDao
 import com.example.giftgiver.features.gift.data.room.GiftR
-import com.example.giftgiver.features.wishlist.data.room.WishlistDao
-import com.example.giftgiver.features.wishlist.data.room.WishlistR
 
 @TypeConverters(DateConverter::class, ListsConverter::class)
 @Database(
     entities = [
-        CalendarR::class, CartR::class, ClientR::class,
-        GiftR::class, WishlistR::class
+        ClientR::class,
+        GiftR::class
     ],
-    version = 1
+    version = 2
 )
 abstract class RoomDB : RoomDatabase() {
-    abstract fun calendarDao(): CalendarDao
-    abstract fun cartDao(): CartDao
     abstract fun clientDao(): ClientDao
     abstract fun giftDao(): GiftDao
-    abstract fun wishlistDao(): WishlistDao
 
     companion object {
 

@@ -14,18 +14,6 @@ interface ClientDao {
     @Query("SELECT * FROM clients")
     suspend fun getClients(): MutableList<ClientR>
 
-    @Transaction
-    @Query("SELECT * FROM clients WHERE vkId = :vkId")
-    suspend fun getClientWithCart(vkId: Long): ClientAndCart?
-
-    @Transaction
-    @Query("SELECT * FROM clients WHERE vkId = :vkId")
-    suspend fun getClientWithWishlists(vkId: Long): ClientWithWishlists?
-
-    @Transaction
-    @Query("SELECT * FROM clients WHERE vkId = :vkId")
-    suspend fun getClientWithCalendar(vkId: Long): ClientAndCalendar?
-
     @Query("SELECT * FROM clients WHERE vkId = :vkId")
     suspend fun getClientByVkId(vkId: Long): ClientR?
 

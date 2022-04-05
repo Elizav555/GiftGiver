@@ -4,9 +4,8 @@ import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.Relation
-import com.example.giftgiver.features.calendar.data.room.CalendarR
-import com.example.giftgiver.features.cart.data.room.CartR
+import com.example.giftgiver.features.event.data.room.EventR
+import com.example.giftgiver.features.gift.data.room.GiftInfoR
 import com.example.giftgiver.features.user.data.room.UserInfoR
 import com.example.giftgiver.features.wishlist.data.room.WishlistR
 import kotlinx.parcelize.Parcelize
@@ -18,31 +17,7 @@ data class ClientR(
     val favFriendsIds: List<Long> = listOf(),
     @Embedded
     val info: UserInfoR,
+    val events: List<EventR> = listOf(),
+    val giftsInfo: List<GiftInfoR> = listOf(),
+    val wishlists: List<WishlistR> = listOf(),
 ) : Parcelable
-
-data class ClientAndCalendar(
-    @Embedded val clientR: ClientR,
-    @Relation(
-        parentColumn = "vkId",
-        entityColumn = "clientId"
-    )
-    val calendar: CalendarR,
-)
-
-data class ClientAndCart(
-    @Embedded val clientR: ClientR,
-    @Relation(
-        parentColumn = "vkId",
-        entityColumn = "clientId"
-    )
-    val cart: CartR,
-)
-
-data class ClientWithWishlists(
-    @Embedded val clientR: ClientR,
-    @Relation(
-        parentColumn = "vkId",
-        entityColumn = "clientId"
-    )
-    val wishlists: List<WishlistR>
-)

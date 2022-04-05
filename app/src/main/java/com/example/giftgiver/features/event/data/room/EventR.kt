@@ -6,7 +6,7 @@ import java.util.*
 
 @Parcelize
 data class EventR(
-    val date: Date,
-    val desc: String?,
+    val date: Date = Date(),
+    val desc: String? = "",
 ) : Parcelable
 

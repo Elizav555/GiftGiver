@@ -1,8 +1,6 @@
 package com.example.giftgiver.common.db.room
 
-import com.example.giftgiver.features.calendar.data.room.CalendarR
 import com.example.giftgiver.features.calendar.domain.Calendar
-import com.example.giftgiver.features.cart.data.room.CartR
 import com.example.giftgiver.features.cart.domain.Cart
 import com.example.giftgiver.features.client.data.room.ClientR
 import com.example.giftgiver.features.client.domain.Client
@@ -22,7 +20,10 @@ class RoomMapper {
         return ClientR(
             vkId = client.vkId,
             favFriendsIds = client.favFriendsIds,
-            info = mapUserInfoToRoom(client.info)
+            info = mapUserInfoToRoom(client.info),
+            events = client.calendar.events.map { mapEventToRoom(it) },
+            giftsInfo = client.cart.giftsInfo.map { mapGiftInfoToRoom(it) },
+            wishlists = client.wishlists.map { mapWishlistToRoom(it) }
         )
     }
 
@@ -35,25 +36,18 @@ class RoomMapper {
         )
     }
 
-    fun mapWishlistToRoom(wishlist: Wishlist, vkId: Long): WishlistR {
+    private fun mapWishlistToRoom(wishlist: Wishlist): WishlistR {
         return WishlistR(
-            clientId = vkId,
             name = wishlist.name,
             giftsIds = wishlist.giftsIds
         )
     }
-
-    fun mapCartToRoom(cart: Cart, vkId: Long): CartR =
-        CartR(clientId = vkId, giftsInfo = cart.giftsInfo.map { mapGiftInfoToRoom(it) })
 
     private fun mapGiftInfoToRoom(giftInfo: GiftInfo) = GiftInfoR(
         giftId = giftInfo.giftId,
         forId = giftInfo.forId,
         lastSeen = giftInfo.lastSeen.time
     )
-
-    fun mapCalendarToRoom(calendar: Calendar, vkId: Long): CalendarR =
-        CalendarR(clientId = vkId, events = calendar.events.map { mapEventToRoom(it) })
 
     private fun mapEventToRoom(event: Event): EventR {
         return EventR(
@@ -64,16 +58,13 @@ class RoomMapper {
 
     fun mapClientFromRoom(
         client: ClientR,
-        wishlists: List<Wishlist>,
-        cart: Cart,
-        calendar: Calendar
     ): Client {
         return Client(
             vkId = client.vkId,
-            calendar = calendar,
-            cart = cart,
+            calendar = Calendar(client.events.map { mapEventFromRoom(it) } as MutableList<Event>),
+            cart = Cart(client.giftsInfo.map { mapGiftInfoFromRoom(it) } as MutableList<GiftInfo>),
             favFriendsIds = client.favFriendsIds as MutableList<Long>,
-            wishlists = wishlists as MutableList<Wishlist>,
+            wishlists = client.wishlists.map { mapWishlistFromRoom(it) } as MutableList<Wishlist>,
             info = mapUserInfoFromRoom(client.info, client.vkId)
         )
     }
@@ -95,9 +86,6 @@ class RoomMapper {
         )
     }
 
-    fun mapCartFromRoom(cart: CartR): Cart =
-        Cart(giftsInfo = cart.giftsInfo.map { mapGiftInfoFromRoom(it) } as MutableList<GiftInfo>)
-
     private fun mapGiftInfoFromRoom(giftInfo: GiftInfoR): GiftInfo {
         val calendar = java.util.Calendar.getInstance()
         calendar.time = giftInfo.lastSeen
@@ -107,9 +95,6 @@ class RoomMapper {
             lastSeen = calendar
         )
     }
-
-    fun mapCalendarFromRoom(calendar: CalendarR): Calendar =
-        Calendar(events = calendar.events.map { mapEventFromRoom(it) } as MutableList<Event>)
 
     private fun mapEventFromRoom(event: EventR): Event {
         val calendar = java.util.Calendar.getInstance()
