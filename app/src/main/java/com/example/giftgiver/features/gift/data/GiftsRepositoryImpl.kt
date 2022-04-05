@@ -21,6 +21,7 @@ class GiftsRepositoryImpl(
     private val fbMapper: FBMapper,
     private val firebaseFirestore: FirebaseFirestore,
 ) : GiftsRepository {
+
     private val clients = firebaseFirestore.collection(CLIENTS)
 
     override suspend fun addGift(clientId: Long, gift: Gift, wishlists: List<Wishlist>): String {

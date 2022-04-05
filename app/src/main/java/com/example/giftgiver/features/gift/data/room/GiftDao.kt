@@ -15,7 +15,7 @@ interface GiftDao {
     suspend fun getGifts(): MutableList<GiftR>
 
     @Query("SELECT * FROM gifts WHERE id = :id")
-    suspend fun getGiftById(id: Int): GiftR?
+    suspend fun getGiftById(id: String): GiftR?
 
     @Delete
     suspend fun deleteGift(gift: GiftR)

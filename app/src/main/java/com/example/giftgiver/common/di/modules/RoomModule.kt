@@ -5,7 +5,6 @@ import com.example.giftgiver.common.db.room.RoomDB
 import com.example.giftgiver.features.calendar.data.room.CalendarDao
 import com.example.giftgiver.features.cart.data.room.CartDao
 import com.example.giftgiver.features.client.data.room.ClientDao
-import com.example.giftgiver.features.event.data.room.EventDao
 import com.example.giftgiver.features.gift.data.room.GiftDao
 import com.example.giftgiver.features.wishlist.data.room.WishlistDao
 import dagger.Module
@@ -29,10 +28,6 @@ class RoomModule {
     @Provides
     @Singleton
     fun provideClientDao(database: RoomDB): ClientDao = database.clientDao()
-
-    @Provides
-    @Singleton
-    fun provideEventDao(database: RoomDB): EventDao = database.eventDao()
 
     @Provides
     @Singleton

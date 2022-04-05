@@ -2,7 +2,7 @@ package com.example.giftgiver.features.client.domain.repositories
 
 import com.example.giftgiver.features.client.domain.Client
 
-interface ClientRepOffline {
+interface ClientsRepOffline {
     suspend fun addClient(client: Client)
 
     suspend fun deleteClient(client: Client)

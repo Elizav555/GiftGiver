@@ -24,11 +24,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.mainComponent.inject(this)
-        initObservers()
         mainViewModel = ViewModelProvider(
             viewModelStore,
             viewModelFactory
         )[MainViewModel::class.java]
+        initObservers()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
