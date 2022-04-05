@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
-import com.example.giftgiver.features.client.domain.ClientStateRep
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
+import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
-import com.example.giftgiver.features.gift.domain.useCases.UpdateGiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
@@ -18,11 +17,10 @@ import javax.inject.Inject
 class GiftViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val imageStorage: ImageStorage,
-    private val clientStateRep: ClientStateRep,
-    private val getGiftUseCase: GetGiftUseCase,
-    private val updateGiftUseCase: UpdateGiftUseCase
+    getClientState: GetClientStateUseCase,
+    private val giftUseCase: GiftUseCase,
 ) : ViewModel() {
-    private val client = clientStateRep.getClient()
+    private val client = getClientState()
 
     private var _gift: MutableLiveData<Result<Gift?>> = MutableLiveData()
     val gift: LiveData<Result<Gift?>> = _gift
@@ -42,7 +40,7 @@ class GiftViewModel @Inject constructor(
 
     fun getGift(userId: Long, giftId: String) = viewModelScope.launch {
         try {
-            clientGift = getGiftUseCase(userId, giftId)
+            clientGift = giftUseCase.getGift(userId, giftId)
             _gift.value = Result.success(clientGift)
         } catch (ex: Exception) {
             _gift.value = Result.failure(ex)
@@ -59,7 +57,7 @@ class GiftViewModel @Inject constructor(
                     it.name = newName
                     it.desc = newDesc
                     it.lastChanged = Calendar.getInstance()
-                    client?.vkId?.let { vkId -> updateGiftUseCase(vkId, it) }
+                    client?.vkId?.let { vkId -> giftUseCase.updateGift(vkId, it) }
                     _gift.value = Result.success(it)
                 }
             } catch (ex: Exception) {

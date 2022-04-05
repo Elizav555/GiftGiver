@@ -9,13 +9,13 @@ interface ClientDao {
     suspend fun save(client: ClientR)
 
     @Update
-    suspend fun updateClients(client: ClientR)
+    suspend fun updateClient(client: ClientR)
 
     @Query("SELECT * FROM clients")
     suspend fun getClients(): MutableList<ClientR>
 
     @Query("SELECT * FROM clients WHERE vkId = :vkId")
-    suspend fun getClientByVkId(vkId: Int): ClientR?
+    suspend fun getClientByVkId(vkId: Long): ClientR?
 
     @Delete
     suspend fun deleteClient(client: ClientR)

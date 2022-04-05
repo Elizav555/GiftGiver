@@ -1,4 +1,4 @@
-package com.example.giftgiver.features.client.domain
+package com.example.giftgiver.features.client.domain.repositories
 
 import com.example.giftgiver.features.client.domain.Client
 

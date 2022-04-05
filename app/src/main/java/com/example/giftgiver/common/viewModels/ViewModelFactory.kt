@@ -6,52 +6,38 @@ import com.example.giftgiver.App
 import com.example.giftgiver.R
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.calendar.domain.useCases.GetHolidaysUseCase
-import com.example.giftgiver.features.calendar.domain.useCases.UpdateCalendarUseCase
 import com.example.giftgiver.features.calendar.presentation.CalendarViewModel
-import com.example.giftgiver.features.cart.domain.UpdateCartUseCase
 import com.example.giftgiver.features.cart.presentation.CartViewModel
-import com.example.giftgiver.features.client.domain.ClientStateRep
-import com.example.giftgiver.features.client.domain.useCases.AddClientUseCase
-import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
-import com.example.giftgiver.features.client.domain.useCases.UpdateClientsInfoUseCase
+import com.example.giftgiver.features.client.domain.useCases.*
 import com.example.giftgiver.features.client.presentation.ClientViewModel
 import com.example.giftgiver.features.event.data.DateMapper
-import com.example.giftgiver.features.gift.domain.useCases.AddGiftUseCase
-import com.example.giftgiver.features.gift.domain.useCases.DeleteGiftUseCase
-import com.example.giftgiver.features.gift.domain.useCases.GetGiftUseCase
-import com.example.giftgiver.features.gift.domain.useCases.UpdateGiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
 import com.example.giftgiver.features.gift.presentation.GiftViewModel
 import com.example.giftgiver.features.start.presentation.StartViewModel
-import com.example.giftgiver.features.user.domain.FriendsStateRep
+import com.example.giftgiver.features.user.domain.useCases.LoadFriendsUseCase
 import com.example.giftgiver.features.user.domain.useCases.LoadFriendsVK
-import com.example.giftgiver.features.user.domain.useCases.UpdateFavFriendsUseCase
 import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
 import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
-import com.example.giftgiver.features.wishlist.domain.UpdateWishlistUseCase
 import com.example.giftgiver.features.wishlist.presentation.viewModels.FriendsWishlistViewModel
 import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
 import javax.inject.Inject
 
 class ViewModelFactory @Inject constructor(
     private val getHolidays: GetHolidaysUseCase,
-    private val updateCalendar: UpdateCalendarUseCase,
     private val dateMapper: DateMapper,
-    private val updateCart: UpdateCartUseCase,
-    private val updateWishlists: UpdateWishlistUseCase,
-    private val updateInfo: UpdateClientsInfoUseCase,
     private val imageStorage: ImageStorage,
     private val getClientByVkId: GetClientByVkId,
     private val loadFriendsVK: LoadFriendsVK,
     private val addClient: AddClientUseCase,
-    private val updateFavFriends: UpdateFavFriendsUseCase,
-    private val clientStateRep: ClientStateRep,
-    private val friendsStateRep: FriendsStateRep,
-    private val getGift: GetGiftUseCase,
-    private val addGift: AddGiftUseCase,
-    private val deleteGift: DeleteGiftUseCase,
-    private val updateGift: UpdateGiftUseCase
+    private val giftUseCase: GiftUseCase,
+    private val clientUpdatedUseCase: ClientUpdatedUseCase,
+    private val updateClientStateUseCase: UpdateClientStateUseCase,
+    private val updateOfflineClientUseCase: UpdateOfflineClientUseCase,
+    private val clientFBUseCase: ClientFBUseCase,
+    private val getClientState: GetClientStateUseCase,
+    private val loadFriendsUseCase: LoadFriendsUseCase
 ) : ViewModelProvider.Factory {
-    val error = App.appComponent.getContext().getString(R.string.unknownViewModel)
+    private val error = App.appComponent.getContext().getString(R.string.unknownViewModel)
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
         when {
             modelClass.isAssignableFrom(ImageViewModel::class.java) ->
@@ -60,53 +46,66 @@ class ViewModelFactory @Inject constructor(
             modelClass.isAssignableFrom(CalendarViewModel::class.java) ->
                 CalendarViewModel(
                     getHolidays,
-                    updateCalendar,
+                    clientFBUseCase,
                     dateMapper,
-                    clientStateRep,
-                    friendsStateRep
+                    getClientState
                 ) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(CartViewModel::class.java) ->
-                CartViewModel(updateCart, clientStateRep, getGift) as? T
+                CartViewModel(
+                    clientFBUseCase,
+                    getClientState,
+                    giftUseCase
+                ) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(ClientViewModel::class.java) ->
-                ClientViewModel(updateWishlists, updateInfo, imageStorage, clientStateRep) as? T
+                ClientViewModel(
+                    imageStorage,
+                    getClientState,
+                    clientFBUseCase,
+                ) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(GiftViewModel::class.java) ->
                 GiftViewModel(
                     getClientByVkId,
                     imageStorage,
-                    clientStateRep,
-                    getGift,
-                    updateGift
+                    getClientState,
+                    giftUseCase,
                 ) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(StartViewModel::class.java) ->
-                StartViewModel(getClientByVkId, loadFriendsVK, addClient, friendsStateRep) as? T
+                StartViewModel(getClientByVkId, loadFriendsUseCase, addClient, getClientState) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(UserViewModel::class.java) ->
-                UserViewModel(getClientByVkId, updateFavFriends, clientStateRep) as? T
+                UserViewModel(
+                    getClientByVkId, clientFBUseCase, getClientState,
+                ) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(FriendsViewModel::class.java) ->
-                FriendsViewModel(getClientByVkId, clientStateRep, friendsStateRep) as? T
+                FriendsViewModel(getClientByVkId, getClientState) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(FriendsWishlistViewModel::class.java) ->
                 FriendsWishlistViewModel(
                     getClientByVkId,
-                    updateCart,
-                    clientStateRep,
-                    getGift,
-                    updateGift
+                    getClientState,
+                    giftUseCase,
+                    clientFBUseCase,
                 ) as? T
                     ?: throw IllegalArgumentException(error)
             modelClass.isAssignableFrom(WishlistViewModel::class.java) ->
                 WishlistViewModel(
                     imageStorage,
-                    clientStateRep,
-                    getGift,
-                    addGift,
-                    deleteGift,
-                    updateWishlists
+                    getClientState,
+                    giftUseCase,
+                    clientFBUseCase,
+                ) as? T
+                    ?: throw IllegalArgumentException(error)
+            modelClass.isAssignableFrom(MainViewModel::class.java) ->
+                MainViewModel(
+                    clientUpdatedUseCase,
+                    updateClientStateUseCase,
+                    updateOfflineClientUseCase,
+                    getClientByVkId
                 ) as? T
                     ?: throw IllegalArgumentException(error)
             else ->

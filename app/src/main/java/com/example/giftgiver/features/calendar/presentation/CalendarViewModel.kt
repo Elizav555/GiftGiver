@@ -11,11 +11,10 @@ import com.example.giftgiver.App
 import com.example.giftgiver.R
 import com.example.giftgiver.features.calendar.domain.notifications.NotifyWorker
 import com.example.giftgiver.features.calendar.domain.useCases.GetHolidaysUseCase
-import com.example.giftgiver.features.calendar.domain.useCases.UpdateCalendarUseCase
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
+import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.event.domain.Event
-import com.example.giftgiver.features.user.domain.FriendsStateRep
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -23,14 +22,14 @@ import javax.inject.Inject
 
 class CalendarViewModel @Inject constructor(
     private val getHolidaysUseCase: GetHolidaysUseCase,
-    private val updateCalendar: UpdateCalendarUseCase,
+    private val clientFBUseCase: ClientFBUseCase,
     private val dateMapper: DateMapper,
-    private val clientStateRep: ClientStateRep,
-    private val friendsStateRep: FriendsStateRep
+    getClientState: GetClientStateUseCase
 ) : ViewModel() {
+
     private val curYear = Calendar.getInstance().get(Calendar.YEAR)
-    private val client = clientStateRep.getClient()
-    private val friends = friendsStateRep.getFriends()
+    private val client = getClientState()
+    private val friends = getClientState.getFriendsState()
     private var isNotified = false
     private var _holidays: MutableLiveData<Result<List<Event>>> = MutableLiveData()
     val holidays: LiveData<Result<List<Event>>> = _holidays
@@ -50,9 +49,8 @@ class CalendarViewModel @Inject constructor(
 
     private fun updateClient() = viewModelScope.launch {
         client?.let { client ->
-            updateCalendar(client.vkId, clientHolidays)
+            clientFBUseCase.updateCalendar(client.vkId, clientHolidays)
             client.calendar.events = clientHolidays
-            clientStateRep.addClient(client)
         }
     }
 

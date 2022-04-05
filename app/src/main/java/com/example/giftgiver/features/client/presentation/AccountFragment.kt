@@ -14,7 +14,7 @@ import com.example.giftgiver.App
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentAccountBinding
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist

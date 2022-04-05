@@ -18,7 +18,7 @@ import com.example.giftgiver.databinding.FragmentStartBinding
 import com.example.giftgiver.features.calendar.domain.Calendar
 import com.example.giftgiver.features.cart.domain.Cart
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
@@ -87,9 +87,8 @@ class StartFragment : Fragment() {
                         cart = Cart()
                     )
                     startViewModel.addClient(client)
-                    clientStateRep.addClient(client)
                 }
-            } else clientStateRep.addClient(clientFromFB)
+            } else startViewModel.addClient(clientFromFB)
         }
     }
 

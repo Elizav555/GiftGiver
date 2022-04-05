@@ -5,18 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
-import com.example.giftgiver.features.user.domain.useCases.UpdateFavFriendsUseCase
+import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class UserViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
-    private val updateFavFriends: UpdateFavFriendsUseCase,
-    private val clientStateRep: ClientStateRep
+    private val clientFBUseCase: ClientFBUseCase,
+    getClientState: GetClientStateUseCase,
 ) : ViewModel() {
-    private val client = clientStateRep.getClient()
+    private val client = getClientState()
     private var _friend: MutableLiveData<Result<Client?>> = MutableLiveData()
     val friend: LiveData<Result<Client?>> = _friend
     private var clientFriend: Client? = null
@@ -34,9 +34,8 @@ class UserViewModel @Inject constructor(
             if (isFav) {
                 clientFriend?.let { friend -> it.favFriendsIds.add(friend.vkId) }
             } else clientFriend?.let { friend -> it.favFriendsIds.remove(friend.vkId) }
-            updateFavFriends(client.vkId, it.favFriendsIds)
+            clientFBUseCase.updateFavFriends(client.vkId, it.favFriendsIds)
             client.favFriendsIds = it.favFriendsIds
-            clientStateRep.addClient(client)
         }
     }
 

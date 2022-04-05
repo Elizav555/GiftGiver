@@ -1,7 +1,7 @@
 package com.example.giftgiver.features.client.data
 
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.ClientStateRep
+import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 
 class ClientStateRepImpl : ClientStateRep {
     private var curClient: Client? = null

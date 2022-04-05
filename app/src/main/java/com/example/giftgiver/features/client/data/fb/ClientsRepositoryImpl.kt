@@ -1,7 +1,9 @@
 package com.example.giftgiver.features.client.data.fb
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.ClientsRepository
+import com.example.giftgiver.features.client.domain.repositories.ClientsRepository
 import com.example.giftgiver.features.event.domain.Event
 import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.user.data.fb.UserInfoFB
@@ -11,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import com.vk.api.sdk.VK
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -29,6 +32,14 @@ class ClientsRepositoryImpl(
     private val firebaseFirestore: FirebaseFirestore
 ) : ClientsRepository {
     private val clients = firebaseFirestore.collection(CLIENTS)
+    private var curClientChanged = false
+    private val isChanged: MutableLiveData<Boolean> = MutableLiveData(curClientChanged)
+
+    init {
+        isChanged.postValue(curClientChanged)
+    }
+
+    override fun isClientChanged(): LiveData<Boolean> = isChanged
 
     override suspend fun addClient(client: Client) {
         val clientRef = clients.document(client.vkId.toString())
@@ -36,8 +47,9 @@ class ClientsRepositoryImpl(
         clientRef.set(clientFB)
     }
 
-    override suspend fun deleteClient(client: Client) =
+    override suspend fun deleteClient(client: Client) {
         clients.document(client.vkId.toString()).delete()
+    }
 
     override suspend fun getClientByVkId(vkId: Long): Client? {
         val snapshot = getDataSnapshot(vkId)
@@ -45,7 +57,7 @@ class ClientsRepositoryImpl(
         return clientFB?.let { fbMapper.mapClientFromFB(it) }
     }
 
-    override suspend fun getDataSnapshot(vkId: Long): DocumentSnapshot {
+    private suspend fun getDataSnapshot(vkId: Long): DocumentSnapshot {
         return suspendCoroutine { continuation ->
             clients.document(vkId.toString()).get().addOnSuccessListener {
                 continuation.resume(it)
@@ -57,6 +69,8 @@ class ClientsRepositoryImpl(
 
     override suspend fun updateClient(vkId: Long, changes: Map<String, Any>) {
         clients.document(vkId.toString()).update(changes)
+        curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateInfo(vkId: Long, info: UserInfo) {
@@ -67,24 +81,34 @@ class ClientsRepositoryImpl(
             info.about,
         )
         clients.document(vkId.toString()).update(INFO, infoFB)
+        curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateWishlists(vkId: Long, wishlists: List<Wishlist>) {
         val wishlistsFB = wishlists.map { fbMapper.mapWishlistToFB(it) }
         clients.document(vkId.toString()).update(WISHLISTS, wishlistsFB)
+        curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>) {
         val giftsIdsFB = fbMapper.mapGiftsInfoToFB(giftsIds)
         clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS_IDS)}", giftsIdsFB)
+        curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateCalendar(vkId: Long, events: List<Event>) {
         val eventsFB = events.map { fbMapper.mapEventToFB(it) }
         clients.document("$vkId").update("${FieldPath.of(CALENDAR, EVENTS)}", eventsFB)
+        curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateFavFriends(vkId: Long, friendsIds: List<Long>) {
         clients.document("$vkId").update(FAV_FRIENDS, friendsIds)
+        curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 }
