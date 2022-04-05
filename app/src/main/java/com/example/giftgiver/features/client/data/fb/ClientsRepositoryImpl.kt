@@ -36,10 +36,6 @@ class ClientsRepositoryImpl(
     private val isChanged: MutableLiveData<Boolean> = MutableLiveData(curClientChanged)
 
     init {
-        observeClientChangesListener()
-    }
-
-    private fun observeClientChangesListener() {
         isChanged.postValue(curClientChanged)
     }
 
@@ -74,6 +70,7 @@ class ClientsRepositoryImpl(
     override suspend fun updateClient(vkId: Long, changes: Map<String, Any>) {
         clients.document(vkId.toString()).update(changes)
         curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateInfo(vkId: Long, info: UserInfo) {
@@ -85,28 +82,33 @@ class ClientsRepositoryImpl(
         )
         clients.document(vkId.toString()).update(INFO, infoFB)
         curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateWishlists(vkId: Long, wishlists: List<Wishlist>) {
         val wishlistsFB = wishlists.map { fbMapper.mapWishlistToFB(it) }
         clients.document(vkId.toString()).update(WISHLISTS, wishlistsFB)
         curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>) {
         val giftsIdsFB = fbMapper.mapGiftsInfoToFB(giftsIds)
         clients.document(vkId.toString()).update("${FieldPath.of(CART, GIFTS_IDS)}", giftsIdsFB)
         curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateCalendar(vkId: Long, events: List<Event>) {
         val eventsFB = events.map { fbMapper.mapEventToFB(it) }
         clients.document("$vkId").update("${FieldPath.of(CALENDAR, EVENTS)}", eventsFB)
         curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 
     override suspend fun updateFavFriends(vkId: Long, friendsIds: List<Long>) {
         clients.document("$vkId").update(FAV_FRIENDS, friendsIds)
         curClientChanged = vkId == VK.getUserId().value
+        isChanged.postValue(curClientChanged)
     }
 }
