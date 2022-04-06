@@ -2,9 +2,6 @@ package com.example.giftgiver.common.di.modules
 
 import androidx.viewbinding.BuildConfig
 import com.example.giftgiver.features.calendar.data.holidaysApi.HolidayApi
-import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
-import com.example.giftgiver.features.user.data.vk.VKUserWithInfoRequest
-import com.example.giftgiver.features.user.data.vk.VkMapper
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -51,14 +48,4 @@ class NetModule {
     companion object {
         private const val DOMAIN = "https://date.nager.at/"
     }
-
-//    @Provides
-//    @Singleton
-//    fun provideVKUserWithInfoRequest(id: Long?, vkMapper: VkMapper) =
-//        VKUserWithInfoRequest(id, vkMapper)
-//
-//    @Provides
-//    @Singleton
-//    fun provideVKFriendsRequest(id: Long?, vkMapper: VkMapper) =
-//        VKFriendsRequest(id, vkMapper)
 }

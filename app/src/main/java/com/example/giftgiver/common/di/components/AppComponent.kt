@@ -11,8 +11,8 @@ import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.client.domain.repositories.ClientsRepOffline
 import com.example.giftgiver.features.client.domain.repositories.ClientsRepository
 import com.example.giftgiver.features.event.data.DateMapper
-import com.example.giftgiver.features.gift.domain.GiftsRepOffline
-import com.example.giftgiver.features.gift.domain.GiftsRepository
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
+import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
 import com.example.giftgiver.features.user.data.vk.VkMapper
 import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.google.firebase.firestore.FirebaseFirestore

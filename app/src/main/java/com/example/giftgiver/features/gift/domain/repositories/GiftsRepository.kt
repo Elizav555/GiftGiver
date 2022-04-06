@@ -1,5 +1,6 @@
-package com.example.giftgiver.features.gift.domain
+package com.example.giftgiver.features.gift.domain.repositories
 
+import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 
 interface GiftsRepository {
