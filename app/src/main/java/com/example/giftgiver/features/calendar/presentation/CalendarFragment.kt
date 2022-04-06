@@ -73,7 +73,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
 
     private fun bindCalendar(holidays: List<Event>) = with(binding) {
         val eventDays: List<EventDay> = holidays.map {
-            EventDay(                            //todo get rid of all these maps
+            EventDay(
                 it.date,
                 R.color.accent
             )
