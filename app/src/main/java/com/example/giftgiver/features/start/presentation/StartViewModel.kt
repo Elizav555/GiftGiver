@@ -8,6 +8,7 @@ import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.AddClientUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
+import com.example.giftgiver.features.start.domain.AuthUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.domain.useCases.LoadFriendsUseCase
 import com.vk.api.sdk.VK
@@ -19,6 +20,7 @@ class StartViewModel @Inject constructor(
     private val loadFriends: LoadFriendsUseCase,
     private val addClientUseCase: AddClientUseCase,
     private val getClientState: GetClientStateUseCase,
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
 
     private var _client: MutableLiveData<Result<Client?>> = MutableLiveData()
@@ -49,4 +51,6 @@ class StartViewModel @Inject constructor(
             _friends.value = Result.failure(ex)
         }
     }
+
+    fun login() = authUseCase.login()
 }

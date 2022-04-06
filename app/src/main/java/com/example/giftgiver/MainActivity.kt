@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.giftgiver.common.viewModels.MainViewModel
 import com.example.giftgiver.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.vk.api.sdk.VK
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -62,6 +63,16 @@ class MainActivity : DaggerAppCompatActivity() {
                 ).show()
             }
         }
+
+        mainViewModel.isClientAuth().observe(this) {
+            if (it == false) {
+                VK.logout()
+                mainViewModel.restart()
+                startFrom(this)
+            } else if (it == true) {
+                makeToast(getString(R.string.welcome))
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -71,6 +82,11 @@ class MainActivity : DaggerAppCompatActivity() {
 
     fun setBottomNavigationVisibility(visibility: Int) {
         binding.bottomNav.visibility = visibility
+    }
+
+    fun makeToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG)
+            .show()
     }
 
     companion object {

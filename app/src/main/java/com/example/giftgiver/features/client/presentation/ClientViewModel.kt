@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
+import com.example.giftgiver.features.start.domain.AuthUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import kotlinx.coroutines.launch
@@ -16,13 +17,15 @@ import javax.inject.Inject
 class ClientViewModel @Inject constructor(
     private val imageStorage: ImageStorage,
     getClientState: GetClientStateUseCase,
-    private val clientFBUseCase: ClientFBUseCase
+    private val clientFBUseCase: ClientFBUseCase,
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
     private val client = getClientState()
     private var _wishlists: MutableLiveData<Result<List<Wishlist>>> = MutableLiveData()
     val wishlists: LiveData<Result<List<Wishlist>>> = _wishlists
     private var clientWishlists: MutableList<Wishlist> = mutableListOf()
 
+    fun getClient() = client
     fun getWishlists() =
         try {
             clientWishlists = client?.wishlists ?: mutableListOf()
@@ -91,4 +94,6 @@ class ClientViewModel @Inject constructor(
                 _info.value = Result.failure(ex)
             }
         }
+
+    fun logout() = authUseCase.logout()
 }

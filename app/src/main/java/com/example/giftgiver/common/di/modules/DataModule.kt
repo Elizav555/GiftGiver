@@ -20,6 +20,8 @@ import com.example.giftgiver.features.gift.data.GiftsRepositoryImpl
 import com.example.giftgiver.features.gift.data.room.GiftDao
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
+import com.example.giftgiver.features.start.data.AuthRepositoryImpl
+import com.example.giftgiver.features.start.domain.AuthRepository
 import com.example.giftgiver.features.user.data.FriendsStateRepImpl
 import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.google.firebase.firestore.FirebaseFirestore
@@ -76,6 +78,10 @@ class DataModule {
     @Singleton
     fun provideImageStorage(storageReference: StorageReference): ImageStorage =
         ImageStorageImpl(storageReference)
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl()
 
     @Provides
     @Singleton

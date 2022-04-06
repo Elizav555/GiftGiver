@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentAccountBinding
-import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
-import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.AddWishlistDialog
@@ -19,20 +17,12 @@ import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
 import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.autoCleared
 import com.example.giftgiver.utils.viewModel
-import com.vk.api.sdk.VK
 import java.io.File
-import javax.inject.Inject
 
 class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
     private var isAdapterInited = false
-
-    @Inject
-    lateinit var clientStateRep: ClientStateRep
-
-    @Inject
-    lateinit var friendsStateRep: FriendsStateRep
     private val clientViewModel: ClientViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +56,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
     }
 
     private fun enterEditMode() {
-        clientStateRep.getClient()
+        clientViewModel.getClient()
             ?.let { EditClientDialog(it).show(childFragmentManager, "dialog") }
     }
 
@@ -74,7 +64,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         with(binding) {
             setHasOptionsMenu(true)
             btnLogout.setOnClickListener {
-                logout()
+                clientViewModel.logout()
             }
             btnAdd.setOnClickListener {
                 AddWishlistDialog()
@@ -127,14 +117,6 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
                 wishlistIndex
             )
         findNavController().navigate(action)
-    }
-
-    private fun logout() { //todo check mb change
-        VK.logout()
-        clientStateRep.deleteClient()
-        friendsStateRep.deleteFriends()
-        isAdapterInited = false
-        findNavController().navigate(AccountFragmentDirections.actionAccountToStartFragment())
     }
 
     fun updateInfo(newName: String, newInfo: String, newBirthDate: String, imageFile: File?) =

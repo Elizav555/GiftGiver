@@ -29,7 +29,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
         tools:src="@tools:sample/avatars" />
-    <!--todo handle long name here and in users-->
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="0dp"

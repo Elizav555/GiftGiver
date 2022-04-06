@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -37,10 +36,9 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                 is VKAuthenticationResult.Success -> {
                     binding.btnLogin.isVisible = false
                     binding.progressBar.isVisible = true
-                    makeToast("Welcome!")
                     startViewModel.getClient(VK.getUserId().value)
                 }
-                is VKAuthenticationResult.Failed -> makeToast("Authentication error")
+                is VKAuthenticationResult.Failed -> (activity as? MainActivity)?.makeToast("Authentication error")
             }
         }
 
@@ -106,11 +104,6 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         }
     }
 
-    private fun makeToast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG)
-            .show()
-    }
-
     private fun initObservers() {
         startViewModel.client.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
@@ -118,6 +111,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                 if (it != null) {
                     binding.btnLogin.isVisible = false
                     binding.progressBar.isVisible = true
+                    startViewModel.login()
                     startViewModel.loadFriends()
                 }
             }, onFailure = {
