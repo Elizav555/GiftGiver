@@ -1,7 +1,7 @@
 package com.example.giftgiver.features.gift.data
 
 import android.util.Log
-import com.example.giftgiver.features.client.data.fb.CLIENTS
+import com.example.giftgiver.features.client.data.fb.ClientsRepositoryImpl.Companion.CLIENTS
 import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.gift.data.fb.GiftFB
 import com.example.giftgiver.features.gift.domain.Gift

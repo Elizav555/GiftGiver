@@ -9,30 +9,29 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import coil.api.load
-import com.example.giftgiver.App
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.DialogAddGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
+import dagger.android.support.DaggerDialogFragment
 import java.io.File
 import javax.inject.Inject
 
 class AddGiftDialog(
     private val submitAction: (String, String, File?) -> Unit?,
     private val gift: Gift? = null
-) : DialogFragment() {
+) : DaggerDialogFragment() {
     private lateinit var binding: DialogAddGiftBinding
     private var cameraImageFile: File? = null
     private var imageFile: File? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var imageViewModel: ImageViewModel
+    private val imageViewModel: ImageViewModel by viewModels { viewModelFactory }
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {
             imageViewModel.onGalleryImagePicked(it)
@@ -48,11 +47,6 @@ class AddGiftDialog(
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        App.mainComponent.inject(this)
-        imageViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[ImageViewModel::class.java]
         binding = DialogAddGiftBinding.inflate(layoutInflater)
         binding.btnCamera.setOnClickListener { openCamera() }
         binding.btnGallery.setOnClickListener { openGallery() }

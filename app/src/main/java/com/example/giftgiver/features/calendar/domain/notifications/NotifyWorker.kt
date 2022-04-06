@@ -7,13 +7,13 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 
 class NotifyWorker(
-    context: Context,
+    private val context: Context,
     params: WorkerParameters
 ) :
     Worker(context, params) {
     override fun doWork(): Result {
         try {
-            val notificationService = NotificationService()
+            val notificationService = NotificationService(context)
             inputData.getString(EVENT_NAME)?.let {
                 notificationService.showNotification(it)
             }

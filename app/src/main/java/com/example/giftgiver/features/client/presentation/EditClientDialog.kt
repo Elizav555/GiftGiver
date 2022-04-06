@@ -9,16 +9,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import coil.api.load
-import com.example.giftgiver.App
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.DialogEditClientBinding
 import com.example.giftgiver.features.client.domain.Client
+import dagger.android.support.DaggerDialogFragment
 import java.io.File
 import java.text.DateFormat
 import java.text.ParseException
@@ -26,7 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class EditClientDialog(private val client: Client) : DialogFragment() {
+class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
     private val dateRegex =
         Regex("^(1[0-9]|0[1-9]|3[0-1]|2[1-9]|[1-9]).(0[1-9]|1[0-2]|[1-9]).[0-9]{4}$")
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
@@ -36,7 +35,7 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var imageViewModel: ImageViewModel
+    private val imageViewModel: ImageViewModel by viewModels { viewModelFactory }
     private var imageFile: File? = null
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {
@@ -53,11 +52,6 @@ class EditClientDialog(private val client: Client) : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        App.mainComponent.inject(this)
-        imageViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[ImageViewModel::class.java]
         binding = DialogEditClientBinding.inflate(layoutInflater)
         binding.btnCamera.setOnClickListener { openCamera() }
         binding.btnGallery.setOnClickListener { openGallery() }

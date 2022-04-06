@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.api.load
-import com.example.giftgiver.App
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.user.domain.FriendsStateRep
@@ -20,12 +16,14 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.AddWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
+import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.autoCleared
+import com.example.giftgiver.utils.viewModel
 import com.vk.api.sdk.VK
 import java.io.File
 import javax.inject.Inject
 
-class AccountFragment : Fragment() {
+class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
     private var isAdapterInited = false
@@ -35,26 +33,18 @@ class AccountFragment : Fragment() {
 
     @Inject
     lateinit var friendsStateRep: FriendsStateRep
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var clientViewModel: ClientViewModel
+    private val clientViewModel: ClientViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        App.mainComponent.inject(this)
         binding = FragmentAccountBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        clientViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[ClientViewModel::class.java]
         initObservers()
         clientViewModel.getInfo()
         clientViewModel.getWishlists()

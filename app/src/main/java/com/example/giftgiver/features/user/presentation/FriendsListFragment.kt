@@ -6,31 +6,25 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentFriendsListBinding
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.presentation.list.UserAdapter
 import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
+import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.autoCleared
-import javax.inject.Inject
+import com.example.giftgiver.utils.viewModel
 
-class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
+class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
     private var userAdapter: UserAdapter by autoCleared()
     private var friends = listOf<UserInfo>()
     private var isAdapterInited = false
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var friendsViewModel: FriendsViewModel
+    private val friendsViewModel: FriendsViewModel by viewModel()
     private var isFav = false
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,11 +32,6 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        App.mainComponent.inject(this)
-        friendsViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[FriendsViewModel::class.java]
         binding = FragmentFriendsListBinding.inflate(inflater)
         return binding.root
     }

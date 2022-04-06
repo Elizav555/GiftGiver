@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.calendar.presentation
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.giftgiver.App
 import com.example.giftgiver.R
 import com.example.giftgiver.features.calendar.domain.notifications.NotifyWorker
 import com.example.giftgiver.features.calendar.domain.useCases.GetHolidaysUseCase
@@ -24,6 +24,7 @@ class CalendarViewModel @Inject constructor(
     private val getHolidaysUseCase: GetHolidaysUseCase,
     private val clientFBUseCase: ClientFBUseCase,
     private val dateMapper: DateMapper,
+    private val context: Context,
     getClientState: GetClientStateUseCase
 ) : ViewModel() {
 
@@ -64,8 +65,7 @@ class CalendarViewModel @Inject constructor(
                     result.add(
                         Event(
                             calendar,
-                            App.appComponent.getContext()
-                                .getString(R.string.friend_bday, friend.name)
+                            context.getString(R.string.friend_bday, friend.name)
                         )
                     )
                 }
@@ -118,7 +118,7 @@ class CalendarViewModel @Inject constructor(
         val data = Data.Builder().putString(NotifyWorker.EVENT_NAME, eventsDesc).build()
         val notificationWork = OneTimeWorkRequestBuilder<NotifyWorker>()
             .setInitialDelay(15, TimeUnit.SECONDS).setInputData(data).build()
-        WorkManager.getInstance(App.appComponent.getContext()).enqueue(notificationWork)
+        WorkManager.getInstance(context).enqueue(notificationWork)
         isNotified = true
     }
 }

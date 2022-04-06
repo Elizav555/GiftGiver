@@ -5,38 +5,27 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.applandeo.materialcalendarview.EventDay
-import com.example.giftgiver.App
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentCalendarBinding
 import com.example.giftgiver.features.event.domain.Event
 import com.example.giftgiver.features.event.presentation.AddEventDialog
+import com.example.giftgiver.utils.BaseFragment
+import com.example.giftgiver.utils.viewModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class CalendarFragment : Fragment() {
+class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     private lateinit var binding: FragmentCalendarBinding
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var calendarViewModel: CalendarViewModel
+    private val calendarViewModel: CalendarViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        App.mainComponent.inject(this)
-        calendarViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[CalendarViewModel::class.java]
         binding = FragmentCalendarBinding.inflate(inflater)
         return binding.root
     }

@@ -9,10 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
-class AppModule(private val app: Application) {
+class AppModule {
     @Provides
     @Singleton
-    fun provideContext(): Context = app.applicationContext
+    fun provideContext(app: Application): Context = app.applicationContext
 
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default

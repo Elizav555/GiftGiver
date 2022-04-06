@@ -1,5 +1,6 @@
 package com.example.giftgiver.common.viewModels
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -7,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.giftgiver.App
 import com.example.giftgiver.utils.copyInputStreamToFile
 import com.example.giftgiver.utils.correctRotation
 import com.example.giftgiver.utils.getTempFile
@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
-class ImageViewModel @Inject constructor() : ViewModel() {
+class ImageViewModel @Inject constructor(private val context: Context) : ViewModel() {
 
     private val _imageFileLiveData = MutableLiveData<File?>()
     val imageFileLiveData: LiveData<File?> = _imageFileLiveData
@@ -44,10 +44,10 @@ class ImageViewModel @Inject constructor() : ViewModel() {
     private suspend fun convertUriToFile(uri: Uri): File? {
         return withContext(Dispatchers.IO) {
             try {
-                val inputStream = App.appComponent.getContext()
+                val inputStream = context
                     .contentResolver
                     .openInputStream(uri)
-                return@withContext App.appComponent.getContext()
+                return@withContext context
                     .getTempFile().apply {
                         copyInputStreamToFile(inputStream)
                         correctRotation()

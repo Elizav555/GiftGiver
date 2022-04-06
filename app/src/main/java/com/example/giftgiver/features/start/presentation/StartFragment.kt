@@ -7,34 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
-import com.example.giftgiver.common.viewModels.ViewModelFactory
+import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentStartBinding
 import com.example.giftgiver.features.calendar.domain.Calendar
 import com.example.giftgiver.features.cart.domain.Cart
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
+import com.example.giftgiver.utils.BaseFragment
+import com.example.giftgiver.utils.viewModel
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class StartFragment : Fragment() {
+class StartFragment : BaseFragment(R.layout.fragment_start) {
     private lateinit var binding: FragmentStartBinding
 
     @Inject
     lateinit var clientStateRep: ClientStateRep
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var startViewModel: StartViewModel
+    private val startViewModel: StartViewModel by viewModel()
     private val activityLauncher =
         registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
             when (result) {
@@ -54,11 +50,6 @@ class StartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        App.mainComponent.inject(this)
-        startViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[StartViewModel::class.java]
         binding = FragmentStartBinding.inflate(inflater)
         return binding.root
     }

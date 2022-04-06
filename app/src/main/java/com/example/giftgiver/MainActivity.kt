@@ -3,31 +3,26 @@ package com.example.giftgiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.giftgiver.common.viewModels.MainViewModel
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    lateinit var mainViewModel: MainViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val mainViewModel: MainViewModel by viewModels { viewModelFactory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.mainComponent.inject(this)
-        mainViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[MainViewModel::class.java]
         initObservers()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

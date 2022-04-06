@@ -5,43 +5,28 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import coil.api.load
-import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ImageViewModel
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.utils.BaseFragment
+import com.example.giftgiver.utils.viewModel
 import java.io.File
-import javax.inject.Inject
 
-class GiftFragment : Fragment() {
+class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     private lateinit var binding: FragmentGiftBinding
     private val args: GiftFragmentArgs by navArgs()
     private var curGift: Gift? = null
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var imageViewModel: ImageViewModel
-    private lateinit var giftViewModel: GiftViewModel
+    private val imageViewModel: ImageViewModel by viewModel()
+    private val giftViewModel: GiftViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        App.mainComponent.inject(this)
-        imageViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[ImageViewModel::class.java]
-        giftViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[GiftViewModel::class.java]
         binding = FragmentGiftBinding.inflate(inflater)
         return binding.root
     }

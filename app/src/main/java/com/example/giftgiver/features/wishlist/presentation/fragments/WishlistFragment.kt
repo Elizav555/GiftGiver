@@ -3,18 +3,14 @@ package com.example.giftgiver.features.wishlist.presentation.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
@@ -23,12 +19,14 @@ import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.ChangeWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
+import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
+import com.example.giftgiver.utils.viewModel
 import java.io.File
 import javax.inject.Inject
 
-class WishlistFragment : Fragment() {
+class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     lateinit var binding: FragmentWishlistBinding
     private val args: WishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
@@ -37,20 +35,12 @@ class WishlistFragment : Fragment() {
 
     @Inject
     lateinit var clientStateRep: ClientStateRep
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var wishlistViewModel: WishlistViewModel
+    private val wishlistViewModel: WishlistViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        App.mainComponent.inject(this)
-        wishlistViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[WishlistViewModel::class.java]
         binding = FragmentWishlistBinding.inflate(inflater)
         return binding.root
     }

@@ -5,44 +5,33 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.giftgiver.App
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentFriendsWishlistBinding
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
 import com.example.giftgiver.features.wishlist.presentation.viewModels.FriendsWishlistViewModel
+import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.autoCleared
-import javax.inject.Inject
+import com.example.giftgiver.utils.viewModel
 
-class FriendsWishlistFragment : Fragment() {
+class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist) {
     lateinit var binding: FragmentFriendsWishlistBinding
     private val args: FriendsWishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
     private var wishlistIndex = -1
     private var isAdapterInited = false
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var friendsWishlistViewModel: FriendsWishlistViewModel
+    private val friendsWishlistViewModel: FriendsWishlistViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        App.mainComponent.inject(this)
-        friendsWishlistViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[FriendsWishlistViewModel::class.java]
         binding = FragmentFriendsWishlistBinding.inflate(inflater)
         return binding.root
     }

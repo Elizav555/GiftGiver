@@ -10,13 +10,11 @@ import android.os.Build
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.toBitmap
-import com.example.giftgiver.App
 import com.example.giftgiver.R
 
 private const val CHANNEL_ID = "channel_id_1"
 
-class NotificationService {
-    private val context = App.appComponent.getContext()
+class NotificationService(private val context: Context) {
     private val manager by lazy {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }

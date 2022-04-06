@@ -3,34 +3,29 @@ package com.example.giftgiver.features.cart.presentation
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.giftgiver.App
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.FragmentCartBinding
 import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.forCart.GiftCartAdapter
+import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.SwipeToDeleteCallback
 import com.example.giftgiver.utils.autoCleared
+import com.example.giftgiver.utils.viewModel
 import javax.inject.Inject
 
-class CartFragment : Fragment() {
+class CartFragment : BaseFragment(R.layout.fragment_cart) {
     private lateinit var binding: FragmentCartBinding
     private var giftAdapter: GiftCartAdapter by autoCleared()
 
     @Inject
     lateinit var clientStateRep: ClientStateRep
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var cartViewModel: CartViewModel
+    private val cartViewModel: CartViewModel by viewModel()
     private var giftsForList: List<Gift>? = null
     private var isAdapterInited = false
     override fun onCreateView(
@@ -38,11 +33,6 @@ class CartFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        App.mainComponent.inject(this)
-        cartViewModel = ViewModelProvider(
-            viewModelStore,
-            viewModelFactory
-        )[CartViewModel::class.java]
         binding = FragmentCartBinding.inflate(inflater)
         return binding.root
     }
