@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.client.domain.repositories
 
+import androidx.lifecycle.LiveData
 import com.example.giftgiver.features.client.domain.Client
 
 interface ClientsRepOffline {
@@ -10,4 +11,6 @@ interface ClientsRepOffline {
     suspend fun updateClient(client: Client)
 
     suspend fun getClientByVkId(vkId: Long): Client?
+
+    fun hasInternetConnection(): LiveData<Boolean>
 }

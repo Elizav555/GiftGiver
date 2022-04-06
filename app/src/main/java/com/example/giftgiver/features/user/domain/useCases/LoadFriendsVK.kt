@@ -11,7 +11,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-//todo inject somehow requests
 class LoadFriendsVK @Inject constructor(
     private val getClientByVkId: GetClientByVkId
 ) {

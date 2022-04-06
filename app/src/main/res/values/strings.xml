@@ -74,4 +74,5 @@
     <string name="unknownViewModel">Unknown ViewModel class</string>
     <string name="notific_channel_desc">Notification channel for calendar</string>
     <string name="important_day">Tomorrow is an important day</string>
+    <string name="no_internet">Please, keep in mind that without internet connection your changes won\'t be saved</string>
 </resources>

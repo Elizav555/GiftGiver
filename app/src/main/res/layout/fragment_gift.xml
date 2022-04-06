@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".features.gift.presentation.GiftFragment">
-    <!--todo think about info fields and make them scrollable if necessary -->
 
     <ProgressBar
         android:id="@+id/progressBar"

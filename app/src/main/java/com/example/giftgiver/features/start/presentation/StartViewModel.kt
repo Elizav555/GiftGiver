@@ -18,7 +18,7 @@ class StartViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val loadFriends: LoadFriendsUseCase,
     private val addClientUseCase: AddClientUseCase,
-    private val getClientState: GetClientStateUseCase
+    private val getClientState: GetClientStateUseCase,
 ) : ViewModel() {
 
     private var _client: MutableLiveData<Result<Client?>> = MutableLiveData()

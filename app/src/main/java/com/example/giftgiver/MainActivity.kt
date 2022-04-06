@@ -3,6 +3,7 @@ package com.example.giftgiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -49,6 +50,16 @@ class MainActivity : DaggerAppCompatActivity() {
         mainViewModel.isClientChanged().observe(this) {
             if (it) {
                 mainViewModel.onClientChanged()
+            }
+        }
+
+        mainViewModel.hasInternetConnection().observe(this) {
+            if (!it) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.no_internet),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
