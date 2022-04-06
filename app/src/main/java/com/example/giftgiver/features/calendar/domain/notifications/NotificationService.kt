@@ -12,8 +12,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.example.giftgiver.R
 
-private const val CHANNEL_ID = "channel_id_1"
-
 class NotificationService(private val context: Context) {
     private val manager by lazy {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -36,7 +34,8 @@ class NotificationService(private val context: Context) {
         }
 
         val ringURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val largeIcon = AppCompatResources.getDrawable(context, R.mipmap.ic_gift_giver)?.toBitmap()
+        val largeIcon =
+            AppCompatResources.getDrawable(context, R.mipmap.ic_gift_giver_round)?.toBitmap()
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setLargeIcon(largeIcon)
             .setSmallIcon(R.drawable.ic_baseline_calendar_month_24)
@@ -48,5 +47,9 @@ class NotificationService(private val context: Context) {
             .setSound(ringURI)
 
         manager.notify(1, builder.build())
+    }
+
+    companion object {
+        const val CHANNEL_ID = "channel_id_1"
     }
 }
