@@ -34,7 +34,7 @@ class LoadFriendsVK @Inject constructor(
         if (!filter) {
             return friendsVK.sortedBy { user -> user.name }
         }
-        val allClients = getAllClients()
+        val allClients = getAllClients() //todo think cause first time still slow
         return friendsVK.filter { friend -> allClients.contains(friend.vkId) }
             .sortedByDescending { user -> user.name }
     }
