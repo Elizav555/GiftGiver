@@ -15,6 +15,8 @@ import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.event.domain.Event
+import com.example.giftgiver.features.user.domain.UserInfo
+import com.example.giftgiver.features.user.domain.useCases.LoadFriendsUseCase
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -25,12 +27,12 @@ class CalendarViewModel @Inject constructor(
     private val clientFBUseCase: ClientFBUseCase,
     private val dateMapper: DateMapper,
     private val context: Context,
-    getClientState: GetClientStateUseCase
+    getClientState: GetClientStateUseCase,
+    private val loadFriends: LoadFriendsUseCase
 ) : ViewModel() {
 
     private val curYear = Calendar.getInstance().get(Calendar.YEAR)
     private val client = getClientState()
-    private val friends = getClientState.getFriendsState()
     private var isNotified = false
     private var _holidays: MutableLiveData<Result<List<Event>>> = MutableLiveData()
     val holidays: LiveData<Result<List<Event>>> = _holidays
@@ -55,7 +57,7 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun mapFriendsBdays(): MutableList<Event> {
+    private fun mapFriendsBdays(friends: List<UserInfo>): MutableList<Event> {
         val result = mutableListOf<Event>()
         friends.forEach { friend ->
             if (!friend.bdate.isNullOrBlank()) {
@@ -75,9 +77,11 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun getDefaultHolidays() = viewModelScope.launch {
+        val friends = client?.let { loadFriends(it.vkId, false) }
         clientHolidays = getHolidaysUseCase(curYear.toString()) as MutableList<Event>
-        clientHolidays.addAll(mapFriendsBdays())
+        friends?.let { mapFriendsBdays(it) }?.let { clientHolidays.addAll(it) }
         updateClient()
+        _holidays.value = Result.success(clientHolidays)
     }
 
     fun addEvent(event: Event) =

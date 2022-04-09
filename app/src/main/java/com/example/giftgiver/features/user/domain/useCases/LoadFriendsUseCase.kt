@@ -7,9 +7,9 @@ class LoadFriendsUseCase @Inject constructor(
     private val loadFriendsVK: LoadFriendsVK,
     private val clientsRepOffline: ClientsRepOffline,
 ) {
-    suspend operator fun invoke(vkId: Long) = run {
+    suspend operator fun invoke(vkId: Long, filter: Boolean = true) = run {
         try {
-            loadFriendsVK.loadFriends(vkId)
+            loadFriendsVK.loadFriends(vkId, filter)
         } catch (ex: Exception) {
             clientsRepOffline.getClientByVkId(vkId)?.favFriendsIds?.mapNotNull {//todo mb have list of clients ids
                 clientsRepOffline.getClientByVkId(it)?.info
