@@ -11,7 +11,7 @@ class LoadFriendsUseCase @Inject constructor(
         try {
             loadFriendsVK.loadFriends(vkId)
         } catch (ex: Exception) {
-            clientsRepOffline.getClientByVkId(vkId)?.favFriendsIds?.mapNotNull {
+            clientsRepOffline.getClientByVkId(vkId)?.favFriendsIds?.mapNotNull {//todo mb have list of clients ids
                 clientsRepOffline.getClientByVkId(it)?.info
             } ?: listOf()
         }

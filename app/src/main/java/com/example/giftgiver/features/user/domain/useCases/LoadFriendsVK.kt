@@ -1,6 +1,7 @@
 package com.example.giftgiver.features.user.domain.useCases
 
 import android.util.Log
+import com.example.giftgiver.features.client.domain.useCases.GetAllClientsUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
 import com.example.giftgiver.features.user.domain.UserInfo
@@ -12,7 +13,8 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class LoadFriendsVK @Inject constructor(
-    private val getClientByVkId: GetClientByVkId
+    private val getClientByVkId: GetClientByVkId,
+    private val getAllClients: GetAllClientsUseCase
 ) {
     fun loadFriends(vkId: Long, successAction: (List<UserInfo>) -> Unit) {
         VK.execute(
@@ -32,7 +34,8 @@ class LoadFriendsVK @Inject constructor(
     suspend fun loadFriends(vkId: Long): List<UserInfo> {
         val friendsVK = loadAllFriends(vkId)
 //                return friendsVK.sortedBy { user -> user.name }//todo change back
-        return friendsVK.mapNotNull { friend -> getClientByVkId(friend.vkId)?.info }
+        val allClients = getAllClients()
+        return friendsVK.filter { friend -> allClients.contains(friend.vkId) }
             .sortedByDescending { user -> user.name }
     }
 

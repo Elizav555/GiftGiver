@@ -102,6 +102,16 @@ class ClientsRepositoryImpl(
         isChanged.postValue(curClientChanged)
     }
 
+    override suspend fun getAllClientsIds(): List<Long> {
+        return suspendCoroutine { continuation ->
+            clients.get().addOnSuccessListener { snapshot ->
+                continuation.resume(snapshot.map { it.id.toLong() })
+            }.addOnFailureListener {
+                continuation.resumeWithException(it)
+            }
+        }
+    }
+
     companion object {
         const val CLIENTS = "clients"
         const val WISHLISTS = "wishlists"

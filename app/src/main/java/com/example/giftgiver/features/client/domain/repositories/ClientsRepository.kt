@@ -8,6 +8,7 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 
 interface ClientsRepository {
+    suspend fun getAllClientsIds(): List<Long>
     suspend fun addClient(client: Client)
     suspend fun deleteClient(client: Client)
     suspend fun getClientByVkId(vkId: Long): Client?
