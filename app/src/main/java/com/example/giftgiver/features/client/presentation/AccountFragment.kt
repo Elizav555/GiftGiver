@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,13 +43,17 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_edit, menu)
+        inflater.inflate(R.menu.menu_account, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.edit -> {
                 enterEditMode()
+                true
+            }
+            R.id.changeTheme -> {
+                changeTheme(item)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -58,6 +63,12 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private fun enterEditMode() {
         clientViewModel.getClient()
             ?.let { EditClientDialog(it).show(childFragmentManager, "dialog") }
+    }
+
+    private fun changeTheme(item: MenuItem) {
+        if (item.title == getString(R.string.change_to_dark)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     private fun bindAll() {

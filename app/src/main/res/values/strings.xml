@@ -76,4 +76,6 @@
     <string name="important_day">Tomorrow is an important day</string>
     <string name="no_internet">Please, keep in mind that without internet connection your changes won\'t be saved</string>
     <string name="welcome">Welcome!</string>
+    <string name="change_to_dark">Change to dark</string>
+    <string name="change_to_light">Change to light</string>
 </resources>
