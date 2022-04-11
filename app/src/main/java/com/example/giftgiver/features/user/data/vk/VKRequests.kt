@@ -7,7 +7,8 @@ import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
 
-class VKFriendsRequest(id: Long?) : VKRequest<List<UserInfo>>("friends.get") {
+class VKFriendsRequest(id: Long?, private val vkMapper: VkMapper) :
+    VKRequest<List<UserInfo>>("friends.get") {
     init {
         if (id != null) {
             addParam("user_id", id)
@@ -20,13 +21,14 @@ class VKFriendsRequest(id: Long?) : VKRequest<List<UserInfo>>("friends.get") {
         val users = r.getJSONObject("response").getJSONArray("items")
         val result = ArrayList<UserInfo>()
         for (i in 0 until users.length()) {
-            result.add(VkMapper().mapUser(UserVk().parse(users.getJSONObject(i))))
+            result.add(vkMapper.mapUser(UserVk().parse(users.getJSONObject(i))))
         }
         return result
     }
 }
 
-class VKUserWithInfoRequest(id: Long?) : VKRequest<UserInfo>("users.get") {
+class VKUserWithInfoRequest(id: Long?, private val vkMapper: VkMapper) :
+    VKRequest<UserInfo>("users.get") {
     init {
         addParam("access_token", VKAccessToken.toString())
         if (id != null) {
@@ -39,6 +41,6 @@ class VKUserWithInfoRequest(id: Long?) : VKRequest<UserInfo>("users.get") {
         val userInfoVk = r.getJSONArray("response")
         val userInfo = UserInfoVk().parse(userInfoVk.getJSONObject(0))
         val user = UserVk().parse(userInfoVk.getJSONObject(0))
-        return VkMapper().mapUserWithInfo(user, userInfo)
+        return vkMapper.mapUserWithInfo(user, userInfo)
     }
 }

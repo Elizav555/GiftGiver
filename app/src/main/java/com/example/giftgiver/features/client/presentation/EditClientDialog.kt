@@ -17,21 +17,17 @@ import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.DialogEditClientBinding
 import com.example.giftgiver.features.client.domain.Client
+import com.example.giftgiver.features.event.data.DateMapper
 import dagger.android.support.DaggerDialogFragment
 import java.io.File
-import java.text.DateFormat
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
-    private val dateRegex =
-        Regex("^(1[0-9]|0[1-9]|3[0-1]|2[1-9]|[1-9]).(0[1-9]|1[0-2]|[1-9]).[0-9]{4}$")
-    private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-    private val todayDate = Calendar.getInstance()
     private lateinit var binding: DialogEditClientBinding
     private var cameraImageFile: File? = null
+
+    @Inject
+    lateinit var dateMapper: DateMapper
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -73,7 +69,7 @@ class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
                         (parentFragment as? AccountFragment)?.updateInfo(
                             etName.text.toString(),
                             etInfo.text.toString(),
-                            etBirth.text.toString(),
+                            dateMapper.formatDateString(etBirth.text.toString()),
                             imageFile
                         )
                     }
@@ -104,25 +100,9 @@ class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
         }
     }
 
-    private fun validateBirthDate(date: String): Boolean {
-        if (!date.matches(dateRegex)) {
-            return false
-        }
-        return try {
-            val birthDate = dateFormat.parse(date)
-            if (birthDate.after(todayDate.time)) {
-                false
-            } else {
-                val birthCalendar = Calendar.getInstance()
-                birthCalendar.time = birthDate
-                todayDate.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR) <= 100
-            }
-        } catch (ex: ParseException) {
-            false
-        }
-    }
+    private fun validateBirthDate(date: String) = dateMapper.validateBirthDate(date)
 
-    private fun openGallery() {
+    fun openGallery() {
         galleryLauncher.launch("image/*")
     }
 

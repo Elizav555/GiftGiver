@@ -31,7 +31,7 @@ class MappersModule {
 
     @Provides
     @Singleton
-    fun provideVkMapper(): VkMapper = VkMapper()
+    fun provideVkMapper(dateMapper: DateMapper): VkMapper = VkMapper(dateMapper)
 
     @Provides
     @Singleton

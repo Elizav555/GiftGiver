@@ -28,6 +28,9 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
     private lateinit var binding: FragmentStartBinding
 
     @Inject
+    lateinit var loadUserInfoVK: LoadUserInfoVK
+
+    @Inject
     lateinit var clientStateRep: ClientStateRep
     private val startViewModel: StartViewModel by viewModel()
     private val activityLauncher =
@@ -72,7 +75,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                     val client = Client(
                         vkId,
                         Calendar(),
-                        info = LoadUserInfoVK().loadInfo(vkId),
+                        info = loadUserInfoVK.loadInfo(vkId),
                         cart = Cart()
                     )
                     startViewModel.addClient(client)

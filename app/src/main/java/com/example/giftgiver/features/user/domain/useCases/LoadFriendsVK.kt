@@ -3,6 +3,7 @@ package com.example.giftgiver.features.user.domain.useCases
 import android.util.Log
 import com.example.giftgiver.features.client.domain.useCases.GetAllClientsUseCase
 import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
+import com.example.giftgiver.features.user.data.vk.VkMapper
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
@@ -12,11 +13,12 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class LoadFriendsVK @Inject constructor(
-    private val getAllClients: GetAllClientsUseCase
+    private val getAllClients: GetAllClientsUseCase,
+    private val vkMapper: VkMapper
 ) {
     fun loadFriends(vkId: Long, successAction: (List<UserInfo>) -> Unit) {
         VK.execute(
-            VKFriendsRequest(vkId),
+            VKFriendsRequest(vkId, vkMapper),
             object : VKApiCallback<List<UserInfo>> {
                 override fun success(result: List<UserInfo>) {
                     successAction(result)
@@ -42,7 +44,7 @@ class LoadFriendsVK @Inject constructor(
     private suspend fun loadAllFriends(vkId: Long): List<UserInfo> {
         return suspendCoroutine { continuation ->
             VK.execute(
-                VKFriendsRequest(vkId),
+                VKFriendsRequest(vkId, vkMapper),
                 object : VKApiCallback<List<UserInfo>> {
                     override fun success(result: List<UserInfo>) {
                         continuation.resume(result)
