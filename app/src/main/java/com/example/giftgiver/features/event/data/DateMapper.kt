@@ -10,7 +10,7 @@ class DateMapper {
     private val dateFormatShort: DateFormat = SimpleDateFormat("dd.MM", Locale.getDefault())
     private val dateFormatLong: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     private val dateRegex =
-        Regex("^(1[0-9]|0[1-9]|3[0-1]|2[1-9]|[1-9]).(0[1-9]|1[0-2]|[1-9]).[0-9]{4}$")
+        Regex("^(1[0-9]|0[1-9]|3[0-1]|2[0-9]|[1-9]).(0[1-9]|1[0-2]|[1-9]).[1-2][0-9]{3}\$")
     private val todayDate = Calendar.getInstance()
 
     fun parseStringToCalendar(date: String): Calendar {
