@@ -88,6 +88,19 @@ class WishlistViewModel @Inject constructor(
         }
     }
 
+    fun moveGift(fromPos: Int, toPos: Int, gifts: List<Gift>) = client?.let { client ->
+        viewModelScope.launch {
+            try {
+                Collections.swap(gifts, fromPos, toPos)
+                Collections.swap(client.wishlists[wishlistIndex].giftsIds, fromPos, toPos)
+                clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
+                _gifts.value = Result.success(gifts)
+            } catch (ex: Exception) {
+                _gifts.value = Result.failure(ex)
+            }
+        }
+    }
+
     fun changeWishlistName(newName: String) = client?.let { client ->
         viewModelScope.launch {
             try {

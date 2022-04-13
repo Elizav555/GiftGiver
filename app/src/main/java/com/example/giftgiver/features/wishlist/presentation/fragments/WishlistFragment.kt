@@ -21,7 +21,7 @@ import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.ChangeWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
 import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.SwipeToDeleteCallback
+import com.example.giftgiver.utils.MySwipeCallback
 import com.example.giftgiver.utils.autoCleared
 import com.example.giftgiver.utils.viewModel
 import java.io.File
@@ -102,10 +102,23 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
             )
             addItemDecoration(dividerItemDecoration)
 
-            val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
+            val swipeToDeleteCallback = object : MySwipeCallback() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
                     deleteGift(gifts[pos], pos)
+                }
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    wishlistViewModel.moveGift(
+                        viewHolder.adapterPosition,
+                        target.adapterPosition,
+                        gifts
+                    )
+                    return true
                 }
             }
 

@@ -39,6 +39,16 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun moveGift(fromPos: Int, toPos: Int) =
+        try {
+            Collections.swap(clientGifts, fromPos, toPos)
+            updateClient()
+            _gifts.value = Result.success(clientGifts)
+        } catch (ex: Exception) {
+            _gifts.value = Result.failure(ex)
+        }
+
+
     fun updateClient() = viewModelScope.launch {
         client?.let { client ->
             val ids = clientGifts.map { GiftInfo(it.id, it.forId, Calendar.getInstance()) }
