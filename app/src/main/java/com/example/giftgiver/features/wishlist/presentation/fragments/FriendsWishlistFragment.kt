@@ -58,7 +58,7 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
             navigateToItem(id)
         }
         giftAdapter =
-            GiftAdapter(goToItem, gifts, ::checkedFunc, friendsWishlistViewModel.getClientCart())
+            GiftAdapter(goToItem, ::checkedFunc, friendsWishlistViewModel.getClientCart())
         with(binding.rvGifts) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())

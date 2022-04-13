@@ -106,7 +106,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         val delete = { position: Int ->
             deleteWishlist(wishlists[position])
         }
-        wishlistAdapter = WishlistAdapter(goToWishlist, delete, wishlists)
+        wishlistAdapter = WishlistAdapter(goToWishlist, delete)
         with(binding.rvWishlists) {
             adapter = wishlistAdapter
             layoutManager = LinearLayoutManager(requireContext())

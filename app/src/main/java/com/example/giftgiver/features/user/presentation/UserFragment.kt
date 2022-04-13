@@ -100,7 +100,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
         val goToWishlist = { position: Int ->
             navigateToWishlist(position)
         }
-        wishlistAdapter = WishlistAdapter(goToWishlist, null, wishlists)
+        wishlistAdapter = WishlistAdapter(goToWishlist, null)
         with(binding.rvWishlists) {
             adapter = wishlistAdapter
             layoutManager = LinearLayoutManager(requireContext())

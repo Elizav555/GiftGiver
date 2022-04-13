@@ -86,7 +86,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
         val goToItem = { id: String ->
             navigateToItem(id)
         }
-        giftAdapter = GiftAdapter(goToItem, gifts)
+        giftAdapter = GiftAdapter(goToItem)
         with(binding.rvGifts) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())

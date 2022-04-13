@@ -9,7 +9,6 @@ import com.example.giftgiver.features.wishlist.domain.Wishlist
 class WishlistAdapter(
     private val action: (position: Int) -> Unit,
     private val deleteAction: ((position: Int) -> Unit)?,
-    private val wishlists: List<Wishlist>,
 ) : ListAdapter<Wishlist, WishlistHolder>(WishlistDiffItemCallback()) {
 
     override fun onCreateViewHolder(
@@ -29,7 +28,7 @@ class WishlistAdapter(
         holder: WishlistHolder,
         position: Int
     ) {
-        val wishlist = wishlists[position]
+        val wishlist = getItem(position)
         holder.bind(wishlist)
     }
 

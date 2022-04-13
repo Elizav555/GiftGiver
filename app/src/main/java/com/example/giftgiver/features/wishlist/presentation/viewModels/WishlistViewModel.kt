@@ -38,10 +38,10 @@ class WishlistViewModel @Inject constructor(
 
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts
-
+    private var clientGifts = mutableListOf<Gift>()
     fun getGifts(giftsIds: List<String>) = viewModelScope.launch {
         try {
-            val clientGifts =
+            clientGifts =
                 giftsIds.mapNotNull {
                     getClientState()?.vkId?.let { vkId ->
                         giftUseCase.getGift(
@@ -49,7 +49,7 @@ class WishlistViewModel @Inject constructor(
                             it
                         )
                     }
-                }
+                } as MutableList<Gift>
             _gifts.value = Result.success(clientGifts)
         } catch (ex: Exception) {
             _gifts.value = Result.failure(ex)
@@ -75,6 +75,7 @@ class WishlistViewModel @Inject constructor(
                         gift.imageUrl = imageStorage.addImage(newImageFile).toString()
                     }
                     giftUseCase.addGift(client.vkId, gift, client.wishlists)
+                    clientGifts.add(gift)
                     clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
                     _wishlist.value = Result.success(client.wishlists[wishlistIndex])
                 } catch (ex: Exception) {
@@ -86,6 +87,7 @@ class WishlistViewModel @Inject constructor(
     fun deleteGift(gift: Gift) = getClientState()?.let { client ->
         viewModelScope.launch {
             try {
+                clientGifts.remove(gift)
                 giftUseCase.deleteGift(client.vkId, gift, client.wishlists)
                 client.wishlists[wishlistIndex].giftsIds.remove(gift.id)
                 clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
@@ -99,12 +101,13 @@ class WishlistViewModel @Inject constructor(
     fun moveGift(fromPos: Int, toPos: Int) = getClientState()?.let { client ->
         viewModelScope.launch {
             try {
+                Collections.swap(clientGifts, fromPos, toPos)
                 Collections.swap(client.wishlists[wishlistIndex].giftsIds, fromPos, toPos)
                 clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
                 getClientState.addClient(client)
-                _wishlist.value = Result.success(client.wishlists[wishlistIndex])
+                _gifts.value = Result.success(clientGifts)
             } catch (ex: Exception) {
-                _wishlist.value = Result.failure(ex)
+                _gifts.value = Result.failure(ex)
             }
         }
     }

@@ -9,7 +9,6 @@ import com.example.giftgiver.features.gift.domain.GiftInfo
 
 class GiftAdapter(
     private val action: (id: String) -> Unit,
-    private val gifts: List<Gift>,
     private val checkedFunc: ((Int, Boolean) -> Unit)? = null,
     private val clientCart: List<GiftInfo>? = null
 ) : ListAdapter<Gift, GiftHolder>(GiftDiffItemCallback()) {
