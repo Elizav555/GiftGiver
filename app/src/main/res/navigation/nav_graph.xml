@@ -70,7 +70,9 @@
         tools:layout="@layout/fragment_start">
         <action
             android:id="@+id/action_startFragment_to_friends"
-            app:destination="@id/ng_friends" />
+            app:destination="@id/ng_friends"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <navigation
         android:id="@+id/ng_account"
