@@ -100,7 +100,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
             val swipeToDeleteCallback = object : MySwipeCallback() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
-                    deleteGift(gifts[pos], pos)
+                    wishlistViewModel.getGiftByPos(pos)?.let { deleteGift(it, pos) }
                 }
 
                 override fun onMove(
@@ -110,8 +110,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
                 ): Boolean {
                     wishlistViewModel.moveGift(
                         viewHolder.adapterPosition,
-                        target.adapterPosition,
-                        gifts
+                        target.adapterPosition
                     )
                     return true
                 }

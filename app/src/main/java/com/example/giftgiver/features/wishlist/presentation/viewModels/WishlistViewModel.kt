@@ -21,7 +21,6 @@ class WishlistViewModel @Inject constructor(
     private val giftUseCase: GiftUseCase,
     private val clientFBUseCase: ClientFBUseCase
 ) : ViewModel() {
-    private val client = getClientState()
     private var wishlistIndex = 0
     private var _wishlist: MutableLiveData<Result<Wishlist?>> = MutableLiveData()
     val wishlist: LiveData<Result<Wishlist?>> = _wishlist
@@ -29,7 +28,7 @@ class WishlistViewModel @Inject constructor(
     fun getWishlist(index: Int) = viewModelScope.launch {
         try {
             wishlistIndex = index
-            client?.let {
+            getClientState()?.let {
                 _wishlist.value = Result.success(it.wishlists[wishlistIndex])
             }
         } catch (ex: Exception) {
@@ -43,43 +42,52 @@ class WishlistViewModel @Inject constructor(
     fun getGifts(giftsIds: List<String>) = viewModelScope.launch {
         try {
             val clientGifts =
-                giftsIds.mapNotNull { client?.vkId?.let { vkId -> giftUseCase.getGift(vkId, it) } }
+                giftsIds.mapNotNull {
+                    getClientState()?.vkId?.let { vkId ->
+                        giftUseCase.getGift(
+                            vkId,
+                            it
+                        )
+                    }
+                }
             _gifts.value = Result.success(clientGifts)
         } catch (ex: Exception) {
             _gifts.value = Result.failure(ex)
         }
     }
 
-    fun addGift(newName: String, newDesc: String, newImageFile: File?) = client?.let { client ->
-        viewModelScope.launch {
-            try {
-                val defaultImageUri = getDefaultUri()
-                val gift = Gift(
-                    "0",
-                    newName,
-                    client.vkId,
-                    client.info.name,
-                    newDesc,
-                    defaultImageUri,
-                    wishlistIndex = wishlistIndex,
-                    lastChanged = Calendar.getInstance()
-                )
-                newImageFile?.let {
-                    gift.imageUrl = imageStorage.addImage(newImageFile).toString()
+    fun addGift(newName: String, newDesc: String, newImageFile: File?) =
+        getClientState()?.let { client ->
+            viewModelScope.launch {
+                try {
+                    val defaultImageUri = getDefaultUri()
+                    val gift = Gift(
+                        "0",
+                        newName,
+                        client.vkId,
+                        client.info.name,
+                        newDesc,
+                        defaultImageUri,
+                        wishlistIndex = wishlistIndex,
+                        lastChanged = Calendar.getInstance()
+                    )
+                    newImageFile?.let {
+                        gift.imageUrl = imageStorage.addImage(newImageFile).toString()
+                    }
+                    giftUseCase.addGift(client.vkId, gift, client.wishlists)
+                    clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
+                    _wishlist.value = Result.success(client.wishlists[wishlistIndex])
+                } catch (ex: Exception) {
+                    _wishlist.value = Result.failure(ex)
                 }
-                giftUseCase.addGift(client.vkId, gift, client.wishlists)
-                clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
-                _wishlist.value = Result.success(client.wishlists[wishlistIndex])
-            } catch (ex: Exception) {
-                _wishlist.value = Result.failure(ex)
             }
         }
-    }
 
-    fun deleteGift(gift: Gift) = client?.let { client ->
+    fun deleteGift(gift: Gift) = getClientState()?.let { client ->
         viewModelScope.launch {
             try {
                 giftUseCase.deleteGift(client.vkId, gift, client.wishlists)
+                client.wishlists[wishlistIndex].giftsIds.remove(gift.id)
                 clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
                 _wishlist.value = Result.success(client.wishlists[wishlistIndex])
             } catch (ex: Exception) {
@@ -88,20 +96,20 @@ class WishlistViewModel @Inject constructor(
         }
     }
 
-    fun moveGift(fromPos: Int, toPos: Int, gifts: List<Gift>) = client?.let { client ->
+    fun moveGift(fromPos: Int, toPos: Int) = getClientState()?.let { client ->
         viewModelScope.launch {
             try {
-                Collections.swap(gifts, fromPos, toPos)
                 Collections.swap(client.wishlists[wishlistIndex].giftsIds, fromPos, toPos)
                 clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
-                _gifts.value = Result.success(gifts)
+                getClientState.addClient(client)
+                _wishlist.value = Result.success(client.wishlists[wishlistIndex])
             } catch (ex: Exception) {
-                _gifts.value = Result.failure(ex)
+                _wishlist.value = Result.failure(ex)
             }
         }
     }
 
-    fun changeWishlistName(newName: String) = client?.let { client ->
+    fun changeWishlistName(newName: String) = getClientState()?.let { client ->
         viewModelScope.launch {
             try {
                 client.wishlists[wishlistIndex].name = newName
@@ -114,7 +122,8 @@ class WishlistViewModel @Inject constructor(
         }
     }
 
-    fun getClientId() = client?.vkId
+    fun getClientId() = getClientState()?.vkId
 
     private suspend fun getDefaultUri() = imageStorage.getDefaultUrl().toString()
+    fun getGiftByPos(pos: Int) = _gifts.value?.getOrNull()?.get(pos)
 }
