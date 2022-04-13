@@ -111,6 +111,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                     binding.btnLogin.isVisible = false
                     binding.progressBar.isVisible = true
                     startViewModel.login()
+                    (activity as? MainActivity)?.makeToast("Welcome!")
                     startViewModel.loadFriends()
                 }
             }, onFailure = {

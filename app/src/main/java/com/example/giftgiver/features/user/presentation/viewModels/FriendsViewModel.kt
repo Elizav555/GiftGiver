@@ -14,8 +14,6 @@ class FriendsViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val getClientState: GetClientStateUseCase
 ) : ViewModel() {
-    private val client = getClientState()
-
     private var _friends: MutableLiveData<Result<List<UserInfo>>> = MutableLiveData()
     val friends: LiveData<Result<List<UserInfo>>> = _friends
     fun getFriends() = viewModelScope.launch {
@@ -29,7 +27,7 @@ class FriendsViewModel @Inject constructor(
     fun filterFriends(isFav: Boolean) = viewModelScope.launch {
         try {
             if (isFav) {
-                client?.let { client ->
+                getClientState()?.let { client ->
                     val friendsFiltered =
                         client.favFriendsIds.mapNotNull { getClientByVkId(it)?.info }
                             .sortedBy { friend -> friend.name }

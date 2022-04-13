@@ -69,8 +69,6 @@ class MainActivity : DaggerAppCompatActivity() {
                 VK.logout()
                 mainViewModel.restart()
                 startFrom(this)
-            } else if (it == true) {
-                makeToast(getString(R.string.welcome))
             }
         }
     }

@@ -16,7 +16,6 @@ class UserViewModel @Inject constructor(
     private val clientFBUseCase: ClientFBUseCase,
     private val getClientState: GetClientStateUseCase,
 ) : ViewModel() {
-    private val client = getClientState()
     private var _friend: MutableLiveData<Result<Client?>> = MutableLiveData()
     val friend: LiveData<Result<Client?>> = _friend
     private var clientFriend: Client? = null
@@ -30,15 +29,14 @@ class UserViewModel @Inject constructor(
     }
 
     fun updateFavFriends(isFav: Boolean) = viewModelScope.launch {
-        client?.let {
+        getClientState()?.let { client ->
             if (isFav) {
-                clientFriend?.let { friend -> it.favFriendsIds.add(friend.vkId) }
-            } else clientFriend?.let { friend -> it.favFriendsIds.remove(friend.vkId) }
-            clientFBUseCase.updateFavFriends(client.vkId, it.favFriendsIds)
-            client.favFriendsIds = it.favFriendsIds
+                clientFriend?.let { friend -> client.favFriendsIds.add(friend.vkId) }
+            } else clientFriend?.let { friend -> client.favFriendsIds.remove(friend.vkId) }
+            clientFBUseCase.updateFavFriends(client.vkId, client.favFriendsIds)
             getClientState.addClient(client)
         }
     }
 
-    fun checkIsFav() = client?.favFriendsIds?.contains(clientFriend?.vkId)
+    fun checkIsFav() = getClientState()?.favFriendsIds?.contains(clientFriend?.vkId)
 }
