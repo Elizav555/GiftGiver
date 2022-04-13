@@ -17,11 +17,10 @@ import javax.inject.Inject
 
 class FriendsWishlistViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
-    getClientState: GetClientStateUseCase,
+    private val getClientState: GetClientStateUseCase,
     private val giftUseCase: GiftUseCase,
     private val clientFBUseCase: ClientFBUseCase
 ) : ViewModel() {
-    private val client = getClientState()
     private var _friend: MutableLiveData<Result<Client?>> = MutableLiveData()
     val friend: LiveData<Result<Client?>> = _friend
     private var curFriend: Client? = null
@@ -37,6 +36,7 @@ class FriendsWishlistViewModel @Inject constructor(
 
     fun checkedFunc(pos: Int, isChecked: Boolean, wishlistIndex: Int) = curFriend?.let { friend ->
         viewModelScope.launch {
+            val client = getClientState()
             try {
                 val curGift =
                     giftUseCase.getGift(friend.vkId, friend.wishlists[wishlistIndex].giftsIds[pos])
@@ -55,10 +55,8 @@ class FriendsWishlistViewModel @Inject constructor(
                             client?.cart?.giftsInfo?.firstOrNull { giftInfo -> giftInfo.giftId == gift.id }
                         client?.cart?.giftsInfo?.remove(giftToDelete)
                     }
-                    client?.let {
-                        clientFBUseCase.updateCart(it.vkId, it.cart.giftsInfo)
-                        giftUseCase.updateGift(friend.vkId, gift)
-                    }
+                    giftUseCase.updateGift(friend.vkId, gift)
+                    updateClient(client)
                     _friend.value = Result.success(curFriend)
                 }
             } catch (ex: Exception) {
@@ -67,7 +65,14 @@ class FriendsWishlistViewModel @Inject constructor(
         }
     }
 
-    fun getClientCart(): List<GiftInfo> = client?.cart?.giftsInfo ?: listOf()
+    private fun updateClient(client: Client?) = viewModelScope.launch {
+        client?.let {
+            clientFBUseCase.updateCart(it.vkId, client.cart.giftsInfo)
+            getClientState.addClient(it)
+        }
+    }
+
+    fun getClientCart(): List<GiftInfo> = getClientState()?.cart?.giftsInfo ?: listOf()
 
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts

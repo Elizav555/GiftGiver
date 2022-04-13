@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.client.domain.useCases
 
+import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.user.domain.FriendsStateRep
 import com.example.giftgiver.features.user.domain.UserInfo
@@ -14,4 +15,6 @@ class GetClientStateUseCase @Inject constructor(
     fun getFriendsState() = friendsStateRep.getFriends()
 
     fun addFriends(friends: List<UserInfo>) = friendsStateRep.addFriends(friends)
+
+    fun addClient(client: Client) = clientStateRep.addClient(client)
 }

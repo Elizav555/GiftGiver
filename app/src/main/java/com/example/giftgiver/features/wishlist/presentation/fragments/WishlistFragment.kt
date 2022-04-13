@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentWishlistBinding
-import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.AddGiftDialog
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
@@ -25,7 +24,6 @@ import com.example.giftgiver.utils.MySwipeCallback
 import com.example.giftgiver.utils.autoCleared
 import com.example.giftgiver.utils.viewModel
 import java.io.File
-import javax.inject.Inject
 
 class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     lateinit var binding: FragmentWishlistBinding
@@ -33,9 +31,6 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     private var giftAdapter: GiftAdapter by autoCleared()
     private var index = 0
     private var isAdapterInited = false
-
-    @Inject
-    lateinit var clientStateRep: ClientStateRep
     private val wishlistViewModel: WishlistViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -150,7 +145,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     }
 
     private fun navigateToItem(giftId: String) {
-        clientStateRep.getClient()?.vkId?.let {
+        wishlistViewModel.getClientId()?.let {
             isAdapterInited = false
             val action =
                 WishlistFragmentDirections.actionMyWishlistFragmentToGiftFragment(

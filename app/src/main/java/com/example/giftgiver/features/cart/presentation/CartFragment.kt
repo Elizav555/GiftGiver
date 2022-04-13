@@ -11,21 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentCartBinding
-import com.example.giftgiver.features.client.domain.repositories.ClientStateRep
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.forCart.GiftCartAdapter
 import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.MySwipeCallback
 import com.example.giftgiver.utils.autoCleared
 import com.example.giftgiver.utils.viewModel
-import javax.inject.Inject
 
 class CartFragment : BaseFragment(R.layout.fragment_cart) {
     private lateinit var binding: FragmentCartBinding
     private var giftAdapter: GiftCartAdapter by autoCleared()
-
-    @Inject
-    lateinit var clientStateRep: ClientStateRep
     private val cartViewModel: CartViewModel by viewModel()
     private var giftsForList: List<Gift>? = null
     private var isAdapterInited = false
@@ -65,7 +60,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         val goToItem = { id: String ->
             navigateToItem(giftsForList?.first { it.id == id })
         }
-        giftAdapter = GiftCartAdapter(goToItem, clientStateRep.getClient()?.cart?.giftsInfo)
+        giftAdapter = GiftCartAdapter(goToItem, cartViewModel.getGiftsInfo())
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -79,7 +74,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
             val swipeToDeleteCallback = object : MySwipeCallback() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
-                    deleteGift(gifts[pos], pos)
+                    deleteGift(cartViewModel.getGiftByPos(pos), pos)
                 }
 
                 override fun onMove(

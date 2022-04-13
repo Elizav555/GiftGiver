@@ -15,18 +15,16 @@ import javax.inject.Inject
 
 class CartViewModel @Inject constructor(
     private val clientFBUseCase: ClientFBUseCase,
-    getClientState: GetClientStateUseCase,
+    private val getClientState: GetClientStateUseCase,
     private val giftUseCase: GiftUseCase
 ) : ViewModel() {
-    private val client = getClientState()
-
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts
     private var clientGifts: MutableList<Gift> = mutableListOf()
 
     fun getGifts() = viewModelScope.launch {
         try {
-            val giftsMapped = client?.cart?.giftsInfo?.mapNotNull {
+            val giftsMapped = getClientState()?.cart?.giftsInfo?.mapNotNull {
                 giftUseCase.getGift(
                     it.forId,
                     it.giftId
@@ -50,15 +48,16 @@ class CartViewModel @Inject constructor(
 
 
     fun updateClient() = viewModelScope.launch {
-        client?.let { client ->
+        getClientState()?.let { client ->
             val ids = clientGifts.map { GiftInfo(it.id, it.forId, Calendar.getInstance()) }
             clientFBUseCase.updateCart(client.vkId, ids)
             client.cart.giftsInfo = ids as MutableList<GiftInfo>
+            getClientState.addClient(client)
         }
     }
 
     fun deleteAll() = try {
-        client?.let {
+        getClientState()?.let {
             clientGifts.clear()
             updateClient()
             _gifts.value = Result.success(clientGifts)
@@ -68,7 +67,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun delete(gift: Gift) = try {
-        client?.let {
+        getClientState()?.let {
             clientGifts.remove(gift)
             updateClient()
             _gifts.value = Result.success(clientGifts)
@@ -76,4 +75,8 @@ class CartViewModel @Inject constructor(
     } catch (ex: Exception) {
         _gifts.value = Result.failure(ex)
     }
+
+    fun getGiftsInfo(): List<GiftInfo>? = getClientState()?.cart?.giftsInfo
+
+    fun getGiftByPos(pos: Int) = clientGifts[pos]
 }

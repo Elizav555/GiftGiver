@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class WishlistViewModel @Inject constructor(
     private val imageStorage: ImageStorage,
-    getClientState: GetClientStateUseCase,
+    private val getClientState: GetClientStateUseCase,
     private val giftUseCase: GiftUseCase,
     private val clientFBUseCase: ClientFBUseCase
 ) : ViewModel() {
@@ -106,12 +106,15 @@ class WishlistViewModel @Inject constructor(
             try {
                 client.wishlists[wishlistIndex].name = newName
                 clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
+                getClientState.addClient(client)
                 _wishlist.value = Result.success(client.wishlists[wishlistIndex])
             } catch (ex: Exception) {
                 _wishlist.value = Result.failure(ex)
             }
         }
     }
+
+    fun getClientId() = client?.vkId
 
     private suspend fun getDefaultUri() = imageStorage.getDefaultUrl().toString()
 }

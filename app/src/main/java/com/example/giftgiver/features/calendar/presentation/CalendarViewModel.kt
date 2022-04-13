@@ -27,7 +27,7 @@ class CalendarViewModel @Inject constructor(
     private val clientFBUseCase: ClientFBUseCase,
     private val dateMapper: DateMapper,
     private val context: Context,
-    getClientState: GetClientStateUseCase,
+    private val getClientState: GetClientStateUseCase,
     private val loadFriends: LoadFriendsUseCase
 ) : ViewModel() {
 
@@ -54,6 +54,7 @@ class CalendarViewModel @Inject constructor(
         client?.let { client ->
             clientFBUseCase.updateCalendar(client.vkId, clientHolidays)
             client.calendar.events = clientHolidays
+            getClientState.addClient(client)
         }
     }
 

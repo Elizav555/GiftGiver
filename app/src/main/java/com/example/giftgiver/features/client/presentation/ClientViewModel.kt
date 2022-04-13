@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class ClientViewModel @Inject constructor(
     private val imageStorage: ImageStorage,
-    getClientState: GetClientStateUseCase,
+    private val getClientState: GetClientStateUseCase,
     private val clientFBUseCase: ClientFBUseCase,
     private val authUseCase: AuthUseCase,
     private val giftUseCase: GiftUseCase
@@ -40,6 +40,7 @@ class ClientViewModel @Inject constructor(
         client?.let { client ->
             clientFBUseCase.updateWishlists(client.vkId, clientWishlists)
             client.wishlists = clientWishlists
+            getClientState.addClient(client)
         }
     }
 
@@ -90,6 +91,7 @@ class ClientViewModel @Inject constructor(
             clientInfo?.let {
                 clientFBUseCase.updateInfo(client.vkId, it)
                 client.info = it
+                getClientState.addClient(client)
             }
         }
     }

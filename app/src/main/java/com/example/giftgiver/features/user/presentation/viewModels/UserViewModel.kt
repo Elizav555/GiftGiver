@@ -14,7 +14,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val clientFBUseCase: ClientFBUseCase,
-    getClientState: GetClientStateUseCase,
+    private val getClientState: GetClientStateUseCase,
 ) : ViewModel() {
     private val client = getClientState()
     private var _friend: MutableLiveData<Result<Client?>> = MutableLiveData()
@@ -36,6 +36,7 @@ class UserViewModel @Inject constructor(
             } else clientFriend?.let { friend -> it.favFriendsIds.remove(friend.vkId) }
             clientFBUseCase.updateFavFriends(client.vkId, it.favFriendsIds)
             client.favFriendsIds = it.favFriendsIds
+            getClientState.addClient(client)
         }
     }
 

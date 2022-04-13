@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.useCases.ClientsChangesUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
-import com.example.giftgiver.features.client.domain.useCases.UpdateClientStateUseCase
+import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.client.domain.useCases.UpdateOfflineClientUseCase
 import com.example.giftgiver.features.start.domain.AuthUseCase
 import com.vk.api.sdk.VK
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val clientsChanges: ClientsChangesUseCase,
-    private val updateClientState: UpdateClientStateUseCase,
+    private val getClientState: GetClientStateUseCase,
     private val updateOfflineClient: UpdateOfflineClientUseCase,
     private val getClientByVkId: GetClientByVkId,
     private val authUseCase: AuthUseCase
@@ -23,7 +23,7 @@ class MainViewModel @Inject constructor(
 
     fun onClientChanged() = viewModelScope.launch {
         getClientByVkId(VK.getUserId().value)?.let {
-            updateClientState(it)
+            getClientState.addClient(it)
             updateOfflineClient(it)
         }
     }
