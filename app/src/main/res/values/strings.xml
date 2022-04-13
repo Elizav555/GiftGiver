@@ -78,4 +78,11 @@
     <string name="welcome">Welcome!</string>
     <string name="change_to_dark">Change to dark</string>
     <string name="change_to_light">Change to light</string>
+    <string name="deleteGiftsTitle">Delete all gifts?</string>
+    <string name="deleteGiftsMessage">All gifts will be deleted, so you won\'t be able to change your mind about choosing any</string>
+    <string name="deleteGiftTitle">Delete this gift?</string>
+    <string name="deleteGiftMessage">After gift will be deleted, you won\'t be able to change your mind about choosing it</string>
+    <string name="delete_wishlist">Delete this wishlist?</string>
+    <string name="action_cannot_undone">This action cannot be undone</string>
+    <string name="delete_gift">Delete this gift?</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
 import com.example.giftgiver.features.start.domain.AuthUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
@@ -18,7 +19,8 @@ class ClientViewModel @Inject constructor(
     private val imageStorage: ImageStorage,
     getClientState: GetClientStateUseCase,
     private val clientFBUseCase: ClientFBUseCase,
-    private val authUseCase: AuthUseCase
+    private val authUseCase: AuthUseCase,
+    private val giftUseCase: GiftUseCase
 ) : ViewModel() {
     private val client = getClientState()
     private var _wishlists: MutableLiveData<Result<List<Wishlist>>> = MutableLiveData()
@@ -49,12 +51,25 @@ class ClientViewModel @Inject constructor(
         _wishlists.value = Result.failure(ex)
     }
 
-    fun deleteWishlist(wishlist: Wishlist) = try {
-        clientWishlists.remove(wishlist)
-        updateClientsWishlists()
-        _wishlists.value = Result.success(clientWishlists)
-    } catch (ex: Exception) {
-        _wishlists.value = Result.failure(ex)
+    fun deleteWishlist(wishlist: Wishlist) = viewModelScope.launch {
+        try {
+            client?.let {
+                wishlist.giftsIds.forEach { giftId ->
+                    giftUseCase.getGift(client.vkId, giftId)?.let { gift ->
+                        giftUseCase.deleteGift(
+                            client.vkId,
+                            gift,
+                            client.wishlists
+                        )
+                    }
+                }
+            }
+            clientWishlists.remove(wishlist)
+            updateClientsWishlists()
+            _wishlists.value = Result.success(clientWishlists)
+        } catch (ex: Exception) {
+            _wishlists.value = Result.failure(ex)
+        }
     }
 
     private var _info: MutableLiveData<Result<UserInfo?>> = MutableLiveData()

@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.client.presentation
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
@@ -119,7 +120,21 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         wishlistAdapter.submitList(wishlists)
     }
 
-    private fun deleteWishlist(wishlist: Wishlist) = clientViewModel.deleteWishlist(wishlist)
+    private fun deleteWishlist(wishlist: Wishlist) {
+        activity?.let {
+            val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
+                .setTitle(getString(R.string.delete_wishlist))
+                .setMessage(getString(R.string.action_cannot_undone))
+                .setPositiveButton(R.string.delete) { _, _ ->
+                    clientViewModel.deleteWishlist(wishlist)
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog?.cancel()
+                }
+                .create()
+            dialog.show()
+        }
+    }
 
     private fun navigateToWishlist(wishlistIndex: Int) {
         isAdapterInited = false

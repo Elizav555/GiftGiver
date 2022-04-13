@@ -95,14 +95,13 @@ class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
 
     private fun checkInputs(dialog: AlertDialog) {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = with(binding) {
-            etName.text.toString().isNotBlank() && etInfo.text.toString()
-                .isNotBlank() && validateBirthDate(etBirth.text.toString())
+            etName.text.toString().isNotBlank() && validateBirthDate(etBirth.text.toString())
         }
     }
 
     private fun validateBirthDate(date: String) = dateMapper.validateBirthDate(date)
 
-    fun openGallery() {
+    private fun openGallery() {
         galleryLauncher.launch("image/*")
     }
 

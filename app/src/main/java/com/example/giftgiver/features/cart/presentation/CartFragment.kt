@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.cart.presentation
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -51,7 +52,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete -> {
-                deleteAll()
+                showDeleteDialog(item)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -78,7 +79,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
             val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
-                    deleteGift(gifts[pos])
+                    deleteGift(gifts[pos], pos)
                 }
             }
             val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
@@ -87,7 +88,22 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         giftAdapter.submitList(gifts)
     }
 
-    private fun deleteGift(gift: Gift) = cartViewModel.delete(gift)
+    private fun deleteGift(gift: Gift, pos: Int) {
+        activity?.let {
+            val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
+                .setTitle(getString(R.string.deleteGiftTitle))
+                .setMessage(getString(R.string.deleteGiftMessage))
+                .setPositiveButton(R.string.delete) { _, _ ->
+                    cartViewModel.delete(gift)
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog?.cancel()
+                    giftAdapter.notifyItemChanged(pos)
+                }
+                .create()
+            dialog.show()
+        }
+    }
 
     private fun navigateToItem(gift: Gift?) {
         cartViewModel.updateClient()
@@ -114,6 +130,22 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })
+        }
+    }
+
+    private fun showDeleteDialog(item: MenuItem) {
+        activity?.let {
+            val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
+                .setTitle(getString(R.string.deleteGiftsTitle))
+                .setMessage(getString(R.string.deleteGiftsMessage))
+                .setPositiveButton(R.string.delete_all) { _, _ ->
+                    deleteAll()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog?.cancel()
+                }
+                .create()
+            dialog.show()
         }
     }
 }

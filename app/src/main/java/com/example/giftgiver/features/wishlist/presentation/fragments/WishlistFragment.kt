@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.wishlist.presentation.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -104,7 +105,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
             val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
-                    deleteGift(gifts[pos])
+                    deleteGift(gifts[pos], pos)
                 }
             }
 
@@ -118,8 +119,21 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
         wishlistViewModel.addGift(newName, newDesc, newImageFile)
     }
 
-    private fun deleteGift(gift: Gift) {
-        wishlistViewModel.deleteGift(gift)
+    private fun deleteGift(gift: Gift, pos: Int) {
+        activity?.let {
+            val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
+                .setTitle(getString(R.string.delete_gift))
+                .setMessage(getString(R.string.action_cannot_undone))
+                .setPositiveButton(R.string.delete) { _, _ ->
+                    wishlistViewModel.deleteGift(gift)
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog?.cancel()
+                    giftAdapter.notifyItemChanged(pos)
+                }
+                .create()
+            dialog.show()
+        }
     }
 
     private fun navigateToItem(giftId: String) {
