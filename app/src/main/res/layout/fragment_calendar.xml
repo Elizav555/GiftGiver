@@ -13,6 +13,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
+        app:datePicker="true"
+        app:eventsEnabled="true"
         app:forwardButtonSrc="@drawable/ic_next"
         app:headerColor="@color/primary_light"
         app:headerLabelColor="@color/icons"
@@ -21,7 +23,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:previousButtonSrc="@drawable/ic_prev"
-        app:todayLabelColor="@color/primary_dark" />
+        app:selectionColor="@color/accent"
+        app:selectionLabelColor="@color/white"
+        app:todayLabelColor="@color/primary_dark"
+        app:type="classic" />
 
     <TextView
         android:id="@+id/tv_date"
@@ -40,7 +45,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:maxLines="4"
@@ -50,6 +54,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_date"
-        app:layout_constraintTop_toBottomOf="@+id/calendar" />
+        app:layout_constraintTop_toTopOf="@+id/tv_date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

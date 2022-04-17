@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
+import androidx.core.content.res.ResourcesCompat
 import com.applandeo.materialcalendarview.EventDay
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentCalendarBinding
@@ -20,6 +21,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     private lateinit var binding: FragmentCalendarBinding
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     private val calendarViewModel: CalendarViewModel by viewModel()
+    private var isCalendarInited = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,22 +74,29 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     }
 
     private fun bindCalendar(holidays: List<Event>) = with(binding) {
+        tvDescription.movementMethod = ScrollingMovementMethod()
+        calendar.setOnDayClickListener { event ->
+            tvDate.text = dateFormat.format(event.calendar.time)
+            displayEventsDesc(holidays.filter { it.date == event.calendar })
+        }
+        bindEvents(holidays)
+    }
+
+    private fun bindEvents(holidays: List<Event>) = with(binding) {
         val eventDays: List<EventDay> = holidays.map {
             EventDay(
                 it.date,
-                R.color.accent
+                R.drawable.ic_baseline_celebration_24,
+                ResourcesCompat.getColor(resources, R.color.accent, null)
             )
         }
-        tvDescription.movementMethod = ScrollingMovementMethod()
         calendar.setEvents(eventDays)
-        calendar.setHighlightedDays(eventDays.map { it.calendar })
-        calendar.setOnDayClickListener { event ->
-            tvDate.text = dateFormat.format(event.calendar.time)
-            val eventsDesc = holidays.filter { it.date == event.calendar }
-                .map { it.desc }
-                .joinToString(",\n")
-            tvDescription.text = eventsDesc
-        }
+    }
+
+    private fun displayEventsDesc(events: List<Event>) = with(binding) {
+        val eventsDesc = events.mapNotNull { it.desc }
+            .joinToString(",\n")
+        tvDescription.text = eventsDesc
     }
 
     private fun enterEditMode() {
@@ -99,9 +108,13 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     private fun initObservers() {
         calendarViewModel.holidays.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
-                val holidays = it
-                bindCalendar(holidays)
-                calendarViewModel.checkTomorrowEvents()
+                if (isCalendarInited) {
+                    bindEvents(it)
+                } else {
+                    isCalendarInited = true
+                    bindCalendar(it)
+                    calendarViewModel.checkTomorrowEvents()
+                }
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })
