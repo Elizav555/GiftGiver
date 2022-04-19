@@ -2,6 +2,7 @@ package com.example.giftgiver.features.user.domain.useCases
 
 import android.util.Log
 import com.example.giftgiver.features.client.domain.useCases.GetAllClientsUseCase
+import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
 import com.example.giftgiver.features.user.data.vk.VkMapper
 import com.example.giftgiver.features.user.domain.UserInfo
@@ -14,6 +15,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class LoadFriendsVK @Inject constructor(
     private val getAllClients: GetAllClientsUseCase,
+    private val getClientByVkId: GetClientByVkId,
     private val vkMapper: VkMapper
 ) {
     fun loadFriends(vkId: Long, successAction: (List<UserInfo>) -> Unit) {
@@ -36,8 +38,9 @@ class LoadFriendsVK @Inject constructor(
         if (!filter) {
             return friendsVK.sortedBy { user -> user.name }
         }
-        val allClients = getAllClients() //todo think cause first time still slow
+        val allClients = getAllClients() //4sec
         return friendsVK.filter { friend -> allClients.contains(friend.vkId) }
+            .mapNotNull { getClientByVkId(it.vkId)?.info }
             .sortedByDescending { user -> user.name }
     }
 
