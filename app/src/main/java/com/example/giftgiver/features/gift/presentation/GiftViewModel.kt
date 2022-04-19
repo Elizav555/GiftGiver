@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
+import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
@@ -20,7 +21,15 @@ class GiftViewModel @Inject constructor(
     getClientState: GetClientStateUseCase,
     private val giftUseCase: GiftUseCase,
 ) : ViewModel() {
-    private val client = getClientState()
+    private var client: Client? = null
+
+    init {
+        viewModelScope.launch {
+            getClientState().collect {
+                client = it
+            }
+        }
+    }
 
     private var _gift: MutableLiveData<Result<Gift?>> = MutableLiveData()
     val gift: LiveData<Result<Gift?>> = _gift

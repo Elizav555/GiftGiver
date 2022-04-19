@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
+import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
@@ -22,10 +23,19 @@ class ClientViewModel @Inject constructor(
     private val authUseCase: AuthUseCase,
     private val giftUseCase: GiftUseCase
 ) : ViewModel() {
-    private val client = getClientState()
     private var _wishlists: MutableLiveData<Result<List<Wishlist>>> = MutableLiveData()
     val wishlists: LiveData<Result<List<Wishlist>>> = _wishlists
     private var clientWishlists: MutableList<Wishlist> = mutableListOf()
+
+    private var client: Client? = null
+
+    init {
+        viewModelScope.launch {
+            getClientState().collect {
+                client = it
+            }
+        }
+    }
 
     fun getClient() = client
     fun getWishlists() =
@@ -40,7 +50,7 @@ class ClientViewModel @Inject constructor(
         client?.let { client ->
             clientFBUseCase.updateWishlists(client.vkId, clientWishlists)
             client.wishlists = clientWishlists
-            getClientState.addClient(client)
+            // getClientState.addClient(client)
         }
     }
 
@@ -54,7 +64,7 @@ class ClientViewModel @Inject constructor(
 
     fun deleteWishlist(wishlist: Wishlist) = viewModelScope.launch {
         try {
-            client?.let {
+            client?.let { client ->
                 wishlist.giftsIds.forEach { giftId ->
                     giftUseCase.getGift(client.vkId, giftId)?.let { gift ->
                         giftUseCase.deleteGift(
@@ -91,7 +101,6 @@ class ClientViewModel @Inject constructor(
             clientInfo?.let {
                 clientFBUseCase.updateInfo(client.vkId, it)
                 client.info = it
-                getClientState.addClient(client)
             }
         }
     }

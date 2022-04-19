@@ -25,6 +25,16 @@ class FriendsWishlistViewModel @Inject constructor(
     val friend: LiveData<Result<Client?>> = _friend
     private var curFriend: Client? = null
 
+    private var client: Client? = null
+
+    init {
+        viewModelScope.launch {
+            getClientState().collect {
+                client = it
+            }
+        }
+    }
+
     fun getFriend(vkId: Long) = viewModelScope.launch {
         try {
             curFriend = getClientByVkId(vkId)
@@ -36,7 +46,6 @@ class FriendsWishlistViewModel @Inject constructor(
 
     fun checkedFunc(pos: Int, isChecked: Boolean, wishlistIndex: Int) = curFriend?.let { friend ->
         viewModelScope.launch {
-            val client = getClientState()
             try {
                 val curGift =
                     giftUseCase.getGift(friend.vkId, friend.wishlists[wishlistIndex].giftsIds[pos])
@@ -56,7 +65,7 @@ class FriendsWishlistViewModel @Inject constructor(
                         client?.cart?.giftsInfo?.remove(giftToDelete)
                     }
                     giftUseCase.updateGift(friend.vkId, gift)
-                    updateClient(client)
+                    updateClient()
                     _friend.value = Result.success(curFriend)
                 }
             } catch (ex: Exception) {
@@ -65,14 +74,13 @@ class FriendsWishlistViewModel @Inject constructor(
         }
     }
 
-    private fun updateClient(client: Client?) = viewModelScope.launch {
+    private fun updateClient() = viewModelScope.launch {
         client?.let {
-            clientFBUseCase.updateCart(it.vkId, client.cart.giftsInfo)
-            getClientState.addClient(it)
+            clientFBUseCase.updateCart(it.vkId, it.cart.giftsInfo)
         }
     }
 
-    fun getClientCart(): List<GiftInfo> = getClientState()?.cart?.giftsInfo ?: listOf()
+    fun getClientCart(): List<GiftInfo> = client?.cart?.giftsInfo ?: listOf()
 
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts
