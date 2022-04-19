@@ -1,6 +1,7 @@
 package com.example.giftgiver.common.db.fileStorage
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.storage.StorageReference
 import java.io.File
 import kotlin.coroutines.resume
@@ -45,4 +46,15 @@ class ImageStorageImpl(
                 }
             }
         }
+
+    override suspend fun deleteImage(url: String) {
+        if (url == getDefaultUrl().toString())
+            return
+        imagesRef.storage.getReferenceFromUrl(url).delete().addOnCompleteListener {
+            if (it.isSuccessful) {
+            } else {
+                Log.e("deleteImage", it.toString())
+            }
+        }
+    }
 }

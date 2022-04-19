@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.gift.domain.useCases
 
+import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
@@ -11,6 +12,7 @@ import javax.inject.Inject
 class GiftUseCase @Inject constructor(
     private val giftsRepository: GiftsRepository,
     private val giftsRepOffline: GiftsRepOffline,
+    private val imageStorage: ImageStorage,
     private val dispatcher: CoroutineDispatcher,
 ) {
     suspend fun addGift(vkId: Long, gift: Gift, wishlists: List<Wishlist>) =
@@ -23,6 +25,7 @@ class GiftUseCase @Inject constructor(
         withContext(dispatcher) {
             giftsRepository.deleteGift(vkId, gift, wishlists)
             giftsRepOffline.deleteGift(gift)
+            gift.imageUrl?.let { imageStorage.deleteImage(it) }
         }
 
     suspend fun updateGift(vkId: Long, gift: Gift) =

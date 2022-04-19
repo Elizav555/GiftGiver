@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
+import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
@@ -25,10 +26,20 @@ class WishlistViewModel @Inject constructor(
     private var _wishlist: MutableLiveData<Result<Wishlist?>> = MutableLiveData()
     val wishlist: LiveData<Result<Wishlist?>> = _wishlist
 
+    private var client: Client? = null
+
+    init {
+        viewModelScope.launch {
+            getClientState().collect {
+                client = it
+            }
+        }
+    }
+
     fun getWishlist(index: Int) = viewModelScope.launch {
         try {
             wishlistIndex = index
-            getClientState()?.let {
+            client?.let {
                 _wishlist.value = Result.success(it.wishlists[wishlistIndex])
             }
         } catch (ex: Exception) {
@@ -43,7 +54,7 @@ class WishlistViewModel @Inject constructor(
         try {
             clientGifts =
                 giftsIds.mapNotNull {
-                    getClientState()?.vkId?.let { vkId ->
+                    client?.vkId?.let { vkId ->
                         giftUseCase.getGift(
                             vkId,
                             it
@@ -57,7 +68,7 @@ class WishlistViewModel @Inject constructor(
     }
 
     fun addGift(newName: String, newDesc: String, newImageFile: File?) =
-        getClientState()?.let { client ->
+        client?.let { client ->
             viewModelScope.launch {
                 try {
                     val defaultImageUri = getDefaultUri()
@@ -84,7 +95,7 @@ class WishlistViewModel @Inject constructor(
             }
         }
 
-    fun deleteGift(gift: Gift) = getClientState()?.let { client ->
+    fun deleteGift(gift: Gift) = client?.let { client ->
         viewModelScope.launch {
             try {
                 clientGifts.remove(gift)
@@ -98,13 +109,13 @@ class WishlistViewModel @Inject constructor(
         }
     }
 
-    fun moveGift(fromPos: Int, toPos: Int) = getClientState()?.let { client ->
+    fun moveGift(fromPos: Int, toPos: Int) = client?.let { client ->
         viewModelScope.launch {
             try {
                 Collections.swap(clientGifts, fromPos, toPos)
                 Collections.swap(client.wishlists[wishlistIndex].giftsIds, fromPos, toPos)
                 clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
-                getClientState.addClient(client)
+                //               getClientState.addClient(client)
                 _gifts.value = Result.success(clientGifts)
             } catch (ex: Exception) {
                 _gifts.value = Result.failure(ex)
@@ -112,12 +123,11 @@ class WishlistViewModel @Inject constructor(
         }
     }
 
-    fun changeWishlistName(newName: String) = getClientState()?.let { client ->
+    fun changeWishlistName(newName: String) = client?.let { client ->
         viewModelScope.launch {
             try {
                 client.wishlists[wishlistIndex].name = newName
                 clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
-                getClientState.addClient(client)
                 _wishlist.value = Result.success(client.wishlists[wishlistIndex])
             } catch (ex: Exception) {
                 _wishlist.value = Result.failure(ex)
@@ -125,7 +135,7 @@ class WishlistViewModel @Inject constructor(
         }
     }
 
-    fun getClientId() = getClientState()?.vkId
+    fun getClientId() = client?.vkId
 
     private suspend fun getDefaultUri() = imageStorage.getDefaultUrl().toString()
     fun getGiftByPos(pos: Int) = _gifts.value?.getOrNull()?.get(pos)

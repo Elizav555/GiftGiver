@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
@@ -21,10 +22,21 @@ class CartViewModel @Inject constructor(
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts
     private var clientGifts: MutableList<Gift> = mutableListOf()
+    private var client: Client? = null
+
+    init {
+        viewModelScope.launch {
+            getClientState().collect {
+                client = it
+                getGifts()
+            }
+        }
+    }
+
 
     fun getGifts() = viewModelScope.launch {
         try {
-            val giftsMapped = getClientState()?.cart?.giftsInfo?.mapNotNull {
+            val giftsMapped = client?.cart?.giftsInfo?.mapNotNull {
                 giftUseCase.getGift(
                     it.forId,
                     it.giftId
@@ -48,16 +60,15 @@ class CartViewModel @Inject constructor(
 
 
     fun updateClient() = viewModelScope.launch {
-        getClientState()?.let { client ->
+        client?.let { client ->
             val ids = clientGifts.map { GiftInfo(it.id, it.forId, Calendar.getInstance()) }
             clientFBUseCase.updateCart(client.vkId, ids)
             client.cart.giftsInfo = ids as MutableList<GiftInfo>
-            getClientState.addClient(client)
         }
     }
 
     fun deleteAll() = try {
-        getClientState()?.let {
+        client?.let {
             clientGifts.clear()
             updateClient()
             _gifts.value = Result.success(clientGifts)
@@ -67,7 +78,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun delete(gift: Gift) = try {
-        getClientState()?.let {
+        client?.let {
             clientGifts.remove(gift)
             updateClient()
             _gifts.value = Result.success(clientGifts)
@@ -76,7 +87,7 @@ class CartViewModel @Inject constructor(
         _gifts.value = Result.failure(ex)
     }
 
-    fun getGiftsInfo(): List<GiftInfo>? = getClientState()?.cart?.giftsInfo
+    fun getGiftsInfo(): List<GiftInfo>? = client?.cart?.giftsInfo
 
     fun getGiftByPos(pos: Int) = clientGifts[pos]
 }

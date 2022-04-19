@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import com.example.giftgiver.R
 import com.example.giftgiver.features.calendar.domain.notifications.NotifyWorker
 import com.example.giftgiver.features.calendar.domain.useCases.GetHolidaysUseCase
+import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.event.data.DateMapper
@@ -30,13 +31,21 @@ class CalendarViewModel @Inject constructor(
     private val getClientState: GetClientStateUseCase,
     private val loadFriends: LoadFriendsUseCase
 ) : ViewModel() {
-
     private val curYear = Calendar.getInstance().get(Calendar.YEAR)
-    private val client = getClientState()
+    private var client: Client? = null
     private var isNotified = false
     private var _holidays: MutableLiveData<Result<List<Event>>> = MutableLiveData()
     val holidays: LiveData<Result<List<Event>>> = _holidays
     private var clientHolidays: MutableList<Event> = mutableListOf()
+
+    init {
+        viewModelScope.launch {
+            getClientState().collect {
+                client = it
+                getHolidays()
+            }
+        }
+    }
 
     fun getHolidays() = viewModelScope.launch {
         try {
@@ -54,7 +63,6 @@ class CalendarViewModel @Inject constructor(
         client?.let { client ->
             clientFBUseCase.updateCalendar(client.vkId, clientHolidays)
             client.calendar.events = clientHolidays
-            getClientState.addClient(client)
         }
     }
 
