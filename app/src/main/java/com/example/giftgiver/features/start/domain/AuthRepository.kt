@@ -1,9 +1,9 @@
 package com.example.giftgiver.features.start.domain
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.SharedFlow
 
 interface AuthRepository {
-    fun isAuth(): LiveData<Boolean?>
+    fun isAuth(): SharedFlow<Boolean?>
     fun clientLogin()
     fun clientLogout()
     fun restart()

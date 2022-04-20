@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -15,6 +16,7 @@ import com.example.giftgiver.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.api.sdk.VK
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -48,27 +50,31 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun initObservers() {
-        mainViewModel.isClientChanged().observe(this) {
-            if (it) {
-                mainViewModel.onClientChanged()
+        lifecycleScope.launch {
+            mainViewModel.isClientChanged().collect {
+                if (it) {
+                    mainViewModel.onClientChanged()
+                }
             }
         }
-
-        mainViewModel.hasInternetConnection().observe(this) {
-            if (!it) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.no_internet),
-                    Toast.LENGTH_LONG
-                ).show()
+        lifecycleScope.launch {
+            mainViewModel.hasInternetConnection().collect {
+                if (!it) {
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.no_internet),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
-
-        mainViewModel.isClientAuth().observe(this) {
-            if (it == false) {
-                VK.logout()
-                mainViewModel.restart()
-                startFrom(this)
+        lifecycleScope.launch {
+            mainViewModel.isClientAuth().collect {
+                if (it == false) {
+                    VK.logout()
+                    mainViewModel.restart()
+                    startFrom(applicationContext)
+                }
             }
         }
     }

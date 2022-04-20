@@ -1,6 +1,5 @@
 package com.example.giftgiver.common.viewModels
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.useCases.ClientsChangesUseCase
@@ -19,7 +18,7 @@ class MainViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
     private val authUseCase: AuthUseCase
 ) : ViewModel() {
-    fun isClientChanged(): LiveData<Boolean> = clientsChanges.isClientChanged()
+    fun isClientChanged() = clientsChanges.isClientChanged()
 
     fun onClientChanged() = viewModelScope.launch {
         getClientByVkId(VK.getUserId().value)?.let {
@@ -32,5 +31,5 @@ class MainViewModel @Inject constructor(
 
     fun isClientAuth() = clientsChanges.isClientAuth()
 
-    fun hasInternetConnection(): LiveData<Boolean> = clientsChanges.hasInternetConnection()
+    fun hasInternetConnection() = clientsChanges.hasInternetConnection()
 }

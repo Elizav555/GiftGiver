@@ -1,24 +1,26 @@
 package com.example.giftgiver.features.client.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.giftgiver.common.db.room.RoomMapper
 import com.example.giftgiver.features.client.data.room.ClientDao
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.repositories.ClientsRepOffline
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 class ClientsRepOfflineImpl(
     private val clientDao: ClientDao,
     private val roomMapper: RoomMapper
 ) : ClientsRepOffline {
     private var hasInternet = true
-    private val hasInternetConnection: MutableLiveData<Boolean> = MutableLiveData(hasInternet)
+    private val hasInternetConnection =
+        MutableSharedFlow<Boolean>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     init {
-        hasInternetConnection.postValue(hasInternet)
+        hasInternetConnection.tryEmit(hasInternet)
     }
 
-    override fun hasInternetConnection(): LiveData<Boolean> = hasInternetConnection
+    override fun hasInternetConnection(): SharedFlow<Boolean> = hasInternetConnection
 
     override suspend fun addClient(client: Client) {
         val clientR = roomMapper.mapClientToRoom(client)
@@ -35,7 +37,7 @@ class ClientsRepOfflineImpl(
 
     override suspend fun getClientByVkId(vkId: Long): Client? {
         hasInternet = false
-        hasInternetConnection.postValue(hasInternet)
+        hasInternetConnection.tryEmit(hasInternet)
         return clientDao.getClientByVkId(vkId)
             ?.let { roomMapper.mapClientFromRoom(it) }
     }

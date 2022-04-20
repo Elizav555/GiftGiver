@@ -1,14 +1,16 @@
 package com.example.giftgiver.features.start.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.giftgiver.features.start.domain.AuthRepository
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 class AuthRepositoryImpl : AuthRepository {
     private var isAuth: Boolean? = null
-    private val isAuthenticated: MutableLiveData<Boolean?> = MutableLiveData(isAuth)
+    private val isAuthenticated: MutableSharedFlow<Boolean?> =
+        MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
-    override fun isAuth(): LiveData<Boolean?> = isAuthenticated
+    override fun isAuth(): SharedFlow<Boolean?> = isAuthenticated
 
     override fun clientLogin() = update(true)
 
@@ -18,6 +20,6 @@ class AuthRepositoryImpl : AuthRepository {
 
     private fun update(value: Boolean? = null) {
         isAuth = value
-        isAuthenticated.postValue(isAuth)
+        isAuthenticated.tryEmit(isAuth)
     }
 }

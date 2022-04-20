@@ -50,7 +50,6 @@ class ClientViewModel @Inject constructor(
         client?.let { client ->
             clientFBUseCase.updateWishlists(client.vkId, clientWishlists)
             client.wishlists = clientWishlists
-            // getClientState.addClient(client)
         }
     }
 

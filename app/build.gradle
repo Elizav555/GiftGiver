@@ -86,6 +86,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-storage'
+//    implementation 'com.google.firebase:firebase-messaging-ktx'
+//    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
     //for calendar

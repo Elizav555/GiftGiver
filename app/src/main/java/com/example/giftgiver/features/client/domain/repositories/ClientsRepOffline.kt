@@ -1,7 +1,7 @@
 package com.example.giftgiver.features.client.domain.repositories
 
-import androidx.lifecycle.LiveData
 import com.example.giftgiver.features.client.domain.Client
+import kotlinx.coroutines.flow.SharedFlow
 
 interface ClientsRepOffline {
     suspend fun addClient(client: Client)
@@ -12,5 +12,5 @@ interface ClientsRepOffline {
 
     suspend fun getClientByVkId(vkId: Long): Client?
 
-    fun hasInternetConnection(): LiveData<Boolean>
+    fun hasInternetConnection(): SharedFlow<Boolean>
 }

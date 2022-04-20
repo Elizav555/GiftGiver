@@ -1,7 +1,5 @@
 package com.example.giftgiver.features.client.data.fb
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.repositories.ClientsRepository
 import com.example.giftgiver.features.event.domain.Event
@@ -14,6 +12,8 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.vk.api.sdk.VK
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -24,13 +24,14 @@ class ClientsRepositoryImpl(
 ) : ClientsRepository {
     private val clients = firebaseFirestore.collection(CLIENTS)
     private var curClientChanged = false
-    private val isChanged: MutableLiveData<Boolean> = MutableLiveData(curClientChanged)
+    private val isChanged =
+        MutableSharedFlow<Boolean>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     init {
-        isChanged.postValue(curClientChanged)
+        isChanged.tryEmit(curClientChanged)
     }
 
-    override fun isClientChanged(): LiveData<Boolean> = isChanged
+    override fun isClientChanged() = isChanged
 
     override suspend fun addClient(client: Client) {
         val clientRef = clients.document(client.vkId.toString())
@@ -99,7 +100,7 @@ class ClientsRepositoryImpl(
 
     private fun checkChanges(vkId: Long) {
         curClientChanged = vkId == VK.getUserId().value
-        isChanged.postValue(curClientChanged)
+        isChanged.tryEmit(curClientChanged)
     }
 
     override suspend fun getAllClientsIds(): List<Long> {
