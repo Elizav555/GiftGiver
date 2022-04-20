@@ -5,19 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FriendsViewModel @Inject constructor(
-    private val getClientByVkId: GetClientByVkId,
     private val getClientState: GetClientStateUseCase
 ) : ViewModel() {
     private var _friends: MutableLiveData<Result<List<UserInfo>>> = MutableLiveData()
     val friends: LiveData<Result<List<UserInfo>>> = _friends
     private var client: Client? = null
+    private var curFriends = listOf<UserInfo>()
 
     init {
         viewModelScope.launch {
@@ -26,11 +25,17 @@ class FriendsViewModel @Inject constructor(
                 getFriends()
             }
         }
+        viewModelScope.launch {
+            getClientState.getFriendsState().collect {
+                curFriends = it
+                getFriends()
+            }
+        }
     }
 
     fun getFriends() = viewModelScope.launch {
         try {
-            _friends.value = Result.success(getClientState.getFriendsState())
+            _friends.value = Result.success(curFriends)
         } catch (ex: Exception) {
             _friends.value = Result.failure(ex)
         }
@@ -41,7 +46,7 @@ class FriendsViewModel @Inject constructor(
             if (isFav) {
                 client?.let { client ->
                     val friendsFiltered =
-                        client.favFriendsIds.mapNotNull { getClientByVkId(it)?.info }
+                        curFriends.filter { client.favFriendsIds.contains(it.vkId) }
                             .sortedBy { friend -> friend.name }
                     _friends.value = Result.success(friendsFiltered)
                 }

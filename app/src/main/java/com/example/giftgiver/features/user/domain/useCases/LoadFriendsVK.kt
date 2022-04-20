@@ -41,7 +41,7 @@ class LoadFriendsVK @Inject constructor(
         val allClients = getAllClients() //4sec
         return friendsVK.filter { friend -> allClients.contains(friend.vkId) }
             .mapNotNull { getClientByVkId(it.vkId)?.info }
-            .sortedByDescending { user -> user.name }
+            .sortedBy { user -> user.name }
     }
 
     private suspend fun loadAllFriends(vkId: Long): List<UserInfo> {
