@@ -1,5 +1,9 @@
 package com.example.giftgiver.features.client.data.fb
 
+import com.example.giftgiver.features.calendar.data.fb.CalendarFB
+import com.example.giftgiver.features.calendar.domain.Calendar
+import com.example.giftgiver.features.cart.data.fb.CartFB
+import com.example.giftgiver.features.cart.domain.Cart
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.event.data.fb.EventFB
 import com.example.giftgiver.features.event.domain.Event
@@ -14,105 +18,119 @@ import com.example.giftgiver.features.wishlist.data.fb.WishlistFB
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Calendar as JavaUtilCalendar
 
 class FBMapper(
     private val dispatcher: CoroutineDispatcher,
     private val loadUserInfoVK: LoadUserInfoVK,
 ) {
-    fun mapClientToFB(client: Client): ClientFB {
-        val clientFB = ClientFB(client.vkId)
-        clientFB.calendar.events = client.calendar.events.map { mapEventToFB(it) }
-        clientFB.cart.giftsInfo =
-            client.cart.giftsInfo.map { GiftInfoFB(it.giftId, it.forId, it.lastSeen.time) }
-        clientFB.favFriendsIds = client.favFriendsIds
-        clientFB.wishlists = client.wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>
-        clientFB.info = with(client.info) {
-            UserInfoFB(
-                name,
-                photo,
-                bdate,
-                about,
-            )
-        }
-        return clientFB
-    }
-
-    fun mapWishlistToFB(wishlist: Wishlist) = WishlistFB(
-        name = wishlist.name,
-        giftsIds = wishlist.giftsIds
-    )
-
-    private fun mapWishlistFromFB(wishlist: WishlistFB) = Wishlist(
-        name = wishlist.name,
-        giftsIds = wishlist.giftsIds as MutableList<String>
-    )
-
-    fun mapEventToFB(event: Event): EventFB =
-        EventFB(date = event.date.time, desc = event.desc)
-
-    fun mapGiftToFB(gift: Gift): GiftFB = GiftFB(
-        name = gift.name,
-        forId = gift.forId,
-        forName = gift.forName,
-        desc = gift.desc,
-        imageUrl = gift.imageUrl,
-        isChosen = gift.isChosen,
-        lastChanged = gift.lastChanged.time,
-        wishlistIndex = gift.wishlistIndex
-    )
-
-    private fun mapEventFromFB(event: EventFB): Event {
-        val calendar = Calendar.getInstance()
-        calendar.time = event.date
-        return Event(date = calendar, desc = event.desc)
-    }
-
-    fun mapGiftFromFB(gift: GiftFB, giftId: String): Gift {
-        val calendar = Calendar.getInstance()
-        calendar.time = gift.lastChanged
-        return Gift(
-            id = giftId,
-            name = gift.name,
-            forId = gift.forId,
-            forName = gift.forName,
-            desc = gift.desc,
-            imageUrl = gift.imageUrl,
-            isChosen = gift.isChosen,
-            lastChanged = calendar,
-            wishlistIndex = gift.wishlistIndex
+    fun mapClientToFB(client: Client) = with(client) {
+        return@with ClientFB(
+            vkId,
+            calendar = CalendarFB(events = calendar.events.map { mapEventToFB(it) }),
+            cart = CartFB(giftsInfo =
+            cart.giftsInfo.map { GiftInfoFB(it.giftId, it.forId, it.lastSeen.time) }),
+            favFriendsIds = favFriendsIds,
+            wishlists = wishlists.map { mapWishlistToFB(it) } as MutableList<WishlistFB>,
+            info = with(info) {
+                UserInfoFB(
+                    name,
+                    photo,
+                    bdate,
+                    about,
+                )
+            }
         )
     }
 
-    suspend fun mapClientFromFB(clientFB: ClientFB): Client {
-        var info = UserInfo(clientFB.vkId)
-        if (clientFB.info == null) {
-            info = withContext(dispatcher) { loadUserInfoVK.loadInfo(clientFB.vkId) }
-        } else clientFB.info?.let { infoFB ->
-            info = UserInfo(
-                clientFB.vkId,
-                infoFB.name,
-                infoFB.photo,
-                infoFB.bdate,
-                infoFB.about,
-            )
-        }
-        val client = Client(clientFB.vkId, info = info)
-        client.wishlists = clientFB.wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>
-        client.calendar.events =
-            clientFB.calendar.events.map { mapEventFromFB(it) } as MutableList<Event>
-        val calendar = Calendar.getInstance()
-        client.cart.giftsInfo =
-            clientFB.cart.giftsInfo.map {
-                calendar.time = it.lastSeen
-                GiftInfo(
-                    it.giftId,
-                    it.forId,
-                    calendar
+    fun mapWishlistToFB(wishlist: Wishlist) = with(wishlist) {
+        WishlistFB(
+            name = name,
+            giftsIds = giftsIds
+        )
+    }
+
+    private fun mapWishlistFromFB(wishlist: WishlistFB) = with(wishlist) {
+        Wishlist(
+            name = name,
+            giftsIds = giftsIds as MutableList<String>
+        )
+    }
+
+    fun mapEventToFB(event: Event): EventFB = with(event) {
+        EventFB(
+            date = date.time,
+            desc = desc
+        )
+    }
+
+    fun mapGiftToFB(gift: Gift): GiftFB = with(gift) {
+        GiftFB(
+            name = name,
+            forId = forId,
+            forName = forName,
+            desc = desc,
+            imageUrl = imageUrl,
+            isChosen = isChosen,
+            lastChanged = lastChanged.time,
+            wishlistIndex = wishlistIndex
+        )
+    }
+
+    private fun mapEventFromFB(event: EventFB) = with(event) {
+        val calendar = JavaUtilCalendar.getInstance()
+        calendar.time = date
+        return@with Event(date = calendar, desc = desc)
+    }
+
+    fun mapGiftFromFB(gift: GiftFB, giftId: String) = with(gift) {
+        val calendar = JavaUtilCalendar.getInstance()
+        calendar.time = lastChanged
+        return@with Gift(
+            id = giftId,
+            name = name,
+            forId = forId,
+            forName = forName,
+            desc = desc,
+            imageUrl = imageUrl,
+            isChosen = isChosen,
+            lastChanged = calendar,
+            wishlistIndex = wishlistIndex
+        )
+    }
+
+    suspend fun mapClientFromFB(clientFB: ClientFB) = with(clientFB) {
+        val info = info?.let { infoFB ->
+            with(infoFB) {
+                UserInfo(
+                    vkId,
+                    name,
+                    photo,
+                    bdate,
+                    about,
                 )
-            } as MutableList<GiftInfo>
-        client.favFriendsIds = clientFB.favFriendsIds
-        return client
+            }
+        } ?: withContext(dispatcher) { loadUserInfoVK.loadInfo(vkId) }
+        val calendar = JavaUtilCalendar.getInstance()
+        return@with Client(
+            vkId,
+            info = info,
+            wishlists = wishlists.map { mapWishlistFromFB(it) } as MutableList<Wishlist>,
+            calendar = Calendar(
+                events = clientFB.calendar.events.map { mapEventFromFB(it) } as MutableList<Event>
+            ),
+            cart = Cart(
+                giftsInfo = cart.giftsInfo.map {
+                    calendar.time = it.lastSeen
+                    GiftInfo(
+                        it.giftId,
+                        it.forId,
+                        calendar
+                    )
+                } as MutableList<GiftInfo>
+            ),
+            favFriendsIds = clientFB.favFriendsIds
+        )
     }
 
     fun mapGiftsInfoToFB(giftsIds: List<GiftInfo>): List<GiftInfoFB> {

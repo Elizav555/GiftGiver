@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -93,6 +94,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
             itemTouchHelper.attachToRecyclerView(this)
         }
         giftAdapter.submitList(gifts)
+        binding.progressBar.isVisible = false
     }
 
     private fun deleteGift(gift: Gift, pos: Int) {
@@ -117,8 +119,8 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         gift?.let {
             isAdapterInited = false
             val action = CartFragmentDirections.actionCartToCartGiftFragment(
-                gift.id,
-                gift.forId
+                it.id,
+                it.forId
             )
             findNavController().navigate(action)
         }

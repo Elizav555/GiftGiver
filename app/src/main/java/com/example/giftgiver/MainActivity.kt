@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -32,9 +33,8 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.bottomNav
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        val navController = navHostFragment.navController
+        val navController =
+            binding.fragmentContainerView.getFragment<NavHostFragment>().navController
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.account,
@@ -84,8 +84,8 @@ class MainActivity : DaggerAppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
-    fun setBottomNavigationVisibility(visibility: Int) {
-        binding.bottomNav.visibility = visibility
+    fun setBottomNavigationVisibility(isVisible: Boolean) {
+        binding.bottomNav.isVisible = isVisible
     }
 
     fun makeToast(text: String) {

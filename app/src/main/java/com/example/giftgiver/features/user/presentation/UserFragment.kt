@@ -5,6 +5,7 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -91,8 +92,8 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             tvInfo.movementMethod = ScrollingMovementMethod()
             tvName.movementMethod = ScrollingMovementMethod()
             tvName.text = info.name
-            progressBar.visibility = View.GONE
-            views.visibility = View.VISIBLE
+            progressBar.isVisible = false
+            views.isVisible = true
         }
     }
 

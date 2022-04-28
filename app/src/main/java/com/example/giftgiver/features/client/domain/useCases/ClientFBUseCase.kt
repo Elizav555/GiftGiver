@@ -14,8 +14,7 @@ class ClientFBUseCase @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
 ) {
     suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>) =
-        withContext(dispatcher)
-        {
+        withContext(dispatcher) {
             clientsRepository.updateCart(vkId, giftsIds)
         }
 

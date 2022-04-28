@@ -1,6 +1,6 @@
 package com.example.giftgiver.features.wishlist.presentation.list
 
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.giftgiver.databinding.ItemWishlistBinding
 import com.example.giftgiver.features.wishlist.domain.Wishlist
@@ -16,7 +16,7 @@ class WishlistHolder(
             action(adapterPosition)
         }
         if (deleteAction == null) {
-            binding.btnDelete.visibility = View.GONE
+            binding.btnDelete.isVisible = false
         } else binding.btnDelete.setOnClickListener {
             deleteAction(adapterPosition)
         }

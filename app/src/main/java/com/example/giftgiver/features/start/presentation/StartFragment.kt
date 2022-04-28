@@ -53,7 +53,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).setBottomNavigationVisibility(View.GONE)
+        (activity as MainActivity).setBottomNavigationVisibility(false)
         (activity as MainActivity).supportActionBar?.hide()
         initObservers()
         setHasOptionsMenu(false)
@@ -65,18 +65,16 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
 
     private fun getClientState(clientFromFB: Client?) {
         lifecycleScope.launch {
-            if (clientFromFB == null) {
+            clientFromFB?.let { startViewModel.addClient(clientFromFB) } ?: lifecycleScope.launch {
                 val vkId = VK.getUserId().value
-                lifecycleScope.launch {
-                    val client = Client(
-                        vkId,
-                        Calendar(),
-                        info = loadUserInfoVK.loadInfo(vkId),
-                        cart = Cart()
-                    )
-                    startViewModel.addClient(client)
-                }
-            } else startViewModel.addClient(clientFromFB)
+                val client = Client(
+                    vkId,
+                    Calendar(),
+                    info = loadUserInfoVK.loadInfo(vkId),
+                    cart = Cart()
+                )
+                startViewModel.addClient(client)
+            }
         }
     }
 
@@ -107,7 +105,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         startViewModel.client.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
                 getClientState(it)
-                if (it != null) {
+                it?.let {
                     binding.btnLogin.isVisible = false
                     binding.progressBar.isVisible = true
                     startViewModel.login()

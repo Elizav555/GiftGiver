@@ -1,12 +1,15 @@
 package com.example.giftgiver.features.gift.domain.useCases
 
+import android.util.Log
 import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
 import com.example.giftgiver.features.wishlist.domain.Wishlist
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class GiftUseCase @Inject constructor(
@@ -40,7 +43,15 @@ class GiftUseCase @Inject constructor(
             try {
                 giftsRepository.getGift(vkId, giftId)
             } catch (ex: Exception) {
-                giftsRepOffline.getGift(giftId)
+                if (ex is UnknownHostException || (ex is FirebaseFirestoreException && ex.message?.contains(
+                        "offline"
+                    ) == true)
+                ) {
+                    Log.e("Internet", ex.toString())
+                    giftsRepOffline.getGift(giftId)
+                } else {
+                    null
+                }
             }
         }
 }

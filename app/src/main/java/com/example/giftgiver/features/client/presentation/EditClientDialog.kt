@@ -34,7 +34,7 @@ class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
     private val imageViewModel: ImageViewModel by viewModels { viewModelFactory }
     private var imageFile: File? = null
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        if (it != null) {
+        it?.let {
             imageViewModel.onGalleryImagePicked(it)
         }
     }
@@ -49,20 +49,20 @@ class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogEditClientBinding.inflate(layoutInflater)
-        binding.btnCamera.setOnClickListener { openCamera() }
-        binding.btnGallery.setOnClickListener { openGallery() }
-        binding.etName.setText(client.info.name)
-        binding.etInfo.setText(client.info.about)
-        binding.etBirth.setText(client.info.bdate)
-        binding.ivImage.load(client.info.photo)
-        imageViewModel.imageBitmapLiveData.observe(this) {
-            binding.ivImage.setImageBitmap(it)
-        }
-        imageViewModel.imageFileLiveData.observe(this) {
-            Log.d("ImageFile", it?.absolutePath.toString())
-            imageFile = it
-        }
         with(binding) {
+            btnCamera.setOnClickListener { openCamera() }
+            btnGallery.setOnClickListener { openGallery() }
+            etName.setText(client.info.name)
+            etInfo.setText(client.info.about)
+            etBirth.setText(client.info.bdate)
+            ivImage.load(client.info.photo)
+            imageViewModel.imageBitmapLiveData.observe(this@EditClientDialog) {
+                ivImage.setImageBitmap(it)
+            }
+            imageViewModel.imageFileLiveData.observe(this@EditClientDialog) {
+                Log.d("ImageFile", it?.absolutePath.toString())
+                imageFile = it
+            }
             return activity?.let {
                 val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton(getString(R.string.save)) { _, _ ->

@@ -15,125 +15,138 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.data.room.WishlistR
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import java.text.NumberFormat
+import  java.util.Calendar as JavaCalendar
 
 class RoomMapper {
-    val numberFormat = NumberFormat.getInstance()
+    private val numberFormat: NumberFormat = NumberFormat.getInstance()
     fun mapClientToRoom(client: Client): ClientR {
-        return ClientR(
-            vkId = client.vkId,
-            favFriendsIds = client.favFriendsIds.map { numberFormat.format(it) },
-            info = mapUserInfoToRoom(client.info),
-            events = client.calendar.events.map { mapEventToRoom(it) },
-            giftsInfo = client.cart.giftsInfo.map { mapGiftInfoToRoom(it) },
-            wishlists = client.wishlists.map { mapWishlistToRoom(it) }
-        )
+        return with(client) {
+            ClientR(
+                vkId = vkId,
+                favFriendsIds = favFriendsIds.map { numberFormat.format(it) },
+                info = mapUserInfoToRoom(info),
+                events = calendar.events.map { mapEventToRoom(it) },
+                giftsInfo = cart.giftsInfo.map { mapGiftInfoToRoom(it) },
+                wishlists = wishlists.map { mapWishlistToRoom(it) }
+            )
+        }
     }
 
     private fun mapUserInfoToRoom(info: UserInfo): UserInfoR {
-        return UserInfoR(
-            name = info.name,
-            photo = info.photo,
-            bdate = info.bdate,
-            about = info.about
-        )
+        return with(info) {
+            UserInfoR(
+                name = name,
+                photo = photo,
+                bdate = bdate,
+                about = about
+            )
+        }
     }
 
     private fun mapWishlistToRoom(wishlist: Wishlist): WishlistR {
-        return WishlistR(
-            name = wishlist.name,
-            giftsIds = wishlist.giftsIds
+        return with(wishlist) {
+            WishlistR(
+                name = name,
+                giftsIds = giftsIds
+            )
+        }
+    }
+
+    private fun mapGiftInfoToRoom(giftInfo: GiftInfo) = with(giftInfo) {
+        GiftInfoR(
+            giftId = giftId,
+            forId = forId,
+            lastSeen = lastSeen.time
         )
     }
 
-    private fun mapGiftInfoToRoom(giftInfo: GiftInfo) = GiftInfoR(
-        giftId = giftInfo.giftId,
-        forId = giftInfo.forId,
-        lastSeen = giftInfo.lastSeen.time
-    )
-
     private fun mapEventToRoom(event: Event): EventR {
-        return EventR(
-            date = event.date.time,
-            desc = event.desc
-        )
+        return with(event) {
+            EventR(
+                date = date.time,
+                desc = desc
+            )
+        }
     }
 
     fun mapClientFromRoom(
         client: ClientR,
-    ): Client {
-        return Client(
-            vkId = client.vkId,
-            calendar = Calendar(client.events.map { mapEventFromRoom(it) } as MutableList<Event>),
-            cart = Cart(client.giftsInfo.map { mapGiftInfoFromRoom(it) } as MutableList<GiftInfo>),
-            favFriendsIds = client.favFriendsIds.map {
+    ) = with(client) {
+        Client(
+            vkId = vkId,
+            calendar = Calendar(events.map { mapEventFromRoom(it) } as MutableList<Event>),
+            cart = Cart(giftsInfo.map { mapGiftInfoFromRoom(it) } as MutableList<GiftInfo>),
+            favFriendsIds = favFriendsIds.map {
                 numberFormat.parse(it)
             } as? MutableList<Long> ?: mutableListOf(),
-            wishlists = client.wishlists.map { mapWishlistFromRoom(it) } as MutableList<Wishlist>,
-            info = mapUserInfoFromRoom(client.info, client.vkId)
+            wishlists = wishlists.map { mapWishlistFromRoom(it) } as MutableList<Wishlist>,
+            info = mapUserInfoFromRoom(info, vkId)
         )
     }
 
-    private fun mapUserInfoFromRoom(info: UserInfoR, vkId: Long): UserInfo {
-        return UserInfo(
+    private fun mapUserInfoFromRoom(info: UserInfoR, vkId: Long) = with(info) {
+        UserInfo(
             vkId = vkId,
-            name = info.name,
-            photo = info.photo,
-            bdate = info.bdate,
-            about = info.about
+            name = name,
+            photo = photo,
+            bdate = bdate,
+            about = about
         )
     }
 
-    private fun mapWishlistFromRoom(wishlist: WishlistR): Wishlist {
-        return Wishlist(
-            name = wishlist.name,
-            giftsIds = wishlist.giftsIds as MutableList<String>
+    private fun mapWishlistFromRoom(wishlist: WishlistR) = with(wishlist) {
+        Wishlist(
+            name = name,
+            giftsIds = giftsIds as MutableList<String>
         )
     }
 
-    private fun mapGiftInfoFromRoom(giftInfo: GiftInfoR): GiftInfo {
-        val calendar = java.util.Calendar.getInstance()
-        calendar.time = giftInfo.lastSeen
-        return GiftInfo(
-            giftId = giftInfo.giftId,
-            forId = giftInfo.forId,
+    private fun mapGiftInfoFromRoom(giftInfo: GiftInfoR) = with(giftInfo) {
+        val calendar = JavaCalendar.getInstance()
+        calendar.time = lastSeen
+        return@with GiftInfo(
+            giftId = giftId,
+            forId = forId,
             lastSeen = calendar
         )
     }
 
-    private fun mapEventFromRoom(event: EventR): Event {
-        val calendar = java.util.Calendar.getInstance()
-        calendar.time = event.date
-        return Event(
+    private fun mapEventFromRoom(event: EventR) = with(event) {
+        val calendar = JavaCalendar.getInstance()
+        calendar.time = date
+        return@with Event(
             date = calendar,
-            desc = event.desc
+            desc = desc
         )
     }
 
-    fun mapGiftToRoom(gift: Gift) = GiftR(
-        id = gift.id,
-        name = gift.name,
-        forId = gift.forId,
-        forName = gift.forName,
-        desc = gift.desc,
-        imageUrl = gift.imageUrl,
-        isChosen = gift.isChosen,
-        lastChanged = gift.lastChanged.time,
-        wishlistIndex = gift.wishlistIndex
-    )
+    fun mapGiftToRoom(gift: Gift) = with(gift) {
+        GiftR(
+            id = id,
+            name = name,
+            forId = forId,
+            forName = forName,
+            desc = desc,
+            imageUrl = imageUrl,
+            isChosen = isChosen,
+            lastChanged = lastChanged.time,
+            wishlistIndex = wishlistIndex
+        )
+    }
 
-    fun mapGiftFromRoom(gift: GiftR): Gift {
-        val calendar = java.util.Calendar.getInstance()
-        gift.lastChanged?.let { calendar.time = it }
-        return Gift(
-            id = gift.id,
-            name = gift.name,
-            forId = gift.forId,
-            forName = gift.forName,
-            desc = gift.desc,
-            imageUrl = gift.imageUrl,
-            isChosen = gift.isChosen,
+    fun mapGiftFromRoom(gift: GiftR) = with(gift) {
+        val calendar = JavaCalendar.getInstance()
+        lastChanged?.let { calendar.time = it }
+        return@with Gift(
+            id = id,
+            name = name,
+            forId = forId,
+            forName = forName,
+            desc = desc,
+            imageUrl = imageUrl,
+            isChosen = isChosen,
             lastChanged = calendar,
-            wishlistIndex = gift.wishlistIndex
+            wishlistIndex = wishlistIndex
         )
     }
 }

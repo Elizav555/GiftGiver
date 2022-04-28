@@ -33,7 +33,7 @@ class AddGiftDialog(
     lateinit var viewModelFactory: ViewModelFactory
     private val imageViewModel: ImageViewModel by viewModels { viewModelFactory }
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        if (it != null) {
+        it?.let {
             imageViewModel.onGalleryImagePicked(it)
         }
     }
@@ -48,21 +48,21 @@ class AddGiftDialog(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogAddGiftBinding.inflate(layoutInflater)
-        binding.btnCamera.setOnClickListener { openCamera() }
-        binding.btnGallery.setOnClickListener { openGallery() }
-        imageViewModel.imageBitmapLiveData.observe(this) {
-            binding.ivImage.setImageBitmap(it)
-        }
-        imageViewModel.imageFileLiveData.observe(this) {
-            Log.d("ImageFile", it?.absolutePath.toString())
-            imageFile = it
-        }
-        gift?.let {
-            binding.etName.setText(it.name)
-            binding.etDesc.setText(it.desc)
-            binding.ivImage.load(it.imageUrl)
-        }
         with(binding) {
+            btnCamera.setOnClickListener { openCamera() }
+            btnGallery.setOnClickListener { openGallery() }
+            imageViewModel.imageBitmapLiveData.observe(this@AddGiftDialog) {
+                ivImage.setImageBitmap(it)
+            }
+            imageViewModel.imageFileLiveData.observe(this@AddGiftDialog) {
+                Log.d("ImageFile", it?.absolutePath.toString())
+                imageFile = it
+            }
+            gift?.let {
+                etName.setText(it.name)
+                etDesc.setText(it.desc)
+                ivImage.load(it.imageUrl)
+            }
             return activity?.let {
                 val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton(getString(R.string.save)) { _, _ ->

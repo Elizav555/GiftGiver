@@ -38,7 +38,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).setBottomNavigationVisibility(View.VISIBLE)
+        (activity as MainActivity).setBottomNavigationVisibility(true)
         setHasOptionsMenu(true)
         (activity as MainActivity).supportActionBar?.show()
         initObservers()
@@ -111,7 +111,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
             )
             addItemDecoration(dividerItemDecoration)
         }
-        binding.progressBar.visibility = View.GONE
+        binding.progressBar.isVisible = false
         updateList()
     }
 

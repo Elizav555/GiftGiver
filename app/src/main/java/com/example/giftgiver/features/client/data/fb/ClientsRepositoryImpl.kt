@@ -64,12 +64,12 @@ class ClientsRepositoryImpl(
         checkChanges(vkId)
     }
 
-    override suspend fun updateInfo(vkId: Long, info: UserInfo) {
+    override suspend fun updateInfo(vkId: Long, info: UserInfo) = with(info) {
         val infoFB = UserInfoFB(
-            info.name,
-            info.photo,
-            info.bdate,
-            info.about,
+            name,
+            photo,
+            bdate,
+            about,
         )
         clients.document(vkId.toString()).update(INFO, infoFB)
         checkChanges(vkId)

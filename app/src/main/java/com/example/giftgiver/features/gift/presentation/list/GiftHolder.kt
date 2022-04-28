@@ -1,6 +1,6 @@
 package com.example.giftgiver.features.gift.presentation.list
 
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.example.giftgiver.databinding.ItemGiftBinding
@@ -18,10 +18,10 @@ class GiftHolder(
         with(binding) {
             root.setOnClickListener { action(gift.id) }
             checkedFunc?.let {
-                checkBox.visibility = View.VISIBLE
+                checkBox.isVisible = true
                 checkBox.isChecked = gift.isChosen
                 if (gift.isChosen) {
-                    ivFilter.visibility = View.VISIBLE
+                    ivFilter.isVisible = true
                     checkBox.isClickable = clientCart?.any { it.giftId == gift.id } == true
                 }
                 checkBox.setOnCheckedChangeListener { _, isChecked ->

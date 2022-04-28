@@ -1,8 +1,6 @@
 package com.example.giftgiver.common.db.room
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.giftgiver.common.db.room.converters.DateConverter
@@ -25,20 +23,6 @@ abstract class RoomDB : RoomDatabase() {
     abstract fun giftDao(): GiftDao
 
     companion object {
-
-        private const val DATABASE_NAME = "gift_giver.db"
-
-        @Volatile
-        private var instance: RoomDB? = null
-        private val LOCK = Any()
-
-        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
-            buildDatabase(context).also { instance = it }
-        }
-
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context, RoomDB::class.java, DATABASE_NAME)
-                .fallbackToDestructiveMigration()
-                .build()
+        const val DATABASE_NAME = "gift_giver.db"
     }
 }

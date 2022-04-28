@@ -2,6 +2,8 @@ package com.example.giftgiver.features.user.domain.useCases
 
 import android.util.Log
 import com.example.giftgiver.features.client.domain.repositories.ClientsRepOffline
+import com.google.firebase.firestore.FirebaseFirestoreException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class LoadFriendsUseCase @Inject constructor(
@@ -12,10 +14,17 @@ class LoadFriendsUseCase @Inject constructor(
         try {
             loadFriendsVK.loadFriends(vkId, filter)
         } catch (ex: Exception) {
-            Log.e("load friends", ex.toString())
-            clientsRepOffline.getClientByVkId(vkId)?.favFriendsIds?.mapNotNull {
-                clientsRepOffline.getClientByVkId(it)?.info
-            } ?: listOf()
+            if (ex is UnknownHostException || (ex is FirebaseFirestoreException && ex.message?.contains(
+                    "offline"
+                ) == true)
+            ) {
+                Log.e("load friends", ex.toString())
+                clientsRepOffline.getClientByVkId(vkId)?.favFriendsIds?.mapNotNull {
+                    clientsRepOffline.getClientByVkId(it)?.info
+                } ?: listOf()
+            } else {
+                listOf()
+            }
         }
     }
 }
