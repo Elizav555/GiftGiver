@@ -6,10 +6,12 @@ import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.TransitionInflater
 import coil.api.load
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
@@ -37,6 +39,9 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentUserBinding.inflate(inflater)
+        sharedElementReturnTransition =
+            TransitionInflater.from(requireContext())
+                .inflateTransition(android.R.transition.move)
         return binding.root
     }
 
@@ -87,7 +92,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             setHasOptionsMenu(true)
             (activity as MainActivity).supportActionBar?.title = info.name
             ivAvatar.load(info.photo)
-            ivAvatar.setOnClickListener { viewImage(info.photo) }
+            ivAvatar.setOnClickListener { viewImage(it, info.photo) }
             tvBirthdate.text = info.bdate
             tvInfo.text = info.about
             tvInfo.movementMethod = ScrollingMovementMethod()
@@ -126,10 +131,15 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
         }
     }
 
-    private fun viewImage(photo: String) {
+    private fun viewImage(transitionView: View, photo: String) {
         val action =
             UserFragmentDirections.actionUserFragmentToImageFragment(photo)
-        findNavController().navigate(action)
+        findNavController().navigate(
+            action, FragmentNavigator.Extras.Builder()
+                .addSharedElements(
+                    mapOf(transitionView to transitionView.transitionName)
+                ).build()
+        )
     }
 
     private fun initObservers() {

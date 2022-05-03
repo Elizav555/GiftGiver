@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.TransitionInflater
 import coil.api.load
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentAccountBinding
@@ -33,6 +35,9 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAccountBinding.inflate(inflater)
+        sharedElementReturnTransition =
+            TransitionInflater.from(requireContext())
+                .inflateTransition(android.R.transition.move)
         return binding.root
     }
 
@@ -90,17 +95,22 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         }
     }
 
-    private fun viewImage(photo: String) {
+    private fun viewImage(transitionView: View, photo: String) {
         isAdapterInited = false
         val action =
             AccountFragmentDirections.actionAccountToImageFragment(photo)
-        findNavController().navigate(action)
+        findNavController().navigate(
+            action, FragmentNavigator.Extras.Builder()
+                .addSharedElements(
+                    mapOf(transitionView to transitionView.transitionName)
+                ).build()
+        )
     }
 
     private fun bindInfo(userInfo: UserInfo) =
         with(userInfo) {
             binding.ivAvatar.setOnClickListener {
-                viewImage(photo)
+                viewImage(it, photo)
             }
             binding.ivAvatar.load(photo)
             binding.tvBirthdate.text = bdate

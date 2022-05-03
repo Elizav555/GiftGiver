@@ -42,4 +42,9 @@
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:backgroundTint">@color/inputsBack</item>
     </style>
+
+    <style name="MaterialAnimations" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
 </resources>

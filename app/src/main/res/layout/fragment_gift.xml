@@ -34,19 +34,6 @@
         app:layout_constraintStart_toEndOf="@+id/iv_photo"
         app:layout_constraintTop_toBottomOf="@+id/tv_for" />
 
-    <ImageView
-        android:id="@+id/iv_photo"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:contentDescription="@string/gift_image"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toStartOf="@+id/tv_for"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tv_for"
@@ -97,4 +84,19 @@
         android:visibility="invisible"
         app:constraint_referenced_ids="iv_photo,tv_desc" />
 
+    <ImageView
+        android:id="@+id/iv_photo"
+        style="@style/MaterialAnimations"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/gift_image"
+        android:scaleType="centerCrop"
+        android:transitionName="@string/trans"
+        app:layout_constraintEnd_toStartOf="@+id/tv_for"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>

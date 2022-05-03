@@ -5,8 +5,10 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import coil.api.load
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
@@ -29,6 +31,9 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGiftBinding.inflate(inflater)
+        sharedElementReturnTransition =
+            TransitionInflater.from(requireContext())
+                .inflateTransition(android.R.transition.move)
         return binding.root
     }
 
@@ -72,7 +77,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
             tvDesc.movementMethod = ScrollingMovementMethod()
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc
-            ivPhoto.setOnClickListener { gift.imageUrl?.let { url -> viewImage(url) } }
+            ivPhoto.setOnClickListener { gift.imageUrl?.let { url -> viewImage(ivPhoto, url) } }
             ivPhoto.load(gift.imageUrl)
             imageViewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
                 ivPhoto.setImageBitmap(it)
@@ -86,10 +91,15 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         giftViewModel.changeGift(newName, newDesc, newImageFile)
     }
 
-    private fun viewImage(photo: String) {
+    private fun viewImage(transitionView: View, photo: String) {
         val action =
             GiftFragmentDirections.actionGiftFragmentToImageFragment(photo)
-        findNavController().navigate(action)
+        findNavController().navigate(
+            action, FragmentNavigator.Extras.Builder()
+                .addSharedElements(
+                    mapOf(transitionView to transitionView.transitionName)
+                ).build()
+        )
     }
 
     private fun initObservers() {

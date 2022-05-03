@@ -85,4 +85,5 @@
     <string name="delete_wishlist">Delete this wishlist?</string>
     <string name="action_cannot_undone">This action cannot be undone</string>
     <string name="delete_gift">Delete this gift?</string>
+    <string name="trans">transaction</string>
 </resources>
