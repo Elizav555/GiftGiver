@@ -95,10 +95,10 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         }
     }
 
-    private fun viewImage(transitionView: View, photo: String) {
+    private fun viewImage(transitionView: View, photo: String, title: String) {
         isAdapterInited = false
         val action =
-            AccountFragmentDirections.actionAccountToImageFragment(photo)
+            AccountFragmentDirections.actionAccountToImageFragment(title, photo)
         findNavController().navigate(
             action, FragmentNavigator.Extras.Builder()
                 .addSharedElements(
@@ -110,7 +110,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private fun bindInfo(userInfo: UserInfo) =
         with(userInfo) {
             binding.ivAvatar.setOnClickListener {
-                viewImage(it, photo)
+                viewImage(it, photo, getString(R.string.avatar_image, name))
             }
             binding.ivAvatar.load(photo)
             binding.tvBirthdate.text = bdate

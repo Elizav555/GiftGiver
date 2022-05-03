@@ -92,7 +92,13 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             setHasOptionsMenu(true)
             (activity as MainActivity).supportActionBar?.title = info.name
             ivAvatar.load(info.photo)
-            ivAvatar.setOnClickListener { viewImage(it, info.photo) }
+            ivAvatar.setOnClickListener {
+                viewImage(
+                    it,
+                    info.photo,
+                    getString(R.string.avatar_image, info.name)
+                )
+            }
             tvBirthdate.text = info.bdate
             tvInfo.text = info.about
             tvInfo.movementMethod = ScrollingMovementMethod()
@@ -131,9 +137,9 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
         }
     }
 
-    private fun viewImage(transitionView: View, photo: String) {
+    private fun viewImage(transitionView: View, photo: String, title: String) {
         val action =
-            UserFragmentDirections.actionUserFragmentToImageFragment(photo)
+            UserFragmentDirections.actionUserFragmentToImageFragment(title, photo)
         findNavController().navigate(
             action, FragmentNavigator.Extras.Builder()
                 .addSharedElements(

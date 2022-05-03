@@ -18,6 +18,9 @@
             android:name="com.example.giftgiver.features.images.presentation.ImageFragment"
             android:label="ImageFragment">
             <argument
+                android:name="title"
+                app:argType="string" />
+            <argument
                 android:name="imageURL"
                 app:argType="string" />
         </fragment>
@@ -136,6 +139,9 @@
             android:name="com.example.giftgiver.features.images.presentation.ImageFragment"
             android:label="ImageFragment">
             <argument
+                android:name="title"
+                app:argType="string" />
+            <argument
                 android:name="imageURL"
                 app:argType="string" />
         </fragment>
@@ -145,8 +151,10 @@
         app:startDestination="@id/cart">
         <fragment
             android:id="@+id/imageFragment"
-            android:name="com.example.giftgiver.features.images.presentation.ImageFragment"
-            android:label="ImageFragment">
+            android:name="com.example.giftgiver.features.images.presentation.ImageFragment">
+            <argument
+                android:name="title"
+                app:argType="string" />
             <argument
                 android:name="imageURL"
                 app:argType="string" />

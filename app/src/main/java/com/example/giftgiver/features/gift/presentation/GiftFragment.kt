@@ -77,7 +77,15 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
             tvDesc.movementMethod = ScrollingMovementMethod()
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc
-            ivPhoto.setOnClickListener { gift.imageUrl?.let { url -> viewImage(ivPhoto, url) } }
+            ivPhoto.setOnClickListener {
+                gift.imageUrl?.let { url ->
+                    viewImage(
+                        ivPhoto,
+                        url,
+                        getString(R.string.gift_image, gift.name)
+                    )
+                }
+            }
             ivPhoto.load(gift.imageUrl)
             imageViewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
                 ivPhoto.setImageBitmap(it)
@@ -91,9 +99,9 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         giftViewModel.changeGift(newName, newDesc, newImageFile)
     }
 
-    private fun viewImage(transitionView: View, photo: String) {
+    private fun viewImage(transitionView: View, photo: String, title: String) {
         val action =
-            GiftFragmentDirections.actionGiftFragmentToImageFragment(photo)
+            GiftFragmentDirections.actionGiftFragmentToImageFragment(title, photo)
         findNavController().navigate(
             action, FragmentNavigator.Extras.Builder()
                 .addSharedElements(

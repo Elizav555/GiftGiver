@@ -69,7 +69,6 @@
     <string name="material_calendar_today_button">Today</string>
     <string name="material_calendar_positive_button">OK</string>
     <string name="material_calendar_negative_button">Cancel</string>
-    <string name="gift_image">Gift image</string>
     <string name="for_gift">For :</string>
     <string name="unknownViewModel">Unknown ViewModel class</string>
     <string name="notific_channel_desc">Notification channel for calendar</string>
@@ -86,4 +85,6 @@
     <string name="action_cannot_undone">This action cannot be undone</string>
     <string name="delete_gift">Delete this gift?</string>
     <string name="trans">transaction</string>
+    <string name="avatar_image">%1$s\'s avatar</string>
+    <string name="gift_image">%1$s\'s image</string>
 </resources>
