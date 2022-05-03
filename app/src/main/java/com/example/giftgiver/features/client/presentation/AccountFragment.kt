@@ -90,8 +90,18 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         }
     }
 
+    private fun viewImage(photo: String) {
+        isAdapterInited = false
+        val action =
+            AccountFragmentDirections.actionAccountToImageFragment(photo)
+        findNavController().navigate(action)
+    }
+
     private fun bindInfo(userInfo: UserInfo) =
         with(userInfo) {
+            binding.ivAvatar.setOnClickListener {
+                viewImage(photo)
+            }
             binding.ivAvatar.load(photo)
             binding.tvBirthdate.text = bdate
             binding.tvInfo.text = about

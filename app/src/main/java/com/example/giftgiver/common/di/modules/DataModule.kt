@@ -1,7 +1,5 @@
 package com.example.giftgiver.common.di.modules
 
-import com.example.giftgiver.common.db.fileStorage.ImageStorage
-import com.example.giftgiver.common.db.fileStorage.ImageStorageImpl
 import com.example.giftgiver.common.db.room.RoomMapper
 import com.example.giftgiver.features.calendar.data.holidaysApi.HolidayApi
 import com.example.giftgiver.features.calendar.data.holidaysApi.HolidayRepositoryImpl
@@ -20,6 +18,8 @@ import com.example.giftgiver.features.gift.data.GiftsRepositoryImpl
 import com.example.giftgiver.features.gift.data.room.GiftDao
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
+import com.example.giftgiver.features.images.data.ImageStorageImpl
+import com.example.giftgiver.features.images.domain.ImageStorage
 import com.example.giftgiver.features.start.data.AuthRepositoryImpl
 import com.example.giftgiver.features.start.domain.AuthRepository
 import com.example.giftgiver.features.user.data.FriendsStateRepImpl

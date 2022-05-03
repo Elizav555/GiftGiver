@@ -5,13 +5,14 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.*
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.images.presentation.ImageViewModel
 import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.viewModel
 import java.io.File
@@ -71,6 +72,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
             tvDesc.movementMethod = ScrollingMovementMethod()
             (activity as MainActivity).supportActionBar?.title = gift.name
             tvDesc.text = gift.desc
+            ivPhoto.setOnClickListener { gift.imageUrl?.let { url -> viewImage(url) } }
             ivPhoto.load(gift.imageUrl)
             imageViewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
                 ivPhoto.setImageBitmap(it)
@@ -82,6 +84,12 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
 
     private fun changeGift(newName: String, newDesc: String, newImageFile: File?) {
         giftViewModel.changeGift(newName, newDesc, newImageFile)
+    }
+
+    private fun viewImage(photo: String) {
+        val action =
+            GiftFragmentDirections.actionGiftFragmentToImageFragment(photo)
+        findNavController().navigate(action)
     }
 
     private fun initObservers() {

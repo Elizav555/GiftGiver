@@ -14,6 +14,14 @@
         android:id="@+id/ng_friends"
         app:startDestination="@id/friends_list">
         <fragment
+            android:id="@+id/imageFragment"
+            android:name="com.example.giftgiver.features.images.presentation.ImageFragment"
+            android:label="ImageFragment">
+            <argument
+                android:name="imageURL"
+                app:argType="string" />
+        </fragment>
+        <fragment
             android:id="@+id/friends_list"
             android:name="com.example.giftgiver.features.user.presentation.FriendsListFragment"
             android:label="@string/friends_list"
@@ -32,6 +40,9 @@
             <action
                 android:id="@+id/action_user_fragment_to_friendsWishlistFragment"
                 app:destination="@id/friendsWishlistFragment" />
+            <action
+                android:id="@+id/action_user_fragment_to_imageFragment"
+                app:destination="@id/imageFragment" />
         </fragment>
         <fragment
             android:id="@+id/giftFragment"
@@ -43,6 +54,9 @@
             <argument
                 android:name="userId"
                 app:argType="long" />
+            <action
+                android:id="@+id/action_GiftFragment_to_imageFragment"
+                app:destination="@id/imageFragment" />
         </fragment>
         <fragment
             android:id="@+id/friendsWishlistFragment"
@@ -88,6 +102,9 @@
             <action
                 android:id="@+id/action_account_to_startFragment"
                 app:destination="@id/startFragment" />
+            <action
+                android:id="@+id/action_account_to_imageFragment"
+                app:destination="@id/imageFragment" />
         </fragment>
         <fragment
             android:id="@+id/myWishlistFragment"
@@ -110,10 +127,30 @@
             <argument
                 android:name="giftId"
                 app:argType="string" />
+            <action
+                android:id="@+id/action_GiftFragment_to_imageFragment"
+                app:destination="@id/imageFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/imageFragment"
+            android:name="com.example.giftgiver.features.images.presentation.ImageFragment"
+            android:label="ImageFragment">
+            <argument
+                android:name="imageURL"
+                app:argType="string" />
         </fragment>
     </navigation>
-    <navigation android:id="@+id/ng_cart"
+    <navigation
+        android:id="@+id/ng_cart"
         app:startDestination="@id/cart">
+        <fragment
+            android:id="@+id/imageFragment"
+            android:name="com.example.giftgiver.features.images.presentation.ImageFragment"
+            android:label="ImageFragment">
+            <argument
+                android:name="imageURL"
+                app:argType="string" />
+        </fragment>
         <fragment
             android:id="@+id/cart"
             android:name="com.example.giftgiver.features.cart.presentation.CartFragment"
@@ -133,6 +170,9 @@
             <argument
                 android:name="userId"
                 app:argType="long" />
+            <action
+                android:id="@+id/action_GiftFragment_to_imageFragment"
+                app:destination="@id/imageFragment" />
         </fragment>
     </navigation>
 </navigation>

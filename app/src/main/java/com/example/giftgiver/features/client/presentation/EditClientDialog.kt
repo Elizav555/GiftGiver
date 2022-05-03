@@ -13,11 +13,11 @@ import androidx.fragment.app.viewModels
 import coil.api.load
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.DialogEditClientBinding
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.event.data.DateMapper
+import com.example.giftgiver.features.images.presentation.ImageViewModel
 import dagger.android.support.DaggerDialogFragment
 import java.io.File
 import javax.inject.Inject

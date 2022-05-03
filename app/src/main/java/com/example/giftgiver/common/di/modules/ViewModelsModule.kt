@@ -2,7 +2,6 @@ package com.example.giftgiver.common.di.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.MainViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.common.viewModels.ViewModelKey
@@ -10,6 +9,7 @@ import com.example.giftgiver.features.calendar.presentation.CalendarViewModel
 import com.example.giftgiver.features.cart.presentation.CartViewModel
 import com.example.giftgiver.features.client.presentation.ClientViewModel
 import com.example.giftgiver.features.gift.presentation.GiftViewModel
+import com.example.giftgiver.features.images.presentation.ImageViewModel
 import com.example.giftgiver.features.start.presentation.StartViewModel
 import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
 import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel

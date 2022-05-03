@@ -1,10 +1,10 @@
 package com.example.giftgiver.features.gift.domain.useCases
 
 import android.util.Log
-import com.example.giftgiver.common.db.fileStorage.ImageStorage
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
+import com.example.giftgiver.features.images.domain.ImageStorage
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CoroutineDispatcher

@@ -13,10 +13,10 @@ import androidx.fragment.app.viewModels
 import coil.api.load
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
-import com.example.giftgiver.common.viewModels.ImageViewModel
 import com.example.giftgiver.common.viewModels.ViewModelFactory
 import com.example.giftgiver.databinding.DialogAddGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
+import com.example.giftgiver.features.images.presentation.ImageViewModel
 import dagger.android.support.DaggerDialogFragment
 import java.io.File
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.example.giftgiver.common.viewModels
+package com.example.giftgiver.features.images.presentation
 
 import android.content.Context
 import android.graphics.Bitmap

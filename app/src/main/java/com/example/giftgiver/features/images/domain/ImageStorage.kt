@@ -1,4 +1,4 @@
-package com.example.giftgiver.common.db.fileStorage
+package com.example.giftgiver.features.images.domain
 
 import android.net.Uri
 import java.io.File

@@ -8,6 +8,7 @@ import com.example.giftgiver.features.client.presentation.AccountFragment
 import com.example.giftgiver.features.client.presentation.EditClientDialog
 import com.example.giftgiver.features.gift.presentation.AddGiftDialog
 import com.example.giftgiver.features.gift.presentation.GiftFragment
+import com.example.giftgiver.features.images.presentation.ImageFragment
 import com.example.giftgiver.features.start.presentation.StartFragment
 import com.example.giftgiver.features.user.presentation.FriendsListFragment
 import com.example.giftgiver.features.user.presentation.UserFragment
@@ -24,6 +25,9 @@ abstract class UIModule {
 
     @ContributesAndroidInjector
     abstract fun contributeCartFragment(): CartFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeImageFragment(): ImageFragment
 
     @ContributesAndroidInjector
     abstract fun contributeCalendarFragment(): CalendarFragment

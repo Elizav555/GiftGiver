@@ -1,7 +1,8 @@
-package com.example.giftgiver.common.db.fileStorage
+package com.example.giftgiver.features.images.data
 
 import android.net.Uri
 import android.util.Log
+import com.example.giftgiver.features.images.domain.ImageStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
 import kotlin.coroutines.resume
