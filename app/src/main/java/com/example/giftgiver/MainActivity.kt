@@ -38,7 +38,7 @@ class MainActivity : DaggerAppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.account,
-                R.id.ng_friends,
+                R.id.friends_list,
                 R.id.calendar,
                 R.id.cart
             )
