@@ -49,32 +49,25 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
     }
 
     private fun configSearch() {
-        val searchView = (activity as? MainActivity)?.findViewById<SearchView>(R.id.search_view)
-        searchView?.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    val friendsName = friends.map { friend -> friend.name }
-                    if (friendsName.contains(query)) {
-                        userAdapter.filter.filter(query)
+        (activity as? MainActivity)?.findViewById<SearchView>(R.id.search_view)?.apply {
+            setOnQueryTextListener(
+                object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        val friendsName = friends.map { friend -> friend.name }
+                        if (friendsName.contains(query)) {
+                            userAdapter.filter.filter(query)
+                        }
+                        binding.recyclerView.scrollToPosition(0)
+                        return false
                     }
-                    binding.recyclerView.scrollToPosition(0)
-                    return false
-                }
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    userAdapter.filter.filter(newText)
-                    return false
+                    override fun onQueryTextChange(newText: String): Boolean {
+                        userAdapter.filter.filter(newText)
+                        return false
+                    }
                 }
-            }
-        )
-        searchView?.setOnSearchClickListener {
-            (activity as? MainActivity)?.changeToolbarTitle("")
-            if (isFav)
-                filterFriends()
-        }
-        searchView?.setOnCloseListener {
-            (activity as? MainActivity)?.changeToolbarTitle("Friends List")
-            false
+            )
+            setOnSearchClickListener { if (isFav) filterFriends() }
         }
     }
 
