@@ -48,7 +48,7 @@ class MainActivity : DaggerAppCompatActivity() {
         navView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
         actionBar?.setHomeButtonEnabled(true)
-        navView.setOnItemReselectedListener { }
+         //navView.setOnItemReselectedListener { }
     }
 
     fun changeToolbar(appBarConfig: AppBarConfig) {
