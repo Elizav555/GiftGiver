@@ -67,7 +67,11 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
                 }
             }
         )
-        searchView?.setOnSearchClickListener { (activity as? MainActivity)?.changeToolbarTitle("") }
+        searchView?.setOnSearchClickListener {
+            (activity as? MainActivity)?.changeToolbarTitle("")
+            if (isFav)
+                filterFriends()
+        }
         searchView?.setOnCloseListener {
             (activity as? MainActivity)?.changeToolbarTitle("Friends List")
             false
