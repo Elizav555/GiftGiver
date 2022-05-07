@@ -3,8 +3,10 @@ package com.example.giftgiver.features.user.presentation
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import android.view.*
-import androidx.core.content.res.ResourcesCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
@@ -21,9 +23,7 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.autoCleared
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
 
 class UserFragment : BaseFragment(R.layout.fragment_user) {
     private lateinit var binding: FragmentUserBinding
@@ -51,46 +51,29 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
         userViewModel.getFriend(args.vkId)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_fav, menu)
-        isFav = userViewModel.checkIsFav() == true
-        changeFavBtn(menu.findItem(R.id.fav))
+    private fun changeFavBtn() {
+        val favRes = if (isFav) {
+            R.drawable.ic_fav_filed
+        } else R.drawable.ic_fav_border
+        (activity as? MainActivity)?.changeToolbar(setAppBarConfig(favRes))
     }
 
-    private fun changeFavBtn(item: MenuItem) {
-        item.icon = if (isFav) {
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_fav_filed,
-                null
-            )
-        } else ResourcesCompat.getDrawable(
-            resources,
-            R.drawable.ic_fav_border,
-            null
-        )
-    }
+    private fun setAppBarConfig(@DrawableRes favDrawableRes: Int) = AppBarConfig(
+        firstButton = AppBarButton(favDrawableRes, ::onFavClick)
+    )
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.fav -> {
-                onFavClick(item)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun onFavClick(item: MenuItem) {
+    private fun onFavClick() {
         isFav = !isFav
-        changeFavBtn(item)
+        changeFavBtn()
         userViewModel.updateFavFriends(isFav)
     }
 
     private fun bindInfo(info: UserInfo) {
         with(binding) {
             setHasOptionsMenu(true)
-            (activity as MainActivity).supportActionBar?.title = info.name
+            isFav = userViewModel.checkIsFav() == true
+            changeFavBtn()
+            (activity as MainActivity).changeToolbarTitle(info.name)
             ivAvatar.load(info.photo)
             ivAvatar.setOnClickListener {
                 viewImage(

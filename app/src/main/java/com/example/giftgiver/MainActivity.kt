@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.giftgiver.common.viewModels.MainViewModel
 import com.example.giftgiver.databinding.ActivityMainBinding
+import com.example.giftgiver.utils.AppBarConfig
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.api.sdk.VK
 import dagger.android.support.DaggerAppCompatActivity
@@ -33,6 +34,7 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.bottomNav
+        setSupportActionBar(binding.toolbar)
         val navController =
             binding.fragmentContainerView.getFragment<NavHostFragment>().navController
         val appBarConfiguration = AppBarConfiguration(
@@ -47,6 +49,31 @@ class MainActivity : DaggerAppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         actionBar?.setHomeButtonEnabled(true)
         navView.setOnItemReselectedListener { }
+    }
+
+    fun changeToolbar(appBarConfig: AppBarConfig) {
+        with(binding) {
+            appBarConfig.firstButton?.let { btn ->
+                ivFirst.setImageResource(btn.icon)
+                ivFirst.setOnClickListener {
+                    btn.action.invoke()
+                }
+                ivFirst.isVisible = true
+            } ?: run { ivFirst.isVisible = false }
+            appBarConfig.secondButton?.let { btn ->
+                ivSecond.setImageResource(btn.icon)
+                ivSecond.setOnClickListener {
+                    btn.action.invoke()
+                }
+                ivSecond.isVisible = true
+            } ?: run { ivSecond.isVisible = false }
+            appBarConfig.title?.let { tvToolbar.text = it }
+            searchView.isVisible = appBarConfig.hasSearch
+        }
+    }
+
+    fun changeToolbarTitle(title: String) {
+        binding.tvToolbar.text = title
     }
 
     private fun initObservers() {

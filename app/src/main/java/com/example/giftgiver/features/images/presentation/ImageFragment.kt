@@ -10,6 +10,7 @@ import coil.api.load
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentImageBinding
+import com.example.giftgiver.utils.AppBarConfig
 import com.example.giftgiver.utils.BaseFragment
 
 class ImageFragment : BaseFragment(R.layout.fragment_image) {
@@ -29,7 +30,11 @@ class ImageFragment : BaseFragment(R.layout.fragment_image) {
         with(binding) {
             imageView.load(link)
         }
-        (activity as MainActivity).supportActionBar?.title = args.title
+        (activity as? MainActivity)?.changeToolbar(
+            AppBarConfig(
+                title = args.title
+            )
+        )
         return binding.root
     }
 }

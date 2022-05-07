@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GiftGiver" parent="Theme.MaterialComponents.DayNight">
+    <style name="Theme.GiftGiver" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
@@ -16,9 +16,10 @@
     </style>
 
     <style name="MyActionBarTheme" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/primary_dark</item>
+        <item name="android:background">@color/primary</item>
         <item name="titleTextColor">@color/primary_text</item>
         <item name="titleCentered">true</item>
+        <item name="android:textColorSecondary">@color/primary_text</item>
     </style>
 
     <style name="BottomNavigationStyle">

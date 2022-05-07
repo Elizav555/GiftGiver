@@ -56,7 +56,6 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         (activity as MainActivity).setBottomNavigationVisibility(false)
         (activity as MainActivity).supportActionBar?.hide()
         initObservers()
-        setHasOptionsMenu(false)
         initVK()
         binding.btnLogin.setOnClickListener {
             initVK()

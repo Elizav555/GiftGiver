@@ -4,13 +4,18 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import com.applandeo.materialcalendarview.EventDay
+import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentCalendarBinding
 import com.example.giftgiver.features.event.domain.Event
 import com.example.giftgiver.features.event.presentation.AddEventDialog
+import com.example.giftgiver.utils.AppBarButton
+import com.example.giftgiver.utils.AppBarConfig
 import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.viewModel
 import java.text.DateFormat
@@ -32,29 +37,20 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_calendar, menu)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
+        (activity as? MainActivity)?.changeToolbar(
+            AppBarConfig(
+                firstButton = AppBarButton(R.drawable.ic_baseline_add_24, ::enterEditMode),
+                secondButton = AppBarButton(
+                    R.drawable.ic_baseline_delete_outline_24,
+                    ::showDeleteDialog
+                ),
+                title = "Calendar"
+            )
+        )
         initObservers()
         calendarViewModel.getHolidays()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.add -> {
-                enterEditMode()
-                true
-            }
-            R.id.delete -> {
-                showDeleteDialog()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun showDeleteDialog() {

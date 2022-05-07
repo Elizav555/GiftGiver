@@ -2,9 +2,11 @@ package com.example.giftgiver.features.user.presentation
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import androidx.appcompat.widget.SearchView
-import androidx.core.content.res.ResourcesCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -15,9 +17,7 @@ import com.example.giftgiver.databinding.FragmentFriendsListBinding
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.presentation.list.UserAdapter
 import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.autoCleared
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
 
 class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
@@ -39,17 +39,18 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(true)
-        setHasOptionsMenu(true)
         (activity as MainActivity).supportActionBar?.show()
+        (activity as? MainActivity)?.changeToolbar(
+            setAppBarConfig(R.drawable.ic_fav_border)
+        )
+        configSearch()
         initObservers()
         friendsViewModel.getFriends()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_filter, menu)
-        val searchViewItem = menu.findItem(R.id.searchView)
-        val searchView = searchViewItem.actionView as SearchView
-        searchView.setOnQueryTextListener(
+    private fun configSearch() {
+        val searchView = (activity as? MainActivity)?.findViewById<SearchView>(R.id.search_view)
+        searchView?.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     val friendsName = friends.map { friend -> friend.name }
@@ -66,34 +67,26 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
                 }
             }
         )
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.filter -> {
-                filterFriends(item)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        searchView?.setOnSearchClickListener { (activity as? MainActivity)?.changeToolbarTitle("") }
+        searchView?.setOnCloseListener {
+            (activity as? MainActivity)?.changeToolbarTitle("Friends List")
+            false
         }
     }
 
-    private fun filterFriends(item: MenuItem) {
+    private fun setAppBarConfig(@DrawableRes favDrawableRes: Int) = AppBarConfig(
+        firstButton = AppBarButton(favDrawableRes, ::filterFriends),
+        title = "Friends List",
+        hasSearch = true
+    )
+
+    private fun filterFriends() {
         isFav = !isFav
         friendsViewModel.filterFriends(isFav)
-        if (isFav) {
-            item.icon = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_fav_filed,
-                null
-            )
-        } else {
-            item.icon = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_fav_border,
-                null
-            )
-        }
+        val favRes = if (isFav) {
+            R.drawable.ic_fav_filed
+        } else R.drawable.ic_fav_border
+        (activity as? MainActivity)?.changeToolbar(setAppBarConfig(favRes))
     }
 
     private fun init() {

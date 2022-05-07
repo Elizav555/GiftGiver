@@ -16,6 +16,7 @@ import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
 import com.example.giftgiver.features.wishlist.presentation.viewModels.FriendsWishlistViewModel
+import com.example.giftgiver.utils.AppBarConfig
 import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.autoCleared
 import com.example.giftgiver.utils.viewModel
@@ -39,18 +40,23 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
+        (activity as? MainActivity)?.changeToolbar(
+            AppBarConfig(
+                title = "Wishlist"
+            )
+        )
         friendsWishlistViewModel.getFriend(args.friendVkId)
         wishlistIndex = args.wishlistIndex
     }
 
     private fun bindInfo(friend: Client) {
-        setHasOptionsMenu(false)
-        (activity as MainActivity).supportActionBar?.title =
+        (activity as MainActivity).changeToolbarTitle(
             getString(
                 R.string.friend_wishlist,
                 friend.info.name,
                 friend.wishlists[wishlistIndex].name
             )
+        )
     }
 
     private fun initAdapter(gifts: MutableList<Gift>) {
