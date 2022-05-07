@@ -9,7 +9,8 @@ import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
-import com.example.giftgiver.features.images.domain.ImageStorage
+import com.example.giftgiver.features.images.domain.AddImageUseCase
+import com.example.giftgiver.features.images.domain.DeleteImageUseCase
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 class GiftViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
-    private val imageStorage: ImageStorage,
+    private val addImageUseCase: AddImageUseCase,
+    private val deleteImageUseCase: DeleteImageUseCase,
     getClientState: GetClientStateUseCase,
     private val giftUseCase: GiftUseCase,
 ) : ViewModel() {
@@ -61,7 +63,9 @@ class GiftViewModel @Inject constructor(
             try {
                 clientGift?.let {
                     newImageFile?.let { file ->
-                        it.imageUrl = imageStorage.addImage(file).toString()
+                        val oldPhoto = it.imageUrl
+                        it.imageUrl = addImageUseCase(file).toString()
+                        oldPhoto?.let { url -> deleteImageUseCase(url) }
                     }
                     it.name = newName
                     it.desc = newDesc

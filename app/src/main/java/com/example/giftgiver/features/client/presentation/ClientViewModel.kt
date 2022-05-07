@@ -8,7 +8,8 @@ import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
-import com.example.giftgiver.features.images.domain.ImageStorage
+import com.example.giftgiver.features.images.domain.AddImageUseCase
+import com.example.giftgiver.features.images.domain.DeleteImageUseCase
 import com.example.giftgiver.features.start.domain.AuthUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
@@ -17,7 +18,8 @@ import java.io.File
 import javax.inject.Inject
 
 class ClientViewModel @Inject constructor(
-    private val imageStorage: ImageStorage,
+    private val addImageUseCase: AddImageUseCase,
+    private val deleteImageUseCase: DeleteImageUseCase,
     private val getClientState: GetClientStateUseCase,
     private val clientFBUseCase: ClientFBUseCase,
     private val authUseCase: AuthUseCase,
@@ -108,7 +110,9 @@ class ClientViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 imageFile?.let { file ->
-                    clientInfo?.photo = imageStorage.addImage(file).toString()
+                    var oldPhoto = clientInfo?.photo
+                    clientInfo?.photo = addImageUseCase(file).toString()
+                    oldPhoto?.let { deleteImageUseCase(it) }
                 }
                 clientInfo?.name = newName
                 clientInfo?.about = newInfo

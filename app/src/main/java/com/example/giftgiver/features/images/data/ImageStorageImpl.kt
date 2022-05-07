@@ -51,11 +51,15 @@ class ImageStorageImpl(
     override suspend fun deleteImage(url: String) {
         if (url == getDefaultUrl().toString())
             return
-        imagesRef.storage.getReferenceFromUrl(url).delete().addOnCompleteListener {
-            if (it.isSuccessful) {
-            } else {
-                Log.e("deleteImage", it.toString())
+        try {
+            imagesRef.storage.getReferenceFromUrl(url).delete().addOnCompleteListener {
+                if (it.isSuccessful) {
+                } else {
+                    Log.e("deleteImage", it.toString())
+                }
             }
+        } catch (error: Exception) {
+            Log.e("deleteImage", error.toString())
         }
     }
 }

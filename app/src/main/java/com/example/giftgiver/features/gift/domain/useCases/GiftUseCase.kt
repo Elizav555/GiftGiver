@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepOffline
 import com.example.giftgiver.features.gift.domain.repositories.GiftsRepository
-import com.example.giftgiver.features.images.domain.ImageStorage
+import com.example.giftgiver.features.images.domain.DeleteImageUseCase
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class GiftUseCase @Inject constructor(
     private val giftsRepository: GiftsRepository,
     private val giftsRepOffline: GiftsRepOffline,
-    private val imageStorage: ImageStorage,
+    private val deleteImageUseCase: DeleteImageUseCase,
     private val dispatcher: CoroutineDispatcher,
 ) {
     suspend fun addGift(vkId: Long, gift: Gift, wishlists: List<Wishlist>) =
@@ -28,7 +28,7 @@ class GiftUseCase @Inject constructor(
         withContext(dispatcher) {
             giftsRepository.deleteGift(vkId, gift, wishlists)
             giftsRepOffline.deleteGift(gift)
-            gift.imageUrl?.let { imageStorage.deleteImage(it) }
+            gift.imageUrl?.let { deleteImageUseCase(it) }
         }
 
     suspend fun updateGift(vkId: Long, gift: Gift) =
