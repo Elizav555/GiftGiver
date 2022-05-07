@@ -2,6 +2,7 @@ package com.example.giftgiver
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -15,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.giftgiver.common.viewModels.MainViewModel
 import com.example.giftgiver.databinding.ActivityMainBinding
 import com.example.giftgiver.utils.AppBarConfig
+import com.example.giftgiver.utils.ThemeUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.api.sdk.VK
 import dagger.android.support.DaggerAppCompatActivity
@@ -48,7 +50,14 @@ class MainActivity : DaggerAppCompatActivity() {
         navView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
         actionBar?.setHomeButtonEnabled(true)
-         //navView.setOnItemReselectedListener { }
+        ThemeUtils.isLight = !isNightMode()
+        //navView.setOnItemReselectedListener { }
+    }
+
+    private fun isNightMode(): Boolean {
+        val nightModeFlags: Int =
+            this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
     fun changeToolbar(appBarConfig: AppBarConfig) {
