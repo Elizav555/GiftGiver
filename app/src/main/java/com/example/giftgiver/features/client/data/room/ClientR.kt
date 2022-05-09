@@ -17,10 +17,7 @@ data class ClientR(
     @PrimaryKey(autoGenerate = false) val vkId: Long = 0,
     val favFriendsIds: List<String> = listOf(),
     @Embedded
-    val info: UserInfoR,
-    // val events: List<EventR> = listOf(),
-    // val giftsInfo: List<GiftInfoR> = listOf(),
-    // val wishlists: List<WishlistR> = listOf(),
+    val info: UserInfoR
 ) : Parcelable
 
 @Parcelize
