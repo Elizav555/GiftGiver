@@ -22,18 +22,25 @@ class ClientsRepOfflineImpl(
 
     override fun hasInternetConnection(): SharedFlow<Boolean> = hasInternetConnection
 
-    override suspend fun addClient(client: Client) {
-        val clientR = roomMapper.mapClientToRoom(client)
-        clientDao.save(clientR)
-    }
+    override suspend fun addClient(newClient: Client) =
+        with(roomMapper.mapClientToRoom(newClient)) {
+            clientDao.save(client)
+            events.forEach { clientDao.save(it) }
+            wishlists.forEach { clientDao.save(it) }
+            giftsInfo.forEach { clientDao.save(it) }
+        }
 
     override suspend fun deleteClient(client: Client) {
-        clientDao.deleteClient(roomMapper.mapClientToRoom(client))
+        clientDao.deleteClient(roomMapper.mapClientToRoom(client).client)
     }
 
-    override suspend fun updateClient(client: Client) {
-        clientDao.updateClient(roomMapper.mapClientToRoom(client))
-    }
+    override suspend fun updateClient(newClient: Client) =
+        with(roomMapper.mapClientToRoom(newClient)) {
+            clientDao.updateClient(client)
+            events.forEach { clientDao.updateEvent(it) }
+            wishlists.forEach { clientDao.updateWishlist(it) }
+            giftsInfo.forEach { clientDao.updateGiftInfo(it) }
+        }
 
     override suspend fun getClientByVkId(vkId: Long): Client? {
         hasInternet = false
