@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
@@ -25,6 +24,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
     private val cartViewModel: CartViewModel by viewModel()
     private var giftsForList: List<Gift>? = null
     private var isAdapterInited = false
+    var appBarChangesListener: OnAppBarChangesListener? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +36,8 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? MainActivity)?.changeToolbar(
+        appBarChangesListener = context as? OnAppBarChangesListener
+        appBarChangesListener?.onToolbarChanges(
             AppBarConfig(
                 firstButton = AppBarButton(
                     R.drawable.ic_baseline_delete_outline_24,

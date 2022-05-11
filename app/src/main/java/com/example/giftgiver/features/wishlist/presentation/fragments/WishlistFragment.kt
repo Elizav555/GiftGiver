@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.features.gift.domain.Gift
@@ -29,6 +28,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     private val args: WishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
     private var index = 0
+    var appBarChangesListener: OnAppBarChangesListener? = null
     private var isAdapterInited = false
     private val wishlistViewModel: WishlistViewModel by viewModel()
     override fun onCreateView(
@@ -43,7 +43,8 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        (activity as? MainActivity)?.changeToolbar(
+        appBarChangesListener = context as? OnAppBarChangesListener
+        appBarChangesListener?.onToolbarChanges(
             AppBarConfig(
                 firstButton = AppBarButton(R.drawable.ic_baseline_edit_24, ::enterEditMode),
                 title = "Wishlist"
@@ -59,7 +60,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
 
     private fun bindInfo(wishlist: Wishlist) {
         setHasOptionsMenu(true)
-        (activity as MainActivity).changeToolbarTitle(wishlist.name)
+        appBarChangesListener?.onTitleChanges(wishlist.name)
         binding.addItem.setOnClickListener {
             val submitAction = { newName: String, newDesc: String, newFile: File? ->
                 addGift(
@@ -148,7 +149,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
 
     fun changeWishlistName(newName: String) {
         wishlistViewModel.changeWishlistName(newName)
-        (activity as MainActivity).changeToolbarTitle(newName)
+        appBarChangesListener?.onTitleChanges(newName)
     }
 
     private fun initObservers() {

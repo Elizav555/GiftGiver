@@ -16,4 +16,9 @@ class AppModule {
 
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+//    @Provides
+//    @Nullable
+//    fun provideAppBarChangesListener(context: Context) =
+//        context as? OnAppBarChangesListener
 }

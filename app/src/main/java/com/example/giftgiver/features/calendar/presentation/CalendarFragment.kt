@@ -9,15 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import com.applandeo.materialcalendarview.EventDay
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentCalendarBinding
 import com.example.giftgiver.features.event.domain.Event
 import com.example.giftgiver.features.event.presentation.AddEventDialog
-import com.example.giftgiver.utils.AppBarButton
-import com.example.giftgiver.utils.AppBarConfig
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,6 +23,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     private val calendarViewModel: CalendarViewModel by viewModel()
     private var isCalendarInited = false
+    var appBarChangesListener: OnAppBarChangesListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +36,8 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? MainActivity)?.changeToolbar(
+        appBarChangesListener = context as? OnAppBarChangesListener
+        appBarChangesListener?.onToolbarChanges(
             AppBarConfig(
                 firstButton = AppBarButton(R.drawable.ic_baseline_add_24, ::enterEditMode),
                 secondButton = AppBarButton(

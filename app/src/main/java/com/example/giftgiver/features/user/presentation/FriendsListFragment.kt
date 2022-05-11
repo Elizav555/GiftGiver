@@ -26,6 +26,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
     private var isAdapterInited = false
     private val friendsViewModel: FriendsViewModel by viewModel()
     private var isFav = false
+    var appBarChangesListener: OnAppBarChangesListener? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +41,8 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(true)
         (activity as MainActivity).supportActionBar?.show()
-        (activity as? MainActivity)?.changeToolbar(
+        appBarChangesListener = context as? OnAppBarChangesListener
+        appBarChangesListener?.onToolbarChanges(
             setAppBarConfig(R.drawable.ic_fav_border)
         )
         configSearch()

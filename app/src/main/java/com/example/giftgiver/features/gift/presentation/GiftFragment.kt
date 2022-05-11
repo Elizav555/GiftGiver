@@ -12,15 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
 import coil.api.load
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.images.presentation.ImageViewModel
-import com.example.giftgiver.utils.AppBarButton
-import com.example.giftgiver.utils.AppBarConfig
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
 import java.io.File
 
 class GiftFragment : BaseFragment(R.layout.fragment_gift) {
@@ -29,6 +25,8 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     private var curGift: Gift? = null
     private val imageViewModel: ImageViewModel by viewModel()
     private val giftViewModel: GiftViewModel by viewModel()
+    var appBarChangesListener: OnAppBarChangesListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,6 +42,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
+        appBarChangesListener = context as? OnAppBarChangesListener
         val vkId = args.userId
         giftViewModel.checkUser(vkId)
         giftViewModel.getGift(vkId, args.giftId)
@@ -65,7 +64,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         with(binding) {
             tvForName.text = gift.forName
             tvDesc.movementMethod = ScrollingMovementMethod()
-            (activity as MainActivity).changeToolbarTitle(gift.name)
+            appBarChangesListener?.onTitleChanges(gift.name)
             tvDesc.text = gift.desc
             ivPhoto.setOnClickListener {
                 gift.imageUrl?.let { url ->
@@ -113,7 +112,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
             result.fold(onSuccess = {
                 val isClient = it
                 binding.groupFor.isVisible = !isClient
-                (activity as? MainActivity)?.changeToolbar(
+                appBarChangesListener?.onToolbarChanges(
                     AppBarConfig(
                         firstButton = if (isClient) AppBarButton(
                             R.drawable.ic_baseline_edit_24,

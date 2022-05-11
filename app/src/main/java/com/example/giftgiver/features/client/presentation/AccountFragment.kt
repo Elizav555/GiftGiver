@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import coil.api.load
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentAccountBinding
 import com.example.giftgiver.features.user.domain.UserInfo
@@ -30,6 +29,8 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private lateinit var binding: FragmentAccountBinding
     private var isAdapterInited = false
     private val clientViewModel: ClientViewModel by viewModel()
+    var appBarChangesListener: OnAppBarChangesListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,6 +40,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         sharedElementReturnTransition =
             TransitionInflater.from(requireContext())
                 .inflateTransition(android.R.transition.move)
+        appBarChangesListener = context as? OnAppBarChangesListener
         checkTheme()
         return binding.root
     }
@@ -67,7 +69,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         } else {
             R.drawable.ic_baseline_light_mode_24
         }
-        (activity as? MainActivity)?.changeToolbar(setAppBarConfig(themeRes))
+        appBarChangesListener?.onToolbarChanges(setAppBarConfig(themeRes))
     }
 
     private fun setAppBarConfig(@DrawableRes themeDrawableRes: Int) = AppBarConfig(

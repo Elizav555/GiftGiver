@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.giftgiver.common.viewModels.MainViewModel
 import com.example.giftgiver.databinding.ActivityMainBinding
 import com.example.giftgiver.utils.AppBarConfig
+import com.example.giftgiver.utils.OnAppBarChangesListener
 import com.example.giftgiver.utils.ThemeUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.api.sdk.VK
@@ -23,7 +24,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), OnAppBarChangesListener {
     private lateinit var binding: ActivityMainBinding
 
     @Inject
@@ -135,5 +136,30 @@ class MainActivity : DaggerAppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             context.startActivity(intent)
         }
+    }
+
+    override fun onToolbarChanges(appBarConfig: AppBarConfig) {
+        with(binding) {
+            appBarConfig.firstButton?.let { btn ->
+                ivFirst.setImageResource(btn.icon)
+                ivFirst.setOnClickListener {
+                    btn.action.invoke()
+                }
+                ivFirst.isVisible = true
+            } ?: run { ivFirst.isVisible = false }
+            appBarConfig.secondButton?.let { btn ->
+                ivSecond.setImageResource(btn.icon)
+                ivSecond.setOnClickListener {
+                    btn.action.invoke()
+                }
+                ivSecond.isVisible = true
+            } ?: run { ivSecond.isVisible = false }
+            appBarConfig.title?.let { tvToolbar.text = it }
+            searchView.isVisible = appBarConfig.hasSearch
+        }
+    }
+
+    override fun onTitleChanges(title: String) {
+        binding.tvToolbar.text = title
     }
 }

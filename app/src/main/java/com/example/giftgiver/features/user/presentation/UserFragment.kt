@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import coil.api.load
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentUserBinding
 import com.example.giftgiver.features.client.domain.Client
@@ -32,6 +31,8 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
     private var isFav = false
     private var friend: Client? = null
     private val userViewModel: UserViewModel by viewModel()
+    var appBarChangesListener: OnAppBarChangesListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +49,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
+        appBarChangesListener = context as? OnAppBarChangesListener
         userViewModel.getFriend(args.vkId)
     }
 
@@ -55,7 +57,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
         val favRes = if (isFav) {
             R.drawable.ic_fav_filed
         } else R.drawable.ic_fav_border
-        (activity as? MainActivity)?.changeToolbar(setAppBarConfig(favRes))
+        appBarChangesListener?.onToolbarChanges(setAppBarConfig(favRes))
     }
 
     private fun setAppBarConfig(@DrawableRes favDrawableRes: Int) = AppBarConfig(
@@ -73,7 +75,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             setHasOptionsMenu(true)
             isFav = userViewModel.checkIsFav() == true
             changeFavBtn()
-            (activity as MainActivity).changeToolbarTitle(info.name)
+            appBarChangesListener?.onTitleChanges(info.name)
             ivAvatar.load(info.photo)
             ivAvatar.setOnClickListener {
                 viewImage(
