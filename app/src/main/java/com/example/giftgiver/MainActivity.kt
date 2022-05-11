@@ -61,31 +61,6 @@ class MainActivity : DaggerAppCompatActivity(), OnAppBarChangesListener {
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
-    fun changeToolbar(appBarConfig: AppBarConfig) {
-        with(binding) {
-            appBarConfig.firstButton?.let { btn ->
-                ivFirst.setImageResource(btn.icon)
-                ivFirst.setOnClickListener {
-                    btn.action.invoke()
-                }
-                ivFirst.isVisible = true
-            } ?: run { ivFirst.isVisible = false }
-            appBarConfig.secondButton?.let { btn ->
-                ivSecond.setImageResource(btn.icon)
-                ivSecond.setOnClickListener {
-                    btn.action.invoke()
-                }
-                ivSecond.isVisible = true
-            } ?: run { ivSecond.isVisible = false }
-            appBarConfig.title?.let { tvToolbar.text = it }
-            searchView.isVisible = appBarConfig.hasSearch
-        }
-    }
-
-    fun changeToolbarTitle(title: String) {
-        binding.tvToolbar.text = title
-    }
-
     private fun initObservers() {
         lifecycleScope.launch {
             mainViewModel.isClientChanged().collect {

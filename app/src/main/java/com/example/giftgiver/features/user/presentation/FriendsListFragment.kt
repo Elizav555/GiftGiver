@@ -85,7 +85,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
         val favRes = if (isFav) {
             R.drawable.ic_fav_filed
         } else R.drawable.ic_fav_border
-        (activity as? MainActivity)?.changeToolbar(setAppBarConfig(favRes))
+        appBarChangesListener?.onToolbarChanges(setAppBarConfig(favRes))
     }
 
     private fun init() {
