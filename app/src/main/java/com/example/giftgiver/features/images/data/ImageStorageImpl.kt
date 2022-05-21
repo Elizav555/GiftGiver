@@ -10,7 +10,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class ImageStorageImpl(
-    private val storageRef: StorageReference,
+    storageRef: StorageReference,
 ) : ImageStorage {
     private val imagesRef = storageRef.child("images")
 

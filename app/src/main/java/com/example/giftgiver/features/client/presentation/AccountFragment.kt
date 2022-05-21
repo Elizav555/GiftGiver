@@ -4,8 +4,10 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import android.view.*
-import androidx.appcompat.app.AppCompatDelegate
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
@@ -19,16 +21,19 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.AddWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.autoCleared
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
 import java.io.File
+import javax.inject.Inject
 
 class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
     private var isAdapterInited = false
     private val clientViewModel: ClientViewModel by viewModel()
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,6 +43,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         sharedElementReturnTransition =
             TransitionInflater.from(requireContext())
                 .inflateTransition(android.R.transition.move)
+        checkTheme()
         return binding.root
     }
 
@@ -49,38 +55,36 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         bindAll()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_account, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.edit -> {
-                enterEditMode()
-                true
-            }
-            R.id.changeTheme -> {
-                changeTheme(item)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun enterEditMode() {
         clientViewModel.getClient()
             ?.let { EditClientDialog(it).show(childFragmentManager, "dialog") }
     }
 
-    private fun changeTheme(item: MenuItem) {
-        if (item.title == getString(R.string.change_to_dark)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+    private fun changeTheme() {
+        ThemeUtils.isLight = !ThemeUtils.isLight
+        checkTheme()
     }
+
+    private fun checkTheme() {
+        val themeRes = if (ThemeUtils.isLight) {
+            R.drawable.ic_baseline_dark_mode_24
+        } else {
+            R.drawable.ic_baseline_light_mode_24
+        }
+        appBarChangesListener.onToolbarChanges(setAppBarConfig(themeRes))
+    }
+
+    private fun setAppBarConfig(@DrawableRes themeDrawableRes: Int) = AppBarConfig(
+        firstButton = AppBarButton(R.drawable.ic_baseline_edit_24, ::enterEditMode),
+        secondButton = AppBarButton(
+            themeDrawableRes,
+            ::changeTheme
+        ),
+        title = "Account"
+    )
 
     private fun bindAll() {
         with(binding) {
-            setHasOptionsMenu(true)
             btnLogout.setOnClickListener {
                 clientViewModel.logout()
             }

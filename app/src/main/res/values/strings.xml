@@ -87,4 +87,5 @@
     <string name="trans">transaction</string>
     <string name="avatar_image">%1$s\'s avatar</string>
     <string name="gift_image">%1$s\'s image</string>
+    <string name="search_hint">Enter friend\'s name</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.giftgiver.common.di.modules
 
 import android.app.Application
 import android.content.Context
+import com.example.giftgiver.utils.OnAppBarChangesListener
+import com.example.giftgiver.utils.OnAppBarChangesListenerImpl
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,4 +18,8 @@ class AppModule {
 
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @Provides
+    @Singleton
+    fun provideAppBarChangesListener(): OnAppBarChangesListener = OnAppBarChangesListenerImpl()
 }

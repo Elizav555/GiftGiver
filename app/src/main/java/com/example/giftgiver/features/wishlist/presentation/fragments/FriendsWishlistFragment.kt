@@ -9,16 +9,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentFriendsWishlistBinding
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
 import com.example.giftgiver.features.wishlist.presentation.viewModels.FriendsWishlistViewModel
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.autoCleared
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
+import javax.inject.Inject
 
 class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist) {
     lateinit var binding: FragmentFriendsWishlistBinding
@@ -26,6 +24,9 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
     private var giftAdapter: GiftAdapter by autoCleared()
     private var wishlistIndex = -1
     private var isAdapterInited = false
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     private val friendsWishlistViewModel: FriendsWishlistViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,18 +40,23 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
+        appBarChangesListener.onToolbarChanges(
+            AppBarConfig(
+                title = "Wishlist"
+            )
+        )
         friendsWishlistViewModel.getFriend(args.friendVkId)
         wishlistIndex = args.wishlistIndex
     }
 
     private fun bindInfo(friend: Client) {
-        setHasOptionsMenu(false)
-        (activity as MainActivity).supportActionBar?.title =
+        appBarChangesListener.onTitleChanges(
             getString(
                 R.string.friend_wishlist,
                 friend.info.name,
                 friend.wishlists[wishlistIndex].name
             )
+        )
     }
 
     private fun initAdapter(gifts: MutableList<Gift>) {

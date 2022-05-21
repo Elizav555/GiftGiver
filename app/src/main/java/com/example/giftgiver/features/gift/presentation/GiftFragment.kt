@@ -3,21 +3,22 @@ package com.example.giftgiver.features.gift.presentation
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
 import coil.api.load
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.images.presentation.ImageViewModel
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
 import java.io.File
+import javax.inject.Inject
 
 class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     private lateinit var binding: FragmentGiftBinding
@@ -25,6 +26,10 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     private var curGift: Gift? = null
     private val imageViewModel: ImageViewModel by viewModel()
     private val giftViewModel: GiftViewModel by viewModel()
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,20 +50,6 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         giftViewModel.getGift(vkId, args.giftId)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_edit, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.edit -> {
-                enterEditMode()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun enterEditMode() {
         val submitAction = { newName: String, newDesc: String, newFile: File? ->
             changeGift(
@@ -75,7 +66,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         with(binding) {
             tvForName.text = gift.forName
             tvDesc.movementMethod = ScrollingMovementMethod()
-            (activity as MainActivity).supportActionBar?.title = gift.name
+            appBarChangesListener.onTitleChanges(gift.name)
             tvDesc.text = gift.desc
             ivPhoto.setOnClickListener {
                 gift.imageUrl?.let { url ->
@@ -123,7 +114,14 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
             result.fold(onSuccess = {
                 val isClient = it
                 binding.groupFor.isVisible = !isClient
-                setHasOptionsMenu(isClient)
+                appBarChangesListener.onToolbarChanges(
+                    AppBarConfig(
+                        firstButton = if (isClient) AppBarButton(
+                            R.drawable.ic_baseline_edit_24,
+                            ::enterEditMode
+                        ) else null,
+                    )
+                )
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })

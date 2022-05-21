@@ -7,14 +7,19 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
 import coil.api.load
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentImageBinding
+import com.example.giftgiver.utils.AppBarConfig
 import com.example.giftgiver.utils.BaseFragment
+import com.example.giftgiver.utils.OnAppBarChangesListener
+import javax.inject.Inject
 
 class ImageFragment : BaseFragment(R.layout.fragment_image) {
     private lateinit var binding: FragmentImageBinding
     private val args: ImageFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,11 +30,15 @@ class ImageFragment : BaseFragment(R.layout.fragment_image) {
             TransitionInflater.from(requireContext())
                 .inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = transition
-        var link = args.imageURL
+        val link = args.imageURL
         with(binding) {
             imageView.load(link)
         }
-        (activity as MainActivity).supportActionBar?.title = args.title
+        appBarChangesListener.onToolbarChanges(
+            AppBarConfig(
+                title = args.title
+            )
+        )
         return binding.root
     }
 }

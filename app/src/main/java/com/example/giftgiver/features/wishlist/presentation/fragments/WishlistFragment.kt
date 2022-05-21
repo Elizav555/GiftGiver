@@ -3,14 +3,15 @@ package com.example.giftgiver.features.wishlist.presentation.fragments
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentWishlistBinding
 import com.example.giftgiver.features.gift.domain.Gift
@@ -19,17 +20,18 @@ import com.example.giftgiver.features.gift.presentation.list.GiftAdapter
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.dialogs.ChangeWishlistDialog
 import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.MySwipeCallback
-import com.example.giftgiver.utils.autoCleared
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
 import java.io.File
+import javax.inject.Inject
 
 class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     lateinit var binding: FragmentWishlistBinding
     private val args: WishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
     private var index = 0
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     private var isAdapterInited = false
     private val wishlistViewModel: WishlistViewModel by viewModel()
     override fun onCreateView(
@@ -44,22 +46,14 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
+        appBarChangesListener.onToolbarChanges(
+            AppBarConfig(
+                firstButton = AppBarButton(R.drawable.ic_baseline_edit_24, ::enterEditMode),
+                title = "Wishlist"
+            )
+        )
         index = args.wishlistIndex
         wishlistViewModel.getWishlist(index)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_edit, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.edit -> {
-                enterEditMode()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun enterEditMode() {
@@ -68,7 +62,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
 
     private fun bindInfo(wishlist: Wishlist) {
         setHasOptionsMenu(true)
-        (activity as MainActivity).supportActionBar?.title = wishlist.name
+        appBarChangesListener.onTitleChanges(wishlist.name)
         binding.addItem.setOnClickListener {
             val submitAction = { newName: String, newDesc: String, newFile: File? ->
                 addGift(
@@ -157,7 +151,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
 
     fun changeWishlistName(newName: String) {
         wishlistViewModel.changeWishlistName(newName)
-        (activity as MainActivity).supportActionBar?.title = newName
+        appBarChangesListener.onTitleChanges(newName)
     }
 
     private fun initObservers() {

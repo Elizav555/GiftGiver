@@ -20,7 +20,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class ClientsRepositoryImpl(
     private val fbMapper: FBMapper,
-    private val firebaseFirestore: FirebaseFirestore
+    firebaseFirestore: FirebaseFirestore
 ) : ClientsRepository {
     private val clients = firebaseFirestore.collection(CLIENTS)
     private var curClientChanged = false

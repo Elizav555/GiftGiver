@@ -3,7 +3,9 @@ package com.example.giftgiver.features.cart.presentation
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,10 +16,8 @@ import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.forCart.GiftCartAdapter
-import com.example.giftgiver.utils.BaseFragment
-import com.example.giftgiver.utils.MySwipeCallback
-import com.example.giftgiver.utils.autoCleared
-import com.example.giftgiver.utils.viewModel
+import com.example.giftgiver.utils.*
+import javax.inject.Inject
 
 class CartFragment : BaseFragment(R.layout.fragment_cart) {
     private lateinit var binding: FragmentCartBinding
@@ -25,6 +25,9 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
     private val cartViewModel: CartViewModel by viewModel()
     private var giftsForList: List<Gift>? = null
     private var isAdapterInited = false
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,23 +39,17 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
+        appBarChangesListener.onToolbarChanges(
+            AppBarConfig(
+                firstButton = AppBarButton(
+                    R.drawable.ic_baseline_delete_outline_24,
+                    ::showDeleteDialog
+                ),
+                title = "Cart"
+            )
+        )
         initObservers()
         cartViewModel.getGifts()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_delete, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.delete -> {
-                showDeleteDialog(item)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun deleteAll() = cartViewModel.deleteAll()
@@ -142,7 +139,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         }
     }
 
-    private fun showDeleteDialog(item: MenuItem) {
+    private fun showDeleteDialog() {
         activity?.let {
             val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
                 .setTitle(getString(R.string.deleteGiftsTitle))

@@ -10,7 +10,7 @@ import com.example.giftgiver.features.user.domain.UserInfo
 
 class UserAdapter(
     private val action: (id: Long) -> Unit,
-    private val friends: List<UserInfo>,
+    private var friends: List<UserInfo>,
 ) : ListAdapter<UserInfo, UserHolder>(UserDiffItemCallback()), Filterable {
 
     override fun onCreateViewHolder(
