@@ -18,7 +18,7 @@ class NotificationService(private val context: Context) {
     }
     private val pattern = arrayOf(100L, 200L, 0, 400L).toLongArray()
 
-    fun showNotification(title: String) {
+    fun showNotification(body: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel(
                 CHANNEL_ID,
@@ -42,7 +42,7 @@ class NotificationService(private val context: Context) {
             .setContentTitle(context.getString(R.string.important_day))
             .setShowWhen(true)
             .setAutoCancel(true)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(title))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setSound(ringURI)
 
