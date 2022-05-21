@@ -15,7 +15,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ClientR(
     @PrimaryKey(autoGenerate = false) val vkId: Long = 0,
-    val favFriendsIds: List<String> = listOf(),
+    val favFriendsIds: List<Long> = listOf(),
     @Embedded
     val info: UserInfoR
 ) : Parcelable

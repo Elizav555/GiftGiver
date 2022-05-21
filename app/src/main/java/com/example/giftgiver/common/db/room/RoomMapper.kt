@@ -19,12 +19,12 @@ import java.text.NumberFormat
 import  java.util.Calendar as JavaCalendar
 
 class RoomMapper {
-    private val numberFormat: NumberFormat = NumberFormat.getInstance()
+//    private val numberFormat: NumberFormat = NumberFormat.getInstance()
     fun mapClientToRoom(client: Client): ClientFullR {
         return with(client) {
             val clientR = ClientR(
                 vkId = vkId,
-                favFriendsIds = favFriendsIds.map { numberFormat.format(it) },
+                favFriendsIds = favFriendsIds,
                 info = mapUserInfoToRoom(info),
             )
             ClientFullR(
@@ -83,9 +83,7 @@ class RoomMapper {
             vkId = client.vkId,
             calendar = Calendar(events.map { mapEventFromRoom(it) } as MutableList<Event>),
             cart = Cart(giftsInfo.map { mapGiftInfoFromRoom(it) } as MutableList<GiftInfo>),
-            favFriendsIds = client.favFriendsIds.map {
-                numberFormat.parse(it)
-            } as? MutableList<Long> ?: mutableListOf(),
+            favFriendsIds = client.favFriendsIds as MutableList<Long>,
             wishlists = wishlists.map { mapWishlistFromRoom(it) } as MutableList<Wishlist>,
             info = mapUserInfoFromRoom(client.info, client.vkId)
         )

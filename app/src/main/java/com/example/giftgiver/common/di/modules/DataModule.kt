@@ -56,9 +56,10 @@ class DataModule {
     @Singleton
     fun provideClientsOfflineRepository(
         clientDao: ClientDao,
-        roomMapper: RoomMapper
+        roomMapper: RoomMapper,
+        clientsRepository: ClientsRepository,
     ): ClientsRepOffline =
-        ClientsRepOfflineImpl(clientDao, roomMapper)
+        ClientsRepOfflineImpl(clientDao, roomMapper, clientsRepository)
 
     @Provides
     @Singleton
