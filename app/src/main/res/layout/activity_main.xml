@@ -66,6 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="26dp"
                     android:layout_marginEnd="16dp"
+                    android:paddingStart="16dp"
                     android:queryHint="@string/search_hint"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
