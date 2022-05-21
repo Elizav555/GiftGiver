@@ -18,6 +18,7 @@ import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.images.presentation.ImageViewModel
 import com.example.giftgiver.utils.*
 import java.io.File
+import javax.inject.Inject
 
 class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     private lateinit var binding: FragmentGiftBinding
@@ -25,7 +26,9 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     private var curGift: Gift? = null
     private val imageViewModel: ImageViewModel by viewModel()
     private val giftViewModel: GiftViewModel by viewModel()
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +45,6 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        appBarChangesListener = context as? OnAppBarChangesListener
         val vkId = args.userId
         giftViewModel.checkUser(vkId)
         giftViewModel.getGift(vkId, args.giftId)
@@ -64,7 +66,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         with(binding) {
             tvForName.text = gift.forName
             tvDesc.movementMethod = ScrollingMovementMethod()
-            appBarChangesListener?.onTitleChanges(gift.name)
+            appBarChangesListener.onTitleChanges(gift.name)
             tvDesc.text = gift.desc
             ivPhoto.setOnClickListener {
                 gift.imageUrl?.let { url ->
@@ -112,7 +114,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
             result.fold(onSuccess = {
                 val isClient = it
                 binding.groupFor.isVisible = !isClient
-                appBarChangesListener?.onToolbarChanges(
+                appBarChangesListener.onToolbarChanges(
                     AppBarConfig(
                         firstButton = if (isClient) AppBarButton(
                             R.drawable.ic_baseline_edit_24,

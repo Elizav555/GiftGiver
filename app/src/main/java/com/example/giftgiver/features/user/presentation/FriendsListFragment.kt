@@ -18,6 +18,7 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.presentation.list.UserAdapter
 import com.example.giftgiver.features.user.presentation.viewModels.FriendsViewModel
 import com.example.giftgiver.utils.*
+import javax.inject.Inject
 
 class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
@@ -26,7 +27,9 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
     private var isAdapterInited = false
     private val friendsViewModel: FriendsViewModel by viewModel()
     private var isFav = false
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,8 +44,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(true)
         (activity as MainActivity).supportActionBar?.show()
-        appBarChangesListener = context as? OnAppBarChangesListener
-        appBarChangesListener?.onToolbarChanges(
+        appBarChangesListener.onToolbarChanges(
             setAppBarConfig(R.drawable.ic_fav_border)
         )
         configSearch()
@@ -85,7 +87,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
         val favRes = if (isFav) {
             R.drawable.ic_fav_filed
         } else R.drawable.ic_fav_border
-        appBarChangesListener?.onToolbarChanges(setAppBarConfig(favRes))
+        appBarChangesListener.onToolbarChanges(setAppBarConfig(favRes))
     }
 
     private fun init() {

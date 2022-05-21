@@ -110,7 +110,7 @@ class ClientViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 imageFile?.let { file ->
-                    var oldPhoto = clientInfo?.photo
+                    val oldPhoto = clientInfo?.photo
                     clientInfo?.photo = addImageUseCase(file).toString()
                     oldPhoto?.let { deleteImageUseCase(it) }
                 }

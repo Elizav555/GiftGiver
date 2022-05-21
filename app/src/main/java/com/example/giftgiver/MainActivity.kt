@@ -24,18 +24,21 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity(), OnAppBarChangesListener {
+class MainActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var onAppBarChangesListener: OnAppBarChangesListener
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val mainViewModel: MainViewModel by viewModels { viewModelFactory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initObservers()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initObservers()
         val navView: BottomNavigationView = binding.bottomNav
         setSupportActionBar(binding.toolbar)
         val navController =
@@ -89,6 +92,16 @@ class MainActivity : DaggerAppCompatActivity(), OnAppBarChangesListener {
                 }
             }
         }
+        lifecycleScope.launch {
+            onAppBarChangesListener.observeToolbarChanges().collect {
+                handleToolbarChanges(it)
+            }
+        }
+        lifecycleScope.launch {
+            onAppBarChangesListener.observeTitleChanges().collect {
+                handleTitleChanges(it)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -105,15 +118,7 @@ class MainActivity : DaggerAppCompatActivity(), OnAppBarChangesListener {
             .show()
     }
 
-    companion object {
-        fun startFrom(context: Context) {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            context.startActivity(intent)
-        }
-    }
-
-    override fun onToolbarChanges(appBarConfig: AppBarConfig) {
+    private fun handleToolbarChanges(appBarConfig: AppBarConfig) {
         with(binding) {
             appBarConfig.firstButton?.let { btn ->
                 ivFirst.setImageResource(btn.icon)
@@ -134,7 +139,15 @@ class MainActivity : DaggerAppCompatActivity(), OnAppBarChangesListener {
         }
     }
 
-    override fun onTitleChanges(title: String) {
+    private fun handleTitleChanges(title: String) {
         binding.tvToolbar.text = title
+    }
+
+    companion object {
+        fun startFrom(context: Context) {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            context.startActivity(intent)
+        }
     }
 }

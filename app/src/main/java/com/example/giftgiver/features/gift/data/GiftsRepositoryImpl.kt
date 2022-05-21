@@ -19,7 +19,7 @@ const val GIFTS = "gifts"
 
 class GiftsRepositoryImpl(
     private val fbMapper: FBMapper,
-    private val firebaseFirestore: FirebaseFirestore,
+    firebaseFirestore: FirebaseFirestore,
 ) : GiftsRepository {
 
     private val clients = firebaseFirestore.collection(CLIENTS)

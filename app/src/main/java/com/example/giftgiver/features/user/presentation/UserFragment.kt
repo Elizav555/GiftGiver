@@ -23,6 +23,7 @@ import com.example.giftgiver.features.user.presentation.viewModels.UserViewModel
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
 import com.example.giftgiver.utils.*
+import javax.inject.Inject
 
 class UserFragment : BaseFragment(R.layout.fragment_user) {
     private lateinit var binding: FragmentUserBinding
@@ -31,7 +32,9 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
     private var isFav = false
     private var friend: Client? = null
     private val userViewModel: UserViewModel by viewModel()
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +52,6 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        appBarChangesListener = context as? OnAppBarChangesListener
         userViewModel.getFriend(args.vkId)
     }
 
@@ -57,7 +59,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
         val favRes = if (isFav) {
             R.drawable.ic_fav_filed
         } else R.drawable.ic_fav_border
-        appBarChangesListener?.onToolbarChanges(setAppBarConfig(favRes))
+        appBarChangesListener.onToolbarChanges(setAppBarConfig(favRes))
     }
 
     private fun setAppBarConfig(@DrawableRes favDrawableRes: Int) = AppBarConfig(
@@ -75,7 +77,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             setHasOptionsMenu(true)
             isFav = userViewModel.checkIsFav() == true
             changeFavBtn()
-            appBarChangesListener?.onTitleChanges(info.name)
+            appBarChangesListener.onTitleChanges(info.name)
             ivAvatar.load(info.photo)
             ivAvatar.setOnClickListener {
                 viewImage(

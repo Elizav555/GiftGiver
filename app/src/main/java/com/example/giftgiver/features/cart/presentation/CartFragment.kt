@@ -17,6 +17,7 @@ import com.example.giftgiver.databinding.FragmentCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.presentation.list.forCart.GiftCartAdapter
 import com.example.giftgiver.utils.*
+import javax.inject.Inject
 
 class CartFragment : BaseFragment(R.layout.fragment_cart) {
     private lateinit var binding: FragmentCartBinding
@@ -24,7 +25,9 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
     private val cartViewModel: CartViewModel by viewModel()
     private var giftsForList: List<Gift>? = null
     private var isAdapterInited = false
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,8 +39,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        appBarChangesListener = context as? OnAppBarChangesListener
-        appBarChangesListener?.onToolbarChanges(
+        appBarChangesListener.onToolbarChanges(
             AppBarConfig(
                 firstButton = AppBarButton(
                     R.drawable.ic_baseline_delete_outline_24,

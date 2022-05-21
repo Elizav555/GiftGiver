@@ -50,7 +50,7 @@ class CalendarViewModel @Inject constructor(
     fun getHolidays() = viewModelScope.launch {
         try {
             clientHolidays = client?.calendar?.events ?: mutableListOf()
-            if (clientHolidays.isNullOrEmpty()) {
+            if (clientHolidays.isEmpty()) {
                 getDefaultHolidays()
             }
             _holidays.value = Result.success(clientHolidays)

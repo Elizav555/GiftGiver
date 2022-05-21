@@ -12,11 +12,14 @@ import com.example.giftgiver.databinding.FragmentImageBinding
 import com.example.giftgiver.utils.AppBarConfig
 import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.OnAppBarChangesListener
+import javax.inject.Inject
 
 class ImageFragment : BaseFragment(R.layout.fragment_image) {
     private lateinit var binding: FragmentImageBinding
     private val args: ImageFragmentArgs by navArgs()
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,12 +30,11 @@ class ImageFragment : BaseFragment(R.layout.fragment_image) {
             TransitionInflater.from(requireContext())
                 .inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = transition
-        var link = args.imageURL
+        val link = args.imageURL
         with(binding) {
             imageView.load(link)
         }
-        appBarChangesListener = context as? OnAppBarChangesListener
-        appBarChangesListener?.onToolbarChanges(
+        appBarChangesListener.onToolbarChanges(
             AppBarConfig(
                 title = args.title
             )

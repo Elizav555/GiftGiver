@@ -17,13 +17,16 @@ import com.example.giftgiver.utils.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     private lateinit var binding: FragmentCalendarBinding
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     private val calendarViewModel: CalendarViewModel by viewModel()
     private var isCalendarInited = false
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,8 +39,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        appBarChangesListener = context as? OnAppBarChangesListener
-        appBarChangesListener?.onToolbarChanges(
+        appBarChangesListener.onToolbarChanges(
             AppBarConfig(
                 firstButton = AppBarButton(R.drawable.ic_baseline_add_24, ::enterEditMode),
                 secondButton = AppBarButton(

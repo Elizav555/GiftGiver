@@ -23,13 +23,16 @@ import com.example.giftgiver.features.wishlist.presentation.dialogs.AddWishlistD
 import com.example.giftgiver.features.wishlist.presentation.list.WishlistAdapter
 import com.example.giftgiver.utils.*
 import java.io.File
+import javax.inject.Inject
 
 class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private var wishlistAdapter: WishlistAdapter by autoCleared()
     private lateinit var binding: FragmentAccountBinding
     private var isAdapterInited = false
     private val clientViewModel: ClientViewModel by viewModel()
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +43,6 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         sharedElementReturnTransition =
             TransitionInflater.from(requireContext())
                 .inflateTransition(android.R.transition.move)
-        appBarChangesListener = context as? OnAppBarChangesListener
         checkTheme()
         return binding.root
     }
@@ -69,7 +71,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         } else {
             R.drawable.ic_baseline_light_mode_24
         }
-        appBarChangesListener?.onToolbarChanges(setAppBarConfig(themeRes))
+        appBarChangesListener.onToolbarChanges(setAppBarConfig(themeRes))
     }
 
     private fun setAppBarConfig(@DrawableRes themeDrawableRes: Int) = AppBarConfig(

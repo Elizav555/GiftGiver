@@ -22,13 +22,16 @@ import com.example.giftgiver.features.wishlist.presentation.dialogs.ChangeWishli
 import com.example.giftgiver.features.wishlist.presentation.viewModels.WishlistViewModel
 import com.example.giftgiver.utils.*
 import java.io.File
+import javax.inject.Inject
 
 class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     lateinit var binding: FragmentWishlistBinding
     private val args: WishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
     private var index = 0
-    var appBarChangesListener: OnAppBarChangesListener? = null
+
+    @Inject
+    lateinit var appBarChangesListener: OnAppBarChangesListener
     private var isAdapterInited = false
     private val wishlistViewModel: WishlistViewModel by viewModel()
     override fun onCreateView(
@@ -43,8 +46,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        appBarChangesListener = context as? OnAppBarChangesListener
-        appBarChangesListener?.onToolbarChanges(
+        appBarChangesListener.onToolbarChanges(
             AppBarConfig(
                 firstButton = AppBarButton(R.drawable.ic_baseline_edit_24, ::enterEditMode),
                 title = "Wishlist"
@@ -60,7 +62,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
 
     private fun bindInfo(wishlist: Wishlist) {
         setHasOptionsMenu(true)
-        appBarChangesListener?.onTitleChanges(wishlist.name)
+        appBarChangesListener.onTitleChanges(wishlist.name)
         binding.addItem.setOnClickListener {
             val submitAction = { newName: String, newDesc: String, newFile: File? ->
                 addGift(
@@ -149,7 +151,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
 
     fun changeWishlistName(newName: String) {
         wishlistViewModel.changeWishlistName(newName)
-        appBarChangesListener?.onTitleChanges(newName)
+        appBarChangesListener.onTitleChanges(newName)
     }
 
     private fun initObservers() {
