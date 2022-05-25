@@ -20,7 +20,8 @@ class StartViewModel @Inject constructor(
     private val loadFriends: LoadFriendsUseCase,
     private val addClientUseCase: AddClientUseCase,
     private val getClientState: GetClientStateUseCase,
-    private val authUseCase: AuthUseCase
+    private val authUseCase: AuthUseCase,
+    private val clientStateUseCase: GetClientStateUseCase,
 ) : ViewModel() {
 
     private var _client: MutableLiveData<Result<Client?>> = MutableLiveData()
@@ -40,6 +41,10 @@ class StartViewModel @Inject constructor(
 
     fun addClient(clientToAdd: Client) = viewModelScope.launch {
         addClientUseCase(clientToAdd)
+    }
+
+    fun addClientState(clientToAdd: Client) = viewModelScope.launch {
+        clientStateUseCase.addClient(clientToAdd)
     }
 
     fun loadFriends() = viewModelScope.launch {

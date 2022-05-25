@@ -64,16 +64,18 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
 
     private fun getClientState(clientFromFB: Client?) {
         lifecycleScope.launch {
-            clientFromFB?.let { startViewModel.addClient(clientFromFB) } ?: lifecycleScope.launch {
-                val vkId = VK.getUserId().value
-                val client = Client(
-                    vkId,
-                    Calendar(),
-                    info = loadUserInfoVK.loadInfo(vkId),
-                    cart = Cart()
-                )
-                startViewModel.addClient(client)
-            }
+            clientFromFB?.let { startViewModel.addClientState(clientFromFB) }
+                ?: lifecycleScope.launch {
+                    val vkId = VK.getUserId().value
+                    val client = Client(
+                        vkId,
+                        Calendar(),
+                        info = loadUserInfoVK.loadInfo(vkId),
+                        cart = Cart()
+                    )
+                    startViewModel.addClient(client)
+                    startViewModel.addClientState(client)
+                }
         }
     }
 
