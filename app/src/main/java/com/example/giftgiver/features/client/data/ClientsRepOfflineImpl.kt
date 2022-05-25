@@ -43,8 +43,10 @@ class ClientsRepOfflineImpl(
         }
 
     override suspend fun getClientByVkId(vkId: Long): Client? {
-        hasInternet = false
-        hasInternetConnection.tryEmit(hasInternet)
+        if (hasInternet) {
+            hasInternet = false
+            hasInternetConnection.tryEmit(hasInternet)
+        }
         return clientDao.getClientByVkId(vkId)
             ?.let { roomMapper.mapClientFromRoom(it) }
     }
