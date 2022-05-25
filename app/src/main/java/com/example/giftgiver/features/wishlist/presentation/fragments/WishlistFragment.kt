@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -117,6 +118,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     }
 
     private fun addGift(newName: String, newDesc: String, newImageFile: File?) {
+        setLoading(true)
         wishlistViewModel.addGift(newName, newDesc, newImageFile)
     }
 
@@ -154,6 +156,11 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
         appBarChangesListener.onTitleChanges(newName)
     }
 
+    private fun setLoading(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
+        binding.groupGifts.isVisible = !isLoading
+    }
+
     private fun initObservers() {
         wishlistViewModel.wishlist.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = { wishlist ->
@@ -167,6 +174,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
         }
         wishlistViewModel.gifts.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
+                setLoading(false)
                 if (isAdapterInited) {
                     giftAdapter.submitList(it)
                 } else {
