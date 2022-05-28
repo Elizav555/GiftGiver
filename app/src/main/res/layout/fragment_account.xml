@@ -74,6 +74,8 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/border_red"
         android:padding="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:text="@string/my_wishlists"
         android:textColor="@color/primary_text"
         android:textSize="24sp"

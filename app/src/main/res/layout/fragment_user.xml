@@ -86,6 +86,8 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/border_red"
         android:padding="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:text="@string/wishlists_points"
         android:textColor="@color/primary_text"
         android:textSize="24sp"
