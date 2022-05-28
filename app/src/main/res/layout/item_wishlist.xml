@@ -17,7 +17,6 @@
         android:textAlignment="textStart"
         android:textColor="@color/primary_text"
         android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_delete"
         app:layout_constraintStart_toStartOf="parent"
