@@ -33,8 +33,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
             when (result) {
                 is VKAuthenticationResult.Success -> {
-                    binding.btnLogin.isVisible = false
-                    binding.progressBar.isVisible = true
+                    handleLoading(true)
                     startViewModel.getClient(VK.getUserId().value)
                 }
                 is VKAuthenticationResult.Failed -> (activity as? MainActivity)?.makeToast("Authentication error")
@@ -83,8 +82,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         if (VK.isLoggedIn()) {
             startViewModel.getClient(VK.getUserId().value)
         } else {
-            binding.progressBar.isVisible = false
-            binding.btnLogin.isVisible = true
+            handleLoading(false)
             activityLauncher.launch(
                 arrayListOf(
                     VKScope.FRIENDS,
@@ -107,8 +105,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
             result.fold(onSuccess = {
                 getClientState(it)
                 it?.let {
-                    binding.btnLogin.isVisible = false
-                    binding.progressBar.isVisible = true
+                    handleLoading(true)
                     startViewModel.login()
                     (activity as? MainActivity)?.makeToast("Welcome!")
                     startViewModel.loadFriends()
@@ -124,5 +121,10 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                 Log.e("asd", it.message.toString())
             })
         }
+    }
+
+    private fun handleLoading(isLoading: Boolean) {
+        binding.groupLogin.isVisible = !isLoading
+        binding.progressBar.isVisible = isLoading
     }
 }

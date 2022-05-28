@@ -127,6 +127,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         cartViewModel.gifts.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
                 giftsForList = it
+                handleEmpty(it.isEmpty())
                 if (isAdapterInited) {
                     giftAdapter.submitList(it)
                 } else {
@@ -137,6 +138,10 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
                 Log.e("asd", it.message.toString())
             })
         }
+    }
+
+    private fun handleEmpty(isEmpty: Boolean) {
+        binding.groupEmpty.isVisible = isEmpty
     }
 
     private fun showDeleteDialog() {

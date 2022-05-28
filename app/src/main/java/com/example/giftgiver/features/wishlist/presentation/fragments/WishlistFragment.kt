@@ -175,6 +175,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
         wishlistViewModel.gifts.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
                 setLoading(false)
+                binding.groupEmpty.isVisible = it.isEmpty()
                 if (isAdapterInited) {
                     giftAdapter.submitList(it)
                 } else {

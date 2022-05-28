@@ -177,6 +177,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         clientViewModel.wishlists.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
                 val wishlists = it
+                binding.tvEmpty.isVisible = it.isEmpty()
                 if (isAdapterInited) {
                     wishlistAdapter.submitList(wishlists)
                 } else {

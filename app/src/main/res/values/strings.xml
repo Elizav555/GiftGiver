@@ -88,4 +88,7 @@
     <string name="avatar_image">%1$s\'s avatar</string>
     <string name="gift_image">%1$s\'s image</string>
     <string name="search_hint">Enter friend\'s name</string>
+    <string name="cart_is_empty">Your cart is empty</string>
+    <string name="no_wishlists_here_yet">No wishlists here yet</string>
+    <string name="wishlist_is_empty_now">Wishlist is empty now</string>
 </resources>

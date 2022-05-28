@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -105,6 +106,7 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
         }
         friendsWishlistViewModel.gifts.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
+                binding.groupEmpty.isVisible = it.isEmpty()
                 if (isAdapterInited) {
                     giftAdapter.submitList(it)
                 } else {

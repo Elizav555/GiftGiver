@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".features.client.presentation.AccountFragment">
 
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/no_wishlists_here_yet"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/rv_wishlists"
+        app:layout_constraintStart_toStartOf="@+id/rv_wishlists"
+        app:layout_constraintTop_toTopOf="@+id/rv_wishlists" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"

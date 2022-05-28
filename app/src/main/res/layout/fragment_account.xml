@@ -138,4 +138,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
         tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/no_wishlists_here_yet"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/rv_wishlists"
+        app:layout_constraintStart_toStartOf="@+id/rv_wishlists"
+        app:layout_constraintTop_toTopOf="@+id/rv_wishlists"
+        tools:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

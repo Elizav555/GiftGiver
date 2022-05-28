@@ -111,6 +111,7 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             )
             addItemDecoration(dividerItemDecoration)
         }
+        binding.tvEmpty.isVisible = wishlists.isEmpty()
         wishlistAdapter.submitList(wishlists)
     }
 
