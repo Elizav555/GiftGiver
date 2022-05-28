@@ -38,7 +38,7 @@
     <string name="enter_event_desc">Enter event desc</string>
     <string name="info">Info</string>
     <string name="birth_date">Birth Date</string>
-    <string name="pick_from_gallery">Pick from gallery</string>
+    <string name="pick_from_gallery">From gallery</string>
     <string name="take_picture">Take picture</string>
     <string name="ups_friends_list_is_empty">Ups, friends list is empty</string>
     <string name="for_someone">For someone</string>

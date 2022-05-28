@@ -28,8 +28,9 @@
         android:maxLines="2"
         android:scrollbars="vertical"
         android:text="@string/name"
+        android:textAlignment="textEnd"
         android:textColor="@color/primary_text"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_avatar"
@@ -43,7 +44,7 @@
         android:layout_marginEnd="16dp"
         android:text="@string/birth_date"
         android:textColor="@color/primary_text"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_name" />
@@ -69,7 +70,7 @@
         android:id="@+id/tv_wishlists"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/border_red"
         android:padding="8dp"
@@ -84,9 +85,9 @@
         android:id="@+id/rv_wishlists"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_wishlists"
@@ -94,17 +95,19 @@
 
     <Button
         android:id="@+id/btn_logout"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="80dp"
-        android:backgroundTint="@color/accent"
         android:text="@string/logout"
+        android:textColor="@color/primary_text"
         android:textSize="16sp"
         android:textStyle="bold"
         app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:strokeColor="@color/accent" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/views"
@@ -119,8 +122,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/add"
+        android:textStyle="bold"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_avatar" />
