@@ -13,12 +13,14 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="appBarLayoutStyle">@style/MyActionBarTheme</item>
+        <item name="fontFamily">@font/overpass</item>
     </style>
 
     <style name="MyActionBarTheme" parent="Widget.AppCompat.ActionBar">
         <item name="android:backgroundTint">@color/primary_light</item>
         <item name="titleTextColor">@color/primary_text</item>
         <item name="titleCentered">true</item>
+        <item name="fontFamily">@font/overpass</item>
     </style>
 
     <style name="BottomNavigationStyle">
@@ -27,6 +29,7 @@
         <item name="itemIconTint">@drawable/nav_color_state</item>
         <item name="itemTextColor">@color/accent</item>
         <item name="labelBehavior">floating</item>
+        <item name="fontFamily">@font/overpass</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
@@ -41,6 +44,7 @@
     <style name="MyDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:backgroundTint">@color/inputsBack</item>
+        <item name="fontFamily">@font/overpass</item>
     </style>
 
     <style name="MaterialAnimations" parent="@style/Theme.AppCompat.Light.NoActionBar">
