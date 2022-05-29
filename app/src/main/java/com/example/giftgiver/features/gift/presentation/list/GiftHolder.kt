@@ -10,7 +10,7 @@ import com.example.giftgiver.features.gift.domain.GiftInfo
 class GiftHolder(
     private val binding: ItemGiftBinding,
     private val action: (id: String) -> Unit,
-    private val checkedFunc: ((Int, Boolean) -> Unit)?,
+    private val checkedFunc: ((String, Boolean) -> Unit)?,
     private val clientCart: List<GiftInfo>? = null
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -25,7 +25,8 @@ class GiftHolder(
                     checkBox.isClickable = clientCart?.any { it.giftId == gift.id } == true
                 }
                 checkBox.setOnCheckedChangeListener { _, isChecked ->
-                    it(adapterPosition, isChecked)
+                    it(gift.id, isChecked)
+                    checkBox.setOnCheckedChangeListener(null)
                 }
             }
             tvName.text = gift.name
