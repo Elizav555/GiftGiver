@@ -2,15 +2,18 @@ package com.example.giftgiver.features.user.domain.useCases
 
 import android.util.Log
 import com.example.giftgiver.features.client.domain.repositories.ClientsRepOffline
+import com.example.giftgiver.utils.AppDispatchers
 import com.google.firebase.firestore.FirebaseFirestoreException
+import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 import javax.inject.Inject
 
 class LoadFriendsUseCase @Inject constructor(
     private val loadFriendsVK: LoadFriendsVK,
     private val clientsRepOffline: ClientsRepOffline,
+    private val dispatchers: AppDispatchers
 ) {
-    suspend operator fun invoke(vkId: Long, filter: Boolean = true) = run {
+    suspend operator fun invoke(vkId: Long, filter: Boolean = true) = withContext(dispatchers.io) {
         try {
             loadFriendsVK.loadFriends(vkId, filter)
         } catch (ex: Exception) {

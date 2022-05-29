@@ -8,16 +8,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.giftgiver.utils.AppDispatchers
 import com.example.giftgiver.utils.copyInputStreamToFile
 import com.example.giftgiver.utils.correctRotation
 import com.example.giftgiver.utils.getTempFile
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
-class ImageViewModel @Inject constructor(private val context: Context) : ViewModel() {
+class ImageViewModel @Inject constructor(
+    private val context: Context,
+    private val dispatchers: AppDispatchers
+) : ViewModel() {
 
     private val _imageFileLiveData = MutableLiveData<File?>()
     val imageFileLiveData: LiveData<File?> = _imageFileLiveData
@@ -42,16 +46,19 @@ class ImageViewModel @Inject constructor(private val context: Context) : ViewMod
     }
 
     private suspend fun convertUriToFile(uri: Uri): File? {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatchers.io) {
             try {
-                val inputStream = context
-                    .contentResolver
-                    .openInputStream(uri)
-                return@withContext context
-                    .getTempFile().apply {
-                        copyInputStreamToFile(inputStream)
-                        correctRotation()
-                    }
+                val fileDeferred = async {
+                    val inputStream = context
+                        .contentResolver
+                        .openInputStream(uri)
+                    return@async context
+                        .getTempFile().apply {
+                            copyInputStreamToFile(inputStream)
+                            correctRotation()
+                        }
+                }
+                fileDeferred.await()
             } catch (e: Exception) {
                 e.printStackTrace()
                 return@withContext null
@@ -60,13 +67,13 @@ class ImageViewModel @Inject constructor(private val context: Context) : ViewMod
     }
 
     private suspend fun processImageFile(file: File) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatchers.io) {
             file.correctRotation()
         }
     }
 
     private suspend fun convertFileToBitmap(file: File?): Bitmap? {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatchers.io) {
             try {
                 return@withContext BitmapFactory.decodeFile(file?.absolutePath)
             } catch (e: Exception) {

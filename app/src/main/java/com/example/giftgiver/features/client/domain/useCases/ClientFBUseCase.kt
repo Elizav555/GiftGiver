@@ -5,36 +5,36 @@ import com.example.giftgiver.features.event.domain.Event
 import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.wishlist.domain.Wishlist
-import kotlinx.coroutines.CoroutineDispatcher
+import com.example.giftgiver.utils.AppDispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ClientFBUseCase @Inject constructor(
     private val clientsRepository: ClientsRepository,
-    private val dispatcher: CoroutineDispatcher,
+    private val dispatcher: AppDispatchers,
 ) {
     suspend fun updateCart(vkId: Long, giftsIds: List<GiftInfo>) =
-        withContext(dispatcher) {
+        withContext(dispatcher.io) {
             clientsRepository.updateCart(vkId, giftsIds)
         }
 
     suspend fun updateCalendar(vkId: Long, events: List<Event>) =
-        withContext(dispatcher) {
+        withContext(dispatcher.io) {
             clientsRepository.updateCalendar(vkId, events)
         }
 
     suspend fun updateInfo(vkId: Long, info: UserInfo) =
-        withContext(dispatcher) {
+        withContext(dispatcher.io) {
             clientsRepository.updateInfo(vkId, info)
         }
 
     suspend fun updateFavFriends(vkId: Long, friendsIds: List<Long>) =
-        withContext(dispatcher) {
+        withContext(dispatcher.io) {
             clientsRepository.updateFavFriends(vkId, friendsIds)
         }
 
     suspend fun updateWishlists(vkId: Long, wishlists: List<Wishlist>) =
-        withContext(dispatcher) {
+        withContext(dispatcher.io) {
             clientsRepository.updateWishlists(vkId, wishlists)
         }
 }
