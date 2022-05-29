@@ -86,7 +86,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
     private fun bindAll() {
         with(binding) {
             btnLogout.setOnClickListener {
-                clientViewModel.logout()
+                logout()
             }
             btnAdd.setOnClickListener {
                 AddWishlistDialog()
@@ -96,6 +96,21 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
             tvName.movementMethod = ScrollingMovementMethod()
             progressBar.isVisible = false
             views.isVisible = true
+        }
+    }
+
+    private fun logout(){
+        activity?.let {
+            val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
+                .setTitle(getString(R.string.dialog_logout))
+                .setPositiveButton(R.string.logout) { _, _ ->
+                    clientViewModel.logout()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog?.cancel()
+                }
+                .create()
+            dialog.show()
         }
     }
 
