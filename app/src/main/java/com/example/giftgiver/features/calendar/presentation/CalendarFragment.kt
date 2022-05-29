@@ -74,9 +74,10 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
             displayEventsDesc(holidays.filter { it.date == event.calendar })
         }
         bindEvents(holidays)
-        val currentEvents = holidays.filter { it.date == calendar.selectedDates.first() }
+        val currentDate = calendar.selectedDates.first()
+        val currentEvents = holidays.filter { it.date == currentDate }
         displayEventsDesc(currentEvents)
-        tvDate.text = dateFormat.format(calendar.currentPageDate.time)
+        tvDate.text = dateFormat.format(currentDate.time)
     }
 
     private fun bindEvents(holidays: List<Event>) = with(binding) {
