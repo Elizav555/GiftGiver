@@ -1,7 +1,7 @@
 package com.example.giftgiver.features.user.presentation.list
 
 import androidx.recyclerview.widget.RecyclerView
-import coil.api.load
+import coil.load
 import com.example.giftgiver.databinding.ItemUserBinding
 import com.example.giftgiver.features.user.domain.UserInfo
 

@@ -1,5 +1,6 @@
 package com.example.giftgiver.features.start.presentation
 
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import coil.ImageLoader
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.load
 import com.example.giftgiver.MainActivity
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentStartBinding
@@ -16,6 +21,7 @@ import com.example.giftgiver.features.cart.domain.Cart
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
 import com.example.giftgiver.utils.BaseFragment
+import com.example.giftgiver.utils.ThemeUtils
 import com.example.giftgiver.utils.viewModel
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthenticationResult
@@ -36,7 +42,11 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                     handleLoading(true)
                     startViewModel.getClient(VK.getUserId().value)
                 }
-                is VKAuthenticationResult.Failed -> (activity as? MainActivity)?.makeToast("Authentication error")
+                is VKAuthenticationResult.Failed -> (activity as? MainActivity)?.makeToast(
+                    getString(
+                        R.string.auth_error
+                    )
+                )
             }
         }
 
@@ -54,6 +64,20 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).setBottomNavigationVisibility(false)
         (activity as MainActivity).supportActionBar?.hide()
+        val imageLoader = ImageLoader.Builder(requireContext())
+            .components {
+                if (SDK_INT >= 28) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+            }.build()
+        val gifRes = if (ThemeUtils.isLight) {
+            R.drawable.gift_gif
+        } else {
+            R.drawable.gift_gif_night
+        }
+        binding.ivGiftGif.load(gifRes, imageLoader)
         initObservers()
         initVK()
         binding.btnLogin.setOnClickListener {
@@ -107,7 +131,6 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                 it?.let {
                     handleLoading(true)
                     startViewModel.login()
-                    (activity as? MainActivity)?.makeToast("Welcome!")
                     startViewModel.loadFriends()
                 }
             }, onFailure = {
@@ -125,6 +148,6 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
 
     private fun handleLoading(isLoading: Boolean) {
         binding.groupLogin.isVisible = !isLoading
-        binding.progressBar.isVisible = isLoading
+        binding.ivGiftGif.isVisible = isLoading
     }
 }

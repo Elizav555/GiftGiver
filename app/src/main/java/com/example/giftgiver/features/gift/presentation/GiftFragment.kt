@@ -11,7 +11,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
-import coil.api.load
+import coil.load
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift

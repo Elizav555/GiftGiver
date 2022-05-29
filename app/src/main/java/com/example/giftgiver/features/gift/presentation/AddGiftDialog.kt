@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import coil.api.load
+import coil.load
 import com.example.giftgiver.BuildConfig
 import com.example.giftgiver.R
 import com.example.giftgiver.common.viewModels.ViewModelFactory

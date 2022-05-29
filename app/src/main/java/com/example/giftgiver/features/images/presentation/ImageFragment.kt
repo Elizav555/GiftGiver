@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
-import coil.api.load
+import coil.load
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentImageBinding
 import com.example.giftgiver.utils.AppBarConfig

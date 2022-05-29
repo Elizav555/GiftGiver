@@ -91,4 +91,5 @@
     <string name="cart_is_empty">Your cart is empty</string>
     <string name="no_wishlists_here_yet">No wishlists here yet</string>
     <string name="wishlist_is_empty_now">Wishlist is empty now</string>
+    <string name="auth_error">Authentication error</string>
 </resources>

@@ -2,7 +2,7 @@ package com.example.giftgiver.features.gift.presentation.list.forCart
 
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import coil.api.load
+import coil.load
 import com.example.giftgiver.databinding.ItemGiftCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo

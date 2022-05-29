@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/primary_light</item>
         <item name="colorOnSecondary">@color/secondary_text</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/inputsBack</item>
         <!-- Customize your theme here. -->
         <item name="appBarLayoutStyle">@style/MyActionBarTheme</item>
         <item name="fontFamily">@font/overpass</item>
@@ -24,7 +24,7 @@
     </style>
 
     <style name="BottomNavigationStyle">
-        <item name="itemBackground">@color/primary_light</item>
+        <item name="itemBackground">@color/black</item>
         <item name="labelVisibilityMode">selected</item>
         <item name="itemIconTint">@drawable/nav_color_state</item>
         <item name="itemTextColor">@color/accent</item>

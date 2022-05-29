@@ -75,11 +75,7 @@ class MainActivity : DaggerAppCompatActivity() {
         lifecycleScope.launch {
             mainViewModel.hasInternetConnection().collect {
                 if (!it) {
-                    Toast.makeText(
-                        applicationContext,
-                        getString(R.string.no_internet),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    makeToast(getString(R.string.no_internet))
                 }
             }
         }

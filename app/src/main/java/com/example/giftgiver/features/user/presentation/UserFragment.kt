@@ -14,7 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
-import coil.api.load
+import coil.load
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentUserBinding
 import com.example.giftgiver.features.client.domain.Client
