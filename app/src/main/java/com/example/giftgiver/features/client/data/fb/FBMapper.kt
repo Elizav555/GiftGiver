@@ -16,12 +16,12 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
 import com.example.giftgiver.features.wishlist.data.fb.WishlistFB
 import com.example.giftgiver.features.wishlist.domain.Wishlist
-import kotlinx.coroutines.CoroutineDispatcher
+import com.example.giftgiver.utils.AppDispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar as JavaUtilCalendar
 
 class FBMapper(
-    private val dispatcher: CoroutineDispatcher,
+    private val dispatcher: AppDispatchers,
     private val loadUserInfoVK: LoadUserInfoVK,
 ) {
     fun mapClientToFB(client: Client) = with(client) {
@@ -111,7 +111,7 @@ class FBMapper(
                     about,
                 )
             }
-        } ?: withContext(dispatcher) { loadUserInfoVK.loadInfo(vkId) }
+        } ?: withContext(dispatcher.io) { loadUserInfoVK.loadInfo(vkId) }
         val calendar = JavaUtilCalendar.getInstance()
         return@with Client(
             vkId,

@@ -89,8 +89,14 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
         findNavController().navigate(action)
     }
 
-    private fun checkedFunc(pos: Int, isChecked: Boolean) {
-        friendsWishlistViewModel.checkedFunc(pos, isChecked, wishlistIndex)
+    private fun checkedFunc(giftId: String, isChecked: Boolean) {
+        setLoading(true)
+        friendsWishlistViewModel.checkedFunc(giftId, isChecked, wishlistIndex)
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
+        binding.rvGifts.isVisible = !isLoading
     }
 
     private fun initObservers() {
@@ -113,6 +119,7 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
                     isAdapterInited = true
                     initAdapter(it as MutableList<Gift>)
                 }
+                setLoading(false)
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })

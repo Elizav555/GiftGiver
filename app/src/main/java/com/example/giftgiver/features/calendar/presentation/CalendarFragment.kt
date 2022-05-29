@@ -23,7 +23,6 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     private lateinit var binding: FragmentCalendarBinding
     private val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     private val calendarViewModel: CalendarViewModel by viewModel()
-    private var isCalendarInited = false
 
     @Inject
     lateinit var appBarChangesListener: OnAppBarChangesListener
@@ -104,13 +103,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
     private fun initObservers() {
         calendarViewModel.holidays.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
-                if (isCalendarInited) {
-                    bindEvents(it)
-                } else {
-                    isCalendarInited = true
-                    bindCalendar(it)
-                    calendarViewModel.checkTomorrowEvents()
-                }
+                bindCalendar(it)
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })

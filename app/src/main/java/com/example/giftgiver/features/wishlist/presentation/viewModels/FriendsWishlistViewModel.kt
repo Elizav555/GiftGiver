@@ -44,40 +44,39 @@ class FriendsWishlistViewModel @Inject constructor(
         }
     }
 
-    fun checkedFunc(pos: Int, isChecked: Boolean, wishlistIndex: Int) = curFriend?.let { friend ->
-        viewModelScope.launch {
-            try {
-                val curGift =
-                    giftUseCase.getGift(friend.vkId, friend.wishlists[wishlistIndex].giftsIds[pos])
-                curGift?.let { gift ->
-                    gift.isChosen = isChecked
-                    if (isChecked) {
-                        client?.cart?.giftsInfo?.add(
-                            GiftInfo(
-                                gift.id,
-                                gift.forId,
-                                Calendar.getInstance()
+    fun checkedFunc(giftId: String, isChecked: Boolean, wishlistIndex: Int) =
+        curFriend?.let { friend ->
+            viewModelScope.launch {
+                try {
+                    val curGift =
+                        giftUseCase.getGift(friend.vkId, giftId)
+                    curGift?.let { gift ->
+                        gift.isChosen = isChecked
+                        if (isChecked) {
+                            client?.cart?.giftsInfo?.add(
+                                GiftInfo(
+                                    gift.id,
+                                    gift.forId,
+                                    Calendar.getInstance()
+                                )
                             )
-                        )
-                    } else {
-                        val giftToDelete =
-                            client?.cart?.giftsInfo?.firstOrNull { giftInfo -> giftInfo.giftId == gift.id }
-                        client?.cart?.giftsInfo?.remove(giftToDelete)
+                        } else {
+                            val giftToDelete =
+                                client?.cart?.giftsInfo?.firstOrNull { giftInfo -> giftInfo.giftId == gift.id }
+                            client?.cart?.giftsInfo?.remove(giftToDelete)
+                        }
+                        launch { giftUseCase.updateGift(friend.vkId, gift) }
+                        launch { updateClient() }
+                        _friend.value = Result.success(curFriend)
                     }
-                    giftUseCase.updateGift(friend.vkId, gift)
-                    updateClient()
-                    _friend.value = Result.success(curFriend)
+                } catch (ex: Exception) {
+                    _friend.value = Result.failure(ex)
                 }
-            } catch (ex: Exception) {
-                _friend.value = Result.failure(ex)
             }
         }
-    }
 
-    private fun updateClient() = viewModelScope.launch {
-        client?.let {
-            clientFBUseCase.updateCart(it.vkId, it.cart.giftsInfo)
-        }
+    private suspend fun updateClient() = client?.let {
+        clientFBUseCase.updateCart(it.vkId, it.cart.giftsInfo)
     }
 
     fun getClientCart(): List<GiftInfo> = client?.cart?.giftsInfo ?: listOf()

@@ -5,11 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.example.giftgiver.R
-import com.example.giftgiver.features.calendar.domain.notifications.NotifyWorker
 import com.example.giftgiver.features.calendar.domain.useCases.GetHolidaysUseCase
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
@@ -20,7 +16,6 @@ import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.domain.useCases.LoadFriendsUseCase
 import kotlinx.coroutines.launch
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CalendarViewModel @Inject constructor(
@@ -109,30 +104,5 @@ class CalendarViewModel @Inject constructor(
         } catch (ex: Exception) {
             _holidays.value = Result.failure(ex)
         }
-    }
-
-    fun checkTomorrowEvents() {
-        if (client?.isNotified == true)
-            return
-        val tomorrow = Calendar.getInstance()
-        tomorrow.add(Calendar.DAY_OF_MONTH, 1)
-        val tomorrowEvents =
-            clientHolidays.filter {
-                dateMapper.parseCalendarToString(it.date) == dateMapper.parseCalendarToString(
-                    tomorrow
-                )
-            }
-        if (tomorrowEvents.isNotEmpty()) {
-            val desc = tomorrowEvents.mapNotNull { it.desc }.joinToString(",\n")
-            scheduleNotification(desc)
-        }
-    }
-
-    private fun scheduleNotification(eventsDesc: String) {
-        val data = Data.Builder().putString(NotifyWorker.EVENT_NAME, eventsDesc).build()
-        val notificationWork = OneTimeWorkRequestBuilder<NotifyWorker>()
-            .setInitialDelay(15, TimeUnit.SECONDS).setInputData(data).build()
-        WorkManager.getInstance(context).enqueue(notificationWork)
-        client?.isNotified = true
     }
 }

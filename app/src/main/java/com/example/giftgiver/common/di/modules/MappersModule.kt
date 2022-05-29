@@ -6,9 +6,9 @@ import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.user.data.vk.VkMapper
 import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
+import com.example.giftgiver.utils.AppDispatchers
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -20,7 +20,7 @@ class MappersModule {
     @Provides
     @Singleton
     fun provideFBMapper(
-        dispatcher: CoroutineDispatcher,
+        dispatcher: AppDispatchers,
         loadUserInfoVK: LoadUserInfoVK
     ): FBMapper =
         FBMapper(dispatcher, loadUserInfoVK)
