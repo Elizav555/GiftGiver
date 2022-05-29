@@ -71,15 +71,33 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
                     }
                 }
             )
-            setOnSearchClickListener { if (isFav) filterFriends() }
+            setOnSearchClickListener {
+                appBarChangesListener.onToolbarChanges(setAppBarConfig(title = "Friends List"))
+            }
+            setOnCloseListener {
+                appBarChangesListener.onToolbarChanges(
+                    setAppBarConfig(
+                        R.drawable.ic_fav_border,
+                        "Friends List"
+                    )
+                )
+                false
+            }
         }
     }
 
-    private fun setAppBarConfig(@DrawableRes favDrawableRes: Int, title: String) = AppBarConfig(
-        firstButton = AppBarButton(favDrawableRes, ::filterFriends),
-        title = title,
-        hasSearch = true
-    )
+    private fun setAppBarConfig(
+        @DrawableRes favDrawableRes: Int? = null,
+        title: String
+    ): AppBarConfig {
+        val config = AppBarConfig(
+            firstButton = null,
+            title = title,
+            hasSearch = true
+        )
+        favDrawableRes?.let { config.firstButton = AppBarButton(favDrawableRes, ::filterFriends) }
+        return config
+    }
 
     private fun filterFriends() {
         isFav = !isFav
@@ -116,6 +134,8 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
         val action = FriendsListFragmentDirections.actionFriendsListFragmentToUserFragment(
             vkId
         )
+        (activity as? MainActivity)?.findViewById<SearchView>(R.id.search_view)
+            ?.onActionViewCollapsed()
         findNavController().navigate(action)
     }
 
