@@ -30,6 +30,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     private val args: WishlistFragmentArgs by navArgs()
     private var giftAdapter: GiftAdapter by autoCleared()
     private var index = 0
+    private var wishlistName = ""
 
     @Inject
     lateinit var appBarChangesListener: OnAppBarChangesListener
@@ -58,10 +59,11 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     }
 
     private fun enterEditMode() {
-        ChangeWishlistDialog().show(childFragmentManager, "dialog")
+        ChangeWishlistDialog(wishlistName).show(childFragmentManager, "dialog")
     }
 
     private fun bindInfo(wishlist: Wishlist) {
+        wishlistName = wishlist.name
         setHasOptionsMenu(true)
         appBarChangesListener.onTitleChanges(wishlist.name)
         binding.addItem.setOnClickListener {
@@ -159,6 +161,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     private fun setLoading(isLoading: Boolean) {
         binding.progressBar.isVisible = isLoading
         binding.groupGifts.isVisible = !isLoading
+        binding.groupEmpty.isVisible = !isLoading
     }
 
     private fun initObservers() {

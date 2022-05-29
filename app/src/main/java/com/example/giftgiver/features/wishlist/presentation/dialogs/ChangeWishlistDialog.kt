@@ -9,13 +9,14 @@ import com.example.giftgiver.R
 import com.example.giftgiver.databinding.DialogAddWishlistBinding
 import com.example.giftgiver.features.wishlist.presentation.fragments.WishlistFragment
 
-class ChangeWishlistDialog : DialogFragment() {
+class ChangeWishlistDialog(private val wishlistOldName: String) : DialogFragment() {
     private lateinit var binding: DialogAddWishlistBinding
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogAddWishlistBinding.inflate(layoutInflater)
 
         with(binding) {
             return activity?.let {
+                etName.setText(wishlistOldName)
                 val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)
                     .setPositiveButton("Change name") { _, _ ->
                         (parentFragment as WishlistFragment).changeWishlistName(
