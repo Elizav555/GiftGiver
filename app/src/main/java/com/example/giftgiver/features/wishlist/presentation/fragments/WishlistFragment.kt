@@ -94,7 +94,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
             )
             addItemDecoration(dividerItemDecoration)
 
-            val swipeToDeleteCallback = object : MySwipeCallback() {
+            val swipeToDeleteCallback = object : MySwipeCallback(requireContext()) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
                     wishlistViewModel.getGiftByPos(pos)?.let { deleteGift(it, pos) }

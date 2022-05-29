@@ -69,7 +69,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
             )
             addItemDecoration(dividerItemDecoration)
 
-            val swipeToDeleteCallback = object : MySwipeCallback() {
+            val swipeToDeleteCallback = object : MySwipeCallback(requireContext()) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val pos = viewHolder.adapterPosition
                     deleteGift(cartViewModel.getGiftByPos(pos), pos)
