@@ -109,7 +109,6 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
                 } else {
                     isCalendarInited = true
                     bindCalendar(it)
-                    calendarViewModel.checkTomorrowEvents()
                 }
             }, onFailure = {
                 Log.e("asd", it.message.toString())

@@ -1,15 +1,21 @@
 package com.example.giftgiver.features.start.presentation
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.giftgiver.features.calendar.domain.notifications.NotifyWorker
 import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.AddClientUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.client.domain.useCases.UpdateTokenUseCase
+import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.start.domain.AuthUseCase
 import com.example.giftgiver.features.user.domain.UserInfo
 import com.example.giftgiver.features.user.domain.useCases.LoadFriendsUseCase
@@ -17,6 +23,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.api.sdk.VK
 import kotlinx.coroutines.launch
+import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class StartViewModel @Inject constructor(
@@ -26,7 +34,9 @@ class StartViewModel @Inject constructor(
     private val getClientState: GetClientStateUseCase,
     private val authUseCase: AuthUseCase,
     private val clientStateUseCase: GetClientStateUseCase,
-    private val updateTokenUseCase: UpdateTokenUseCase
+    private val updateTokenUseCase: UpdateTokenUseCase,
+    private val dateMapper: DateMapper,
+    private val context: Context,
 ) : ViewModel() {
 
     private var _client: MutableLiveData<Result<Client?>> = MutableLiveData()
@@ -38,7 +48,10 @@ class StartViewModel @Inject constructor(
     fun getClient(vkId: Long) = viewModelScope.launch {
         try {
             val clientReceived = getClientByVkId(vkId)
-            clientReceived?.let { checkTokenUpdates(it.vkId) }
+            clientReceived?.let {
+                checkTokenUpdates(it.vkId)
+                checkTomorrowEvents(it)
+            }
             _client.value = Result.success(clientReceived)
         } catch (ex: Exception) {
             _client.value = Result.failure(ex)
@@ -78,5 +91,27 @@ class StartViewModel @Inject constructor(
                 }
             }
         })
+    }
+
+    private fun checkTomorrowEvents(client: Client) {
+        val tomorrow = Calendar.getInstance()
+        tomorrow.add(Calendar.DAY_OF_MONTH, 1)
+        val tomorrowEvents =
+            client.calendar.events.filter {
+                dateMapper.parseCalendarToString(it.date) == dateMapper.parseCalendarToString(
+                    tomorrow
+                )
+            }
+        if (tomorrowEvents.isNotEmpty()) {
+            val desc = tomorrowEvents.mapNotNull { it.desc }.joinToString(",\n")
+            scheduleNotification(desc)
+        }
+    }
+
+    private fun scheduleNotification(eventsDesc: String) {
+        val data = Data.Builder().putString(NotifyWorker.EVENT_NAME, eventsDesc).build()
+        val notificationWork = OneTimeWorkRequestBuilder<NotifyWorker>()
+            .setInitialDelay(20, TimeUnit.SECONDS).setInputData(data).build()
+        WorkManager.getInstance(context).enqueue(notificationWork)
     }
 }
