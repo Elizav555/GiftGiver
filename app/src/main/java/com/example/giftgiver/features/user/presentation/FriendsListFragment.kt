@@ -45,7 +45,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
         (activity as MainActivity).setBottomNavigationVisibility(true)
         (activity as MainActivity).supportActionBar?.show()
         appBarChangesListener.onToolbarChanges(
-            setAppBarConfig(R.drawable.ic_fav_border)
+            setAppBarConfig(R.drawable.ic_fav_border, "Friends List")
         )
         configSearch()
         initObservers()
@@ -75,19 +75,21 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
         }
     }
 
-    private fun setAppBarConfig(@DrawableRes favDrawableRes: Int) = AppBarConfig(
+    private fun setAppBarConfig(@DrawableRes favDrawableRes: Int, title: String) = AppBarConfig(
         firstButton = AppBarButton(favDrawableRes, ::filterFriends),
-        title = "Friends List",
+        title = title,
         hasSearch = true
     )
 
     private fun filterFriends() {
         isFav = !isFav
         friendsViewModel.filterFriends(isFav)
+        var title = "Friends List"
         val favRes = if (isFav) {
+            title = "Favorites List"
             R.drawable.ic_fav_filed
         } else R.drawable.ic_fav_border
-        appBarChangesListener.onToolbarChanges(setAppBarConfig(favRes))
+        appBarChangesListener.onToolbarChanges(setAppBarConfig(favRes, title))
     }
 
     private fun init() {

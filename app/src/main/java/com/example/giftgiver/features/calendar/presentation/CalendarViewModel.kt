@@ -41,11 +41,12 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    fun getHolidays() = viewModelScope.launch {
+    private fun getHolidays() = viewModelScope.launch {
         try {
             clientHolidays = client?.calendar?.events ?: mutableListOf()
             if (clientHolidays.isEmpty()) {
                 getDefaultHolidays()
+                return@launch
             }
             _holidays.value = Result.success(clientHolidays)
         } catch (ex: Exception) {
@@ -97,12 +98,7 @@ class CalendarViewModel @Inject constructor(
         }
 
     fun deleteClientsEvents() = viewModelScope.launch {
-        try {
-            clientHolidays.clear()
-            getDefaultHolidays()
-            _holidays.value = Result.success(clientHolidays)
-        } catch (ex: Exception) {
-            _holidays.value = Result.failure(ex)
-        }
+        clientHolidays.clear()
+        getDefaultHolidays()
     }
 }

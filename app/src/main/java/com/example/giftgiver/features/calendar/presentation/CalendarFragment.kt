@@ -49,7 +49,6 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
             )
         )
         initObservers()
-        calendarViewModel.getHolidays()
     }
 
     private fun showDeleteDialog() {
@@ -75,6 +74,9 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
             displayEventsDesc(holidays.filter { it.date == event.calendar })
         }
         bindEvents(holidays)
+        val currentEvents = holidays.filter { it.date == calendar.selectedDates.first() }
+        displayEventsDesc(currentEvents)
+        tvDate.text = dateFormat.format(calendar.currentPageDate.time)
     }
 
     private fun bindEvents(holidays: List<Event>) = with(binding) {
