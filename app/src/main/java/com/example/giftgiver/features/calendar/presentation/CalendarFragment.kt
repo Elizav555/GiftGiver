@@ -95,6 +95,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
         val eventsDesc = events.mapNotNull { it.desc }
             .joinToString(",\n")
         tvDescription.text = eventsDesc
+        tvDescription.scrollTo(0, 0)
     }
 
     private fun enterEditMode() {
