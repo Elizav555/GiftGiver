@@ -130,6 +130,7 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
                 .setTitle(getString(R.string.delete_gift))
                 .setMessage(getString(R.string.action_cannot_undone))
                 .setPositiveButton(R.string.delete) { _, _ ->
+                    setLoading(true)
                     wishlistViewModel.deleteGift(gift)
                 }
                 .setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -159,8 +160,8 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
     }
 
     private fun setLoading(isLoading: Boolean) {
-        binding.progressBar.isVisible = isLoading
         binding.groupGifts.isVisible = !isLoading
+        binding.progressBar.isVisible = isLoading
         binding.groupEmpty.isVisible = !isLoading
     }
 
@@ -177,14 +178,14 @@ class WishlistFragment : BaseFragment(R.layout.fragment_wishlist) {
         }
         wishlistViewModel.gifts.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
-                setLoading(false)
-                binding.groupEmpty.isVisible = it.isEmpty()
                 if (isAdapterInited) {
                     giftAdapter.submitList(it)
                 } else {
                     isAdapterInited = true
                     initAdapter(it as MutableList<Gift>)
                 }
+                setLoading(false)
+                binding.groupEmpty.isVisible = it.isEmpty()
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })

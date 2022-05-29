@@ -100,6 +100,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
                 .setTitle(getString(R.string.deleteGiftTitle))
                 .setMessage(getString(R.string.deleteGiftMessage))
                 .setPositiveButton(R.string.delete) { _, _ ->
+                    binding.progressBar.isVisible = true
                     cartViewModel.delete(gift)
                 }
                 .setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -127,13 +128,14 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         cartViewModel.gifts.observe(viewLifecycleOwner) { result ->
             result.fold(onSuccess = {
                 giftsForList = it
-                handleEmpty(it.isEmpty())
                 if (isAdapterInited) {
                     giftAdapter.submitList(it)
                 } else {
                     isAdapterInited = true
                     initAdapter(it)
                 }
+                binding.progressBar.isVisible = false
+                handleEmpty(it.isEmpty())
             }, onFailure = {
                 Log.e("asd", it.message.toString())
             })
