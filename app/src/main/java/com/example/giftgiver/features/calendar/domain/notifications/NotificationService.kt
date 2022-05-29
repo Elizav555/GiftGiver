@@ -18,7 +18,10 @@ class NotificationService(private val context: Context) {
     }
     private val pattern = arrayOf(100L, 200L, 0, 400L).toLongArray()
 
-    fun showNotification(body: String) {
+    fun showNotification(
+        body: String? = context.getString(R.string.app_name),
+        title: String? = context.getString(R.string.important_day)
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel(
                 CHANNEL_ID,
@@ -39,7 +42,7 @@ class NotificationService(private val context: Context) {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setLargeIcon(largeIcon)
             .setSmallIcon(R.drawable.ic_baseline_calendar_month_24)
-            .setContentTitle(context.getString(R.string.important_day))
+            .setContentTitle(title)
             .setShowWhen(true)
             .setAutoCancel(true)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))

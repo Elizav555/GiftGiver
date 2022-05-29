@@ -15,4 +15,6 @@ data class Client(
     var favFriendsIds: MutableList<Long> = mutableListOf(),
     var wishlists: MutableList<Wishlist> = mutableListOf(),
     var info: UserInfo,
+    var pushToken: String? = null,
+    var isNotified: Boolean = false
 ) : Parcelable

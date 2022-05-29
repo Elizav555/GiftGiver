@@ -33,7 +33,6 @@ class CalendarViewModel @Inject constructor(
 ) : ViewModel() {
     private val curYear = Calendar.getInstance().get(Calendar.YEAR)
     private var client: Client? = null
-    private var isNotified = false
     private var _holidays: MutableLiveData<Result<List<Event>>> = MutableLiveData()
     val holidays: LiveData<Result<List<Event>>> = _holidays
     private var clientHolidays: MutableList<Event> = mutableListOf()
@@ -113,6 +112,8 @@ class CalendarViewModel @Inject constructor(
     }
 
     fun checkTomorrowEvents() {
+        if (client?.isNotified == true)
+            return
         val tomorrow = Calendar.getInstance()
         tomorrow.add(Calendar.DAY_OF_MONTH, 1)
         val tomorrowEvents =
@@ -121,7 +122,7 @@ class CalendarViewModel @Inject constructor(
                     tomorrow
                 )
             }
-        if (tomorrowEvents.isNotEmpty() && !isNotified) {
+        if (tomorrowEvents.isNotEmpty()) {
             val desc = tomorrowEvents.mapNotNull { it.desc }.joinToString(",\n")
             scheduleNotification(desc)
         }
@@ -132,6 +133,6 @@ class CalendarViewModel @Inject constructor(
         val notificationWork = OneTimeWorkRequestBuilder<NotifyWorker>()
             .setInitialDelay(15, TimeUnit.SECONDS).setInputData(data).build()
         WorkManager.getInstance(context).enqueue(notificationWork)
-        isNotified = true
+        client?.isNotified = true
     }
 }

@@ -39,7 +39,8 @@ class FBMapper(
                     bdate,
                     about,
                 )
-            }
+            },
+            pushToken = client.pushToken
         )
     }
 
@@ -129,7 +130,8 @@ class FBMapper(
                     )
                 } as MutableList<GiftInfo>
             ),
-            favFriendsIds = clientFB.favFriendsIds
+            favFriendsIds = clientFB.favFriendsIds,
+            pushToken = clientFB.pushToken
         )
     }
 
