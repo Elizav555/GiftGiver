@@ -15,7 +15,7 @@ class NotifyWorker(
         try {
             val notificationService = NotificationService(context)
             inputData.getString(EVENT_NAME)?.let {
-                notificationService.showNotification(it)
+                notificationService.showNotification(body = it)
             }
         } catch (ex: Exception) {
             return failure()

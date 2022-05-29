@@ -13,6 +13,8 @@ class PushService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         val notificationService = NotificationService(this)
-        remoteMessage.notification?.title?.let { notificationService.showNotification(it) }
+        remoteMessage.notification?.let {
+            notificationService.showNotification(it.body, it.title)
+        }
     }
 }
