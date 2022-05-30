@@ -1,6 +1,5 @@
 package com.example.giftgiver.features.user.domain.useCases
 
-import android.util.Log
 import com.example.giftgiver.features.client.domain.useCases.GetAllClientsUseCase
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.user.data.vk.VKFriendsRequest
@@ -13,27 +12,27 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LoadFriendsVK @Inject constructor(
+class LoadFriendsVKUseCase @Inject constructor(
     private val getAllClients: GetAllClientsUseCase,
     private val getClientByVkId: GetClientByVkId,
     private val vkMapper: VkMapper
 ) {
-    fun loadFriends(vkId: Long, successAction: (List<UserInfo>) -> Unit) {
-        VK.execute(
-            VKFriendsRequest(vkId, vkMapper),
-            object : VKApiCallback<List<UserInfo>> {
-                override fun success(result: List<UserInfo>) {
-                    successAction(result)
-                }
+//    fun loadFriends(vkId: Long, successAction: (List<UserInfo>) -> Unit) {
+//        VK.execute(
+//            VKFriendsRequest(vkId, vkMapper),
+//            object : VKApiCallback<List<UserInfo>> {
+//                override fun success(result: List<UserInfo>) {
+//                    successAction(result)
+//                }
+//
+//                override fun fail(error: Exception) {
+//                    Log.println(Log.ERROR, "", error.toString())
+//                }
+//            }
+//        )
+//    }
 
-                override fun fail(error: Exception) {
-                    Log.println(Log.ERROR, "", error.toString())
-                }
-            }
-        )
-    }
-
-    suspend fun loadFriends(vkId: Long, filter: Boolean = true): List<UserInfo> {
+    suspend operator fun invoke(vkId: Long, filter: Boolean = true): List<UserInfo> {
         val friendsVK = loadAllFriends(vkId)
         if (!filter) {
             return friendsVK.sortedBy { user -> user.name }

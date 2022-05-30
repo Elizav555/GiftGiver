@@ -9,13 +9,13 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class LoadFriendsUseCase @Inject constructor(
-    private val loadFriendsVK: LoadFriendsVK,
+    private val loadFriendsVKUseCase: LoadFriendsVKUseCase,
     private val clientsRepOffline: ClientsRepOffline,
     private val dispatchers: AppDispatchers
 ) {
     suspend operator fun invoke(vkId: Long, filter: Boolean = true) = withContext(dispatchers.io) {
         try {
-            loadFriendsVK.loadFriends(vkId, filter)
+            loadFriendsVKUseCase(vkId, filter)
         } catch (ex: Exception) {
             if (ex is UnknownHostException || (ex is FirebaseFirestoreException && ex.message?.contains(
                     "offline"

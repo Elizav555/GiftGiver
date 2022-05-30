@@ -2,7 +2,7 @@ package com.example.giftgiver.common.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.giftgiver.features.client.domain.useCases.ClientsChangesUseCase
+import com.example.giftgiver.features.client.domain.useCases.ClientsChangesInteractor
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.client.domain.useCases.UpdateOfflineClientUseCase
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val clientsChanges: ClientsChangesUseCase,
+    private val clientsChanges: ClientsChangesInteractor,
     private val getClientState: GetClientStateUseCase,
     private val updateOfflineClient: UpdateOfflineClientUseCase,
     private val getClientByVkId: GetClientByVkId,

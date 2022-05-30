@@ -91,7 +91,7 @@ class FriendsWishlistFragment : BaseFragment(R.layout.fragment_friends_wishlist)
 
     private fun checkedFunc(giftId: String, isChecked: Boolean) {
         setLoading(true)
-        friendsWishlistViewModel.checkedFunc(giftId, isChecked, wishlistIndex)
+        friendsWishlistViewModel.checkedFunc(giftId, isChecked)
     }
 
     private fun setLoading(isLoading: Boolean) {

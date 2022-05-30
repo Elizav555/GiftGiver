@@ -1,6 +1,5 @@
 package com.example.giftgiver.features.user.domain.useCases
 
-import android.util.Log
 import com.example.giftgiver.features.user.data.vk.VKUserWithInfoRequest
 import com.example.giftgiver.features.user.data.vk.VkMapper
 import com.example.giftgiver.features.user.domain.UserInfo
@@ -11,23 +10,23 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LoadUserInfoVK @Inject constructor(private val vkMapper: VkMapper) {
-    fun loadInfo(vkId: Long, successAction: (UserInfo) -> Unit) {
-        VK.execute(
-            VKUserWithInfoRequest(vkId, vkMapper),
-            object : VKApiCallback<UserInfo> {
-                override fun success(result: UserInfo) {
-                    successAction(result)
-                }
+class LoadUserInfoVKUseCase @Inject constructor(private val vkMapper: VkMapper) {
+//    fun loadInfo(vkId: Long, successAction: (UserInfo) -> Unit) {
+//        VK.execute(
+//            VKUserWithInfoRequest(vkId, vkMapper),
+//            object : VKApiCallback<UserInfo> {
+//                override fun success(result: UserInfo) {
+//                    successAction(result)
+//                }
+//
+//                override fun fail(error: Exception) {
+//                    Log.println(Log.ERROR, "", error.toString())
+//                }
+//            }
+//        )
+//    }
 
-                override fun fail(error: Exception) {
-                    Log.println(Log.ERROR, "", error.toString())
-                }
-            }
-        )
-    }
-
-    suspend fun loadInfo(vkId: Long): UserInfo {
+    suspend operator fun invoke(vkId: Long): UserInfo {
         return suspendCoroutine { continuation ->
             VK.execute(
                 VKUserWithInfoRequest(vkId, vkMapper),

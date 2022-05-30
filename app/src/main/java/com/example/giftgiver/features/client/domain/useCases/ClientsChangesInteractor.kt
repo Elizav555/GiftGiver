@@ -5,7 +5,7 @@ import com.example.giftgiver.features.client.domain.repositories.ClientsReposito
 import com.example.giftgiver.features.start.domain.AuthRepository
 import javax.inject.Inject
 
-class ClientsChangesUseCase @Inject constructor(
+class ClientsChangesInteractor @Inject constructor(
     private val clientsRepository: ClientsRepository,
     private val clientsRepOffline: ClientsRepOffline,
     private val authRepository: AuthRepository

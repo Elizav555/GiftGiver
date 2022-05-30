@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
+import com.example.giftgiver.features.client.domain.useCases.ClientFBInteractor
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
-import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftInteractor
 import com.example.giftgiver.features.images.domain.AddImageUseCase
 import com.example.giftgiver.features.images.domain.DeleteImageUseCase
 import com.example.giftgiver.features.start.domain.AuthUseCase
@@ -21,9 +21,9 @@ class ClientViewModel @Inject constructor(
     private val addImageUseCase: AddImageUseCase,
     private val deleteImageUseCase: DeleteImageUseCase,
     private val getClientState: GetClientStateUseCase,
-    private val clientFBUseCase: ClientFBUseCase,
+    private val clientFBInteractor: ClientFBInteractor,
     private val authUseCase: AuthUseCase,
-    private val giftUseCase: GiftUseCase
+    private val giftInteractor: GiftInteractor
 ) : ViewModel() {
     private var _wishlists: MutableLiveData<Result<List<Wishlist>>> = MutableLiveData()
     val wishlists: LiveData<Result<List<Wishlist>>> = _wishlists
@@ -50,7 +50,7 @@ class ClientViewModel @Inject constructor(
 
     private fun updateClientsWishlists() = viewModelScope.launch {
         client?.let { client ->
-            clientFBUseCase.updateWishlists(client.vkId, clientWishlists)
+            clientFBInteractor.updateWishlists(client.vkId, clientWishlists)
             client.wishlists = clientWishlists
         }
     }
@@ -67,8 +67,8 @@ class ClientViewModel @Inject constructor(
         try {
             client?.let { client ->
                 wishlist.giftsIds.forEach { giftId ->
-                    giftUseCase.getGift(client.vkId, giftId)?.let { gift ->
-                        giftUseCase.deleteGift(
+                    giftInteractor.getGift(client.vkId, giftId)?.let { gift ->
+                        giftInteractor.deleteGift(
                             client.vkId,
                             gift,
                             client.wishlists
@@ -100,7 +100,7 @@ class ClientViewModel @Inject constructor(
     private fun updateClientsInfo() = viewModelScope.launch {
         client?.let { client ->
             clientInfo?.let {
-                clientFBUseCase.updateInfo(client.vkId, it)
+                clientFBInteractor.updateInfo(client.vkId, it)
                 client.info = it
             }
         }

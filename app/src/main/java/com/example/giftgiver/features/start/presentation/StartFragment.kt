@@ -19,7 +19,7 @@ import com.example.giftgiver.databinding.FragmentStartBinding
 import com.example.giftgiver.features.calendar.domain.Calendar
 import com.example.giftgiver.features.cart.domain.Cart
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
+import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVKUseCase
 import com.example.giftgiver.utils.BaseFragment
 import com.example.giftgiver.utils.ThemeUtils
 import com.example.giftgiver.utils.viewModel
@@ -33,7 +33,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
     private lateinit var binding: FragmentStartBinding
 
     @Inject
-    lateinit var loadUserInfoVK: LoadUserInfoVK
+    lateinit var loadUserInfoVKUseCase: LoadUserInfoVKUseCase
     private val startViewModel: StartViewModel by viewModel()
     private val activityLauncher =
         registerForActivityResult(VK.getVKAuthActivityResultContract()) { result ->
@@ -93,7 +93,7 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
                     val client = Client(
                         vkId,
                         Calendar(),
-                        info = loadUserInfoVK.loadInfo(vkId),
+                        info = loadUserInfoVKUseCase(vkId),
                         cart = Cart()
                     )
                     startViewModel.addClient(client)

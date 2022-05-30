@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
+import com.example.giftgiver.features.client.domain.useCases.ClientFBInteractor
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class UserViewModel @Inject constructor(
     private val getClientByVkId: GetClientByVkId,
-    private val clientFBUseCase: ClientFBUseCase,
+    private val clientFBInteractor: ClientFBInteractor,
     private val getClientState: GetClientStateUseCase,
 ) : ViewModel() {
     private var _friend: MutableLiveData<Result<Client?>> = MutableLiveData()
@@ -44,7 +44,7 @@ class UserViewModel @Inject constructor(
             if (isFav) {
                 clientFriend?.let { friend -> client.favFriendsIds.add(friend.vkId) }
             } else clientFriend?.let { friend -> client.favFriendsIds.remove(friend.vkId) }
-            clientFBUseCase.updateFavFriends(client.vkId, client.favFriendsIds)
+            clientFBInteractor.updateFavFriends(client.vkId, client.favFriendsIds)
         }
     }
 

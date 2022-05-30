@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
+import com.example.giftgiver.features.client.domain.useCases.ClientFBInteractor
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftInteractor
 import com.example.giftgiver.features.images.domain.ImageStorage
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import kotlinx.coroutines.launch
@@ -19,8 +19,8 @@ import javax.inject.Inject
 class WishlistViewModel @Inject constructor(
     private val imageStorage: ImageStorage,
     private val getClientState: GetClientStateUseCase,
-    private val giftUseCase: GiftUseCase,
-    private val clientFBUseCase: ClientFBUseCase
+    private val giftInteractor: GiftInteractor,
+    private val clientFBInteractor: ClientFBInteractor
 ) : ViewModel() {
     private var wishlistIndex = 0
     private var _wishlist: MutableLiveData<Result<Wishlist?>> = MutableLiveData()
@@ -55,7 +55,7 @@ class WishlistViewModel @Inject constructor(
             clientGifts =
                 giftsIds.mapNotNull {
                     client?.vkId?.let { vkId ->
-                        giftUseCase.getGift(
+                        giftInteractor.getGift(
                             vkId,
                             it
                         )
@@ -85,9 +85,9 @@ class WishlistViewModel @Inject constructor(
                     newImageFile?.let {
                         gift.imageUrl = imageStorage.addImage(newImageFile).toString()
                     }
-                    giftUseCase.addGift(client.vkId, gift, client.wishlists)
+                    giftInteractor.addGift(client.vkId, gift, client.wishlists)
                     clientGifts.add(gift)
-                    clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
+                    clientFBInteractor.updateWishlists(client.vkId, client.wishlists)
                     _wishlist.value = Result.success(client.wishlists[wishlistIndex])
                 } catch (ex: Exception) {
                     _wishlist.value = Result.failure(ex)
@@ -99,9 +99,9 @@ class WishlistViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 clientGifts.remove(gift)
-                giftUseCase.deleteGift(client.vkId, gift, client.wishlists)
+                giftInteractor.deleteGift(client.vkId, gift, client.wishlists)
                 client.wishlists[wishlistIndex].giftsIds.remove(gift.id)
-                clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
+                clientFBInteractor.updateWishlists(client.vkId, client.wishlists)
                 _wishlist.value = Result.success(client.wishlists[wishlistIndex])
             } catch (ex: Exception) {
                 _wishlist.value = Result.failure(ex)
@@ -114,7 +114,7 @@ class WishlistViewModel @Inject constructor(
             try {
                 Collections.swap(clientGifts, fromPos, toPos)
                 Collections.swap(client.wishlists[wishlistIndex].giftsIds, fromPos, toPos)
-                clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
+                clientFBInteractor.updateWishlists(client.vkId, client.wishlists)
                 //               getClientState.addClient(client)
                 _gifts.value = Result.success(clientGifts)
             } catch (ex: Exception) {
@@ -127,7 +127,7 @@ class WishlistViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 client.wishlists[wishlistIndex].name = newName
-                clientFBUseCase.updateWishlists(client.vkId, client.wishlists)
+                clientFBInteractor.updateWishlists(client.vkId, client.wishlists)
                 _wishlist.value = Result.success(client.wishlists[wishlistIndex])
             } catch (ex: Exception) {
                 _wishlist.value = Result.failure(ex)

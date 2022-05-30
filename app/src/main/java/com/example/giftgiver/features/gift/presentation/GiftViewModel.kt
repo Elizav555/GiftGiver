@@ -8,7 +8,7 @@ import com.example.giftgiver.features.client.domain.Client
 import com.example.giftgiver.features.client.domain.useCases.GetClientByVkId
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftInteractor
 import com.example.giftgiver.features.images.domain.AddImageUseCase
 import com.example.giftgiver.features.images.domain.DeleteImageUseCase
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ class GiftViewModel @Inject constructor(
     private val addImageUseCase: AddImageUseCase,
     private val deleteImageUseCase: DeleteImageUseCase,
     getClientState: GetClientStateUseCase,
-    private val giftUseCase: GiftUseCase,
+    private val giftInteractor: GiftInteractor,
 ) : ViewModel() {
     private var client: Client? = null
 
@@ -51,7 +51,7 @@ class GiftViewModel @Inject constructor(
 
     fun getGift(userId: Long, giftId: String) = viewModelScope.launch {
         try {
-            clientGift = giftUseCase.getGift(userId, giftId)
+            clientGift = giftInteractor.getGift(userId, giftId)
             _gift.value = Result.success(clientGift)
         } catch (ex: Exception) {
             _gift.value = Result.failure(ex)
@@ -70,7 +70,7 @@ class GiftViewModel @Inject constructor(
                     it.name = newName
                     it.desc = newDesc
                     it.lastChanged = Calendar.getInstance()
-                    client?.vkId?.let { vkId -> giftUseCase.updateGift(vkId, it) }
+                    client?.vkId?.let { vkId -> giftInteractor.updateGift(vkId, it) }
                     _gift.value = Result.success(it)
                 }
             } catch (ex: Exception) {

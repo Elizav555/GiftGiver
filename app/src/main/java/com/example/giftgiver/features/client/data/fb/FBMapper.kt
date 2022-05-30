@@ -13,7 +13,7 @@ import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.user.data.fb.UserInfoFB
 import com.example.giftgiver.features.user.domain.UserInfo
-import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
+import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVKUseCase
 import com.example.giftgiver.features.wishlist.data.fb.WishlistFB
 import com.example.giftgiver.features.wishlist.domain.Wishlist
 import com.example.giftgiver.utils.AppDispatchers
@@ -22,7 +22,7 @@ import java.util.Calendar as JavaUtilCalendar
 
 class FBMapper(
     private val dispatcher: AppDispatchers,
-    private val loadUserInfoVK: LoadUserInfoVK,
+    private val loadUserInfoVKUseCase: LoadUserInfoVKUseCase,
 ) {
     fun mapClientToFB(client: Client) = with(client) {
         return@with ClientFB(
@@ -111,7 +111,7 @@ class FBMapper(
                     about,
                 )
             }
-        } ?: withContext(dispatcher.io) { loadUserInfoVK.loadInfo(vkId) }
+        } ?: withContext(dispatcher.io) { loadUserInfoVKUseCase(vkId) }
         val calendar = JavaUtilCalendar.getInstance()
         return@with Client(
             vkId,

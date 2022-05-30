@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.R
 import com.example.giftgiver.features.calendar.domain.useCases.GetHolidaysUseCase
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
+import com.example.giftgiver.features.client.domain.useCases.ClientFBInteractor
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.event.domain.Event
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class CalendarViewModel @Inject constructor(
     private val getHolidaysUseCase: GetHolidaysUseCase,
-    private val clientFBUseCase: ClientFBUseCase,
+    private val clientFBInteractor: ClientFBInteractor,
     private val dateMapper: DateMapper,
     private val context: Context,
     private val getClientState: GetClientStateUseCase,
@@ -56,7 +56,7 @@ class CalendarViewModel @Inject constructor(
 
     private fun updateClient() = viewModelScope.launch {
         client?.let { client ->
-            clientFBUseCase.updateCalendar(client.vkId, clientHolidays)
+            clientFBInteractor.updateCalendar(client.vkId, clientHolidays)
             client.calendar.events = clientHolidays
         }
     }

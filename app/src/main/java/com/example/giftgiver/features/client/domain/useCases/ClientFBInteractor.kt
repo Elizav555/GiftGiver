@@ -9,7 +9,7 @@ import com.example.giftgiver.utils.AppDispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ClientFBUseCase @Inject constructor(
+class ClientFBInteractor @Inject constructor(
     private val clientsRepository: ClientsRepository,
     private val dispatcher: AppDispatchers,
 ) {

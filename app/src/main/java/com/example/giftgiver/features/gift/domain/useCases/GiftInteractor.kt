@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class GiftUseCase @Inject constructor(
+class GiftInteractor @Inject constructor(
     private val giftsRepository: GiftsRepository,
     private val giftsRepOffline: GiftsRepOffline,
     private val deleteImageUseCase: DeleteImageUseCase,

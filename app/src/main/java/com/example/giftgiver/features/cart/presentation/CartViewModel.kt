@@ -5,19 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.giftgiver.features.client.domain.Client
-import com.example.giftgiver.features.client.domain.useCases.ClientFBUseCase
+import com.example.giftgiver.features.client.domain.useCases.ClientFBInteractor
 import com.example.giftgiver.features.client.domain.useCases.GetClientStateUseCase
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo
-import com.example.giftgiver.features.gift.domain.useCases.GiftUseCase
+import com.example.giftgiver.features.gift.domain.useCases.GiftInteractor
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 class CartViewModel @Inject constructor(
-    private val clientFBUseCase: ClientFBUseCase,
+    private val clientFBInteractor: ClientFBInteractor,
     private val getClientState: GetClientStateUseCase,
-    private val giftUseCase: GiftUseCase
+    private val giftInteractor: GiftInteractor
 ) : ViewModel() {
     private var _gifts: MutableLiveData<Result<List<Gift>>> = MutableLiveData()
     val gifts: LiveData<Result<List<Gift>>> = _gifts
@@ -37,7 +37,7 @@ class CartViewModel @Inject constructor(
     fun getGifts() = viewModelScope.launch {
         try {
             val giftsMapped = client?.cart?.giftsInfo?.mapNotNull {
-                giftUseCase.getGift(
+                giftInteractor.getGift(
                     it.forId,
                     it.giftId
                 )
@@ -62,7 +62,7 @@ class CartViewModel @Inject constructor(
     fun updateClient() = viewModelScope.launch {
         client?.let { client ->
             val ids = clientGifts.map { GiftInfo(it.id, it.forId, Calendar.getInstance()) }
-            clientFBUseCase.updateCart(client.vkId, ids)
+            clientFBInteractor.updateCart(client.vkId, ids)
             client.cart.giftsInfo = ids as MutableList<GiftInfo>
         }
     }

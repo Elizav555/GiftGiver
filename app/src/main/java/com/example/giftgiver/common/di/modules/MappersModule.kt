@@ -5,7 +5,7 @@ import com.example.giftgiver.features.calendar.data.mappers.HolidayMapper
 import com.example.giftgiver.features.client.data.fb.FBMapper
 import com.example.giftgiver.features.event.data.DateMapper
 import com.example.giftgiver.features.user.data.vk.VkMapper
-import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVK
+import com.example.giftgiver.features.user.domain.useCases.LoadUserInfoVKUseCase
 import com.example.giftgiver.utils.AppDispatchers
 import dagger.Module
 import dagger.Provides
@@ -21,9 +21,9 @@ class MappersModule {
     @Singleton
     fun provideFBMapper(
         dispatcher: AppDispatchers,
-        loadUserInfoVK: LoadUserInfoVK
+        loadUserInfoVKUseCase: LoadUserInfoVKUseCase
     ): FBMapper =
-        FBMapper(dispatcher, loadUserInfoVK)
+        FBMapper(dispatcher, loadUserInfoVKUseCase)
 
     @Provides
     @Singleton
