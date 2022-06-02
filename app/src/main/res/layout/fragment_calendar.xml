@@ -11,7 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        app:abbreviationsBarColor="@color/inputsBack"
+        app:abbreviationsLabelsColor="@color/primary_text"
+        app:anotherMonthsDaysLabelsColor="@color/anotherMonthsDaysLabelsColor"
         app:datePicker="true"
+        app:daysLabelsColor="@color/primary_text"
         app:eventsEnabled="true"
         app:forwardButtonSrc="@drawable/ic_next"
         app:headerColor="@color/primary_light"
@@ -20,9 +24,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:pagesColor="@color/inputsBack"
         app:previousButtonSrc="@drawable/ic_prev"
         app:selectionColor="@color/accent"
-        app:selectionLabelColor="@color/white"
+        app:selectionLabelColor="@color/inputsBack"
         app:todayLabelColor="@color/primary_dark"
         app:type="classic" />
 

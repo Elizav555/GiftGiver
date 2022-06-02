@@ -11,4 +11,6 @@
     <color name="divider">#BDBDBD</color>
 
     <color name="inputsBack">#121212</color>
+
+    <color name="anotherMonthsDaysLabelsColor">#32FFFFFF</color>
 </resources>
