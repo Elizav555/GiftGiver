@@ -3,6 +3,7 @@ package com.example.giftgiver.features.gift.presentation.list
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.giftgiver.R
 import com.example.giftgiver.databinding.ItemGiftBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo
@@ -30,7 +31,10 @@ class GiftHolder(
                 }
             }
             tvName.text = gift.name
-            ivPhoto.load(gift.imageUrl)
+            ivPhoto.load(gift.imageUrl){
+                crossfade(true)
+                placeholder(R.drawable.default_gift)
+            }
         }
     }
 }

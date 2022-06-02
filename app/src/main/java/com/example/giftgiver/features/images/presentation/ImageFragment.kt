@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
 import coil.load
+import coil.request.ErrorResult
+import coil.request.ImageRequest
 import com.example.giftgiver.R
 import com.example.giftgiver.databinding.FragmentImageBinding
 import com.example.giftgiver.utils.AppBarConfig
@@ -32,7 +35,17 @@ class ImageFragment : BaseFragment(R.layout.fragment_image) {
         sharedElementEnterTransition = transition
         val link = args.imageURL
         with(binding) {
-            imageView.load(link)
+            imageView.load(link) {
+                listener(
+                    onSuccess = { _, _ ->
+                        progressBar.isVisible = false
+                        imageView.isVisible = true
+                    },
+                    onError = { request: ImageRequest, _: ErrorResult ->
+                        request.error
+                    })
+                error(R.drawable.ic_baseline_info_24)
+            }
         }
         appBarChangesListener.onToolbarChanges(
             AppBarConfig(

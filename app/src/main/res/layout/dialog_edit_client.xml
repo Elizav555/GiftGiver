@@ -49,8 +49,7 @@
         app:layout_constraintBottom_toTopOf="@+id/til_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/accent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/default_person" />
 
     <Button
         android:id="@+id/btn_gallery"

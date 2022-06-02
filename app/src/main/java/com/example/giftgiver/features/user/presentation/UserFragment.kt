@@ -78,7 +78,10 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             isFav = userViewModel.checkIsFav() == true
             changeFavBtn()
             appBarChangesListener.onTitleChanges(info.name)
-            ivAvatar.load(info.photo)
+            ivAvatar.load(info.photo){
+                crossfade(true)
+                placeholder(R.drawable.default_person)
+            }
             ivAvatar.setOnClickListener {
                 viewImage(
                     it,

@@ -131,7 +131,10 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
             binding.ivAvatar.setOnClickListener {
                 viewImage(it, photo, getString(R.string.avatar_image, name))
             }
-            binding.ivAvatar.load(photo)
+            binding.ivAvatar.load(photo){
+                crossfade(true)
+                placeholder(R.drawable.default_person)
+            }
             binding.tvBirthdate.text = bdate
             binding.tvInfo.text = about
             binding.tvName.text = name

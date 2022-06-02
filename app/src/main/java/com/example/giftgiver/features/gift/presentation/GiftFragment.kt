@@ -77,7 +77,10 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
                     )
                 }
             }
-            ivPhoto.load(gift.imageUrl)
+            ivPhoto.load(gift.imageUrl){
+                crossfade(true)
+                placeholder(R.drawable.default_gift)
+            }
             imageViewModel.imageBitmapLiveData.observe(viewLifecycleOwner) {
                 ivPhoto.setImageBitmap(it)
             }

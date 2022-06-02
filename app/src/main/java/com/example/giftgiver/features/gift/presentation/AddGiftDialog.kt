@@ -61,7 +61,10 @@ class AddGiftDialog(
             gift?.let {
                 etName.setText(it.name)
                 etDesc.setText(it.desc)
-                ivImage.load(it.imageUrl)
+                ivImage.load(it.imageUrl){
+                    crossfade(true)
+                    placeholder(R.drawable.default_gift)
+                }
             }
             return activity?.let {
                 val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme).setView(root)

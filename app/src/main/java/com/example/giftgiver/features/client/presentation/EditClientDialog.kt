@@ -55,7 +55,10 @@ class EditClientDialog(private val client: Client) : DaggerDialogFragment() {
             etName.setText(client.info.name)
             etInfo.setText(client.info.about)
             etBirth.setText(client.info.bdate)
-            ivImage.load(client.info.photo)
+            ivImage.load(client.info.photo){
+                crossfade(true)
+                placeholder(R.drawable.default_person)
+            }
             imageViewModel.imageBitmapLiveData.observe(this@EditClientDialog) {
                 ivImage.setImageBitmap(it)
             }

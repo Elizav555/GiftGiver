@@ -3,6 +3,7 @@ package com.example.giftgiver.features.gift.presentation.list.forCart
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.giftgiver.R
 import com.example.giftgiver.databinding.ItemGiftCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
 import com.example.giftgiver.features.gift.domain.GiftInfo
@@ -19,7 +20,10 @@ class GiftCartHolder(
                 gift.lastChanged.after(gifts?.firstOrNull { it.giftId == gift.id }?.lastSeen)
             tvFor.text = gift.forName
             tvName.text = gift.name
-            ivPhoto.load(gift.imageUrl)
+            ivPhoto.load(gift.imageUrl){
+                crossfade(true)
+                placeholder(R.drawable.default_gift)
+            }
             root.setOnClickListener {
                 action(gift.id)
             }

@@ -142,7 +142,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@drawable/default_person" />
 
     <TextView
         android:id="@+id/tv_empty"
