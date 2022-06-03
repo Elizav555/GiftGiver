@@ -11,13 +11,12 @@ import com.example.giftgiver.features.gift.domain.GiftInfo
 class GiftCartHolder(
     private val binding: ItemGiftCartBinding,
     private val action: (id: String) -> Unit,
-    private val gifts: List<GiftInfo>?
+    private val checkIsVisible: (id: String) -> Boolean
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(gift: Gift) {
         with(binding) {
-            ivChanged.isVisible =
-                gift.lastChanged.after(gifts?.firstOrNull { it.giftId == gift.id }?.lastSeen)
+            ivChanged.isVisible = checkIsVisible(gift.id)
             tvFor.text = gift.forName
             tvName.text = gift.name
             ivPhoto.load(gift.imageUrl){

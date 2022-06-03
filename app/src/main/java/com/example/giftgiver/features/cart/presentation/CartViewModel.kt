@@ -87,7 +87,11 @@ class CartViewModel @Inject constructor(
         _gifts.value = Result.failure(ex)
     }
 
-    fun getGiftsInfo(): List<GiftInfo>? = client?.cart?.giftsInfo
-
     fun getGiftByPos(pos: Int) = clientGifts[pos]
+
+    fun checkIsVisible(giftId: String): Boolean {
+        val gift = clientGifts.first { it.id == giftId }
+        val giftInfo = client?.cart?.giftsInfo?.first { it.giftId == giftId }
+        giftInfo?.lastSeen?.let { return@checkIsVisible gift.lastChanged.after(it) } ?: return false
+    }
 }

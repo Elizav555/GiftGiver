@@ -49,7 +49,6 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
             )
         )
         initObservers()
-        cartViewModel.getGifts()
     }
 
     private fun deleteAll() = cartViewModel.deleteAll()
@@ -58,7 +57,7 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         val goToItem = { id: String ->
             navigateToItem(giftsForList?.first { it.id == id })
         }
-        giftAdapter = GiftCartAdapter(goToItem, cartViewModel.getGiftsInfo())
+        giftAdapter = GiftCartAdapter(goToItem, ::checkIsVisible)
         with(binding.rvCart) {
             adapter = giftAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -112,9 +111,11 @@ class CartFragment : BaseFragment(R.layout.fragment_cart) {
         }
     }
 
+    private fun checkIsVisible(giftId: String) = cartViewModel.checkIsVisible(giftId)
+
     private fun navigateToItem(gift: Gift?) {
-        cartViewModel.updateClient()
         gift?.let {
+            cartViewModel.updateClient()
             isAdapterInited = false
             val action = CartFragmentDirections.actionCartToCartGiftFragment(
                 it.id,

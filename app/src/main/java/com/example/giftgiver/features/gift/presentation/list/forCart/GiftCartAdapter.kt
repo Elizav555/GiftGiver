@@ -5,12 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.giftgiver.databinding.ItemGiftCartBinding
 import com.example.giftgiver.features.gift.domain.Gift
-import com.example.giftgiver.features.gift.domain.GiftInfo
 import com.example.giftgiver.features.gift.presentation.list.GiftDiffItemCallback
 
 class GiftCartAdapter(
     private val action: (id: String) -> Unit,
-    private val gifts: List<GiftInfo>?
+    private val checkIsVisible: (id: String) -> Boolean
 ) : ListAdapter<Gift, GiftCartHolder>(GiftDiffItemCallback()) {
 
     override fun onCreateViewHolder(
@@ -23,7 +22,7 @@ class GiftCartAdapter(
             false
         ),
         action,
-        gifts
+        checkIsVisible
     )
 
     override fun onBindViewHolder(
