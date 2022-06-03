@@ -75,7 +75,7 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
     }
 
     private fun setAppBarConfig(@DrawableRes themeDrawableRes: Int) = AppBarConfig(
-        firstButton = AppBarButton(R.drawable.ic_baseline_edit_24, ::enterEditMode),
+        firstButton = AppBarButton(R.drawable.ic_baseline_logout, ::logout),
         secondButton = AppBarButton(
             themeDrawableRes,
             ::changeTheme
@@ -85,8 +85,8 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
 
     private fun bindAll() {
         with(binding) {
-            btnLogout.setOnClickListener {
-                logout()
+            btnEdit.setOnClickListener {
+                enterEditMode()
             }
             btnAdd.setOnClickListener {
                 AddWishlistDialog()
@@ -94,12 +94,10 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
             }
             tvInfo.movementMethod = ScrollingMovementMethod()
             tvName.movementMethod = ScrollingMovementMethod()
-            progressBar.isVisible = false
-            views.isVisible = true
         }
     }
 
-    private fun logout(){
+    private fun logout() {
         activity?.let {
             val dialog = AlertDialog.Builder(it, R.style.MyDialogTheme)
                 .setTitle(getString(R.string.dialog_logout))
@@ -131,13 +129,15 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
             binding.ivAvatar.setOnClickListener {
                 viewImage(it, photo, getString(R.string.avatar_image, name))
             }
-            binding.ivAvatar.load(photo){
+            binding.ivAvatar.load(photo) {
                 crossfade(true)
                 placeholder(R.drawable.default_person)
             }
             binding.tvBirthdate.text = bdate
             binding.tvInfo.text = about
             binding.tvName.text = name
+            binding.progressBar.isVisible = false
+            binding.views.isVisible = true
         }
 
     fun addWishlist(wishlist: Wishlist) = clientViewModel.addWishlist(wishlist)
@@ -188,8 +188,11 @@ class AccountFragment : BaseFragment(R.layout.fragment_account) {
         findNavController().navigate(action)
     }
 
-    fun updateInfo(newName: String, newInfo: String, newBirthDate: String, imageFile: File?) =
+    fun updateInfo(newName: String, newInfo: String, newBirthDate: String, imageFile: File?) {
+        binding.views.isVisible = false
+        binding.progressBar.isVisible = true
         clientViewModel.updateInfo(newName, newInfo, newBirthDate, imageFile)
+    }
 
     private fun initObservers() {
         clientViewModel.wishlists.observe(viewLifecycleOwner) { result ->

@@ -77,7 +77,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
                     )
                 }
             }
-            ivPhoto.load(gift.imageUrl){
+            ivPhoto.load(gift.imageUrl) {
                 crossfade(true)
                 placeholder(R.drawable.default_gift)
             }
@@ -90,6 +90,8 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
     }
 
     private fun changeGift(newName: String, newDesc: String, newImageFile: File?) {
+        binding.progressBar.isVisible = true
+        binding.groupAll.isVisible = false
         giftViewModel.changeGift(newName, newDesc, newImageFile)
     }
 

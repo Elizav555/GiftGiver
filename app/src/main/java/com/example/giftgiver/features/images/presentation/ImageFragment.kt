@@ -35,17 +35,7 @@ class ImageFragment : BaseFragment(R.layout.fragment_image) {
         sharedElementEnterTransition = transition
         val link = args.imageURL
         with(binding) {
-            imageView.load(link) {
-                listener(
-                    onSuccess = { _, _ ->
-                        progressBar.isVisible = false
-                        imageView.isVisible = true
-                    },
-                    onError = { request: ImageRequest, _: ErrorResult ->
-                        request.error
-                    })
-                error(R.drawable.ic_baseline_info_24)
-            }
+            imageView.load(link)
         }
         appBarChangesListener.onToolbarChanges(
             AppBarConfig(
