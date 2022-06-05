@@ -72,7 +72,7 @@ class FriendsListFragment : BaseFragment(R.layout.fragment_friends_list) {
                 }
             )
             setOnSearchClickListener {
-                appBarChangesListener.onToolbarChanges(setAppBarConfig(title = "Friends List"))
+                appBarChangesListener.onToolbarChanges(setAppBarConfig(title = ""))
             }
             setOnCloseListener {
                 appBarChangesListener.onToolbarChanges(
