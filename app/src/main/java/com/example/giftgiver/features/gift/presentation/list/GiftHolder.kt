@@ -22,8 +22,10 @@ class GiftHolder(
                 checkBox.isVisible = true
                 checkBox.isChecked = gift.isChosen
                 if (gift.isChosen) {
-                    ivFilter.isVisible = true
-                    checkBox.isClickable = clientCart?.any { it.giftId == gift.id } == true
+                    val isYours = clientCart?.any { it.giftId == gift.id } == true
+                    ivFilter.isVisible = !isYours
+                    ivFilterClient.isVisible = isYours
+                    checkBox.isClickable = isYours
                 }
                 checkBox.setOnCheckedChangeListener { _, isChecked ->
                     it(gift.id, isChecked)
