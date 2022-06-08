@@ -66,6 +66,7 @@ class GiftFragment : BaseFragment(R.layout.fragment_gift) {
         with(binding) {
             tvForName.text = gift.forName
             tvDesc.movementMethod = ScrollingMovementMethod()
+            tvForName.movementMethod = ScrollingMovementMethod()
             appBarChangesListener.onTitleChanges(gift.name)
             tvDesc.text = gift.desc
             ivPhoto.setOnClickListener {

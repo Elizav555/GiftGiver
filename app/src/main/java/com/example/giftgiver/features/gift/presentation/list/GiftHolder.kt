@@ -31,7 +31,8 @@ class GiftHolder(
                 }
             }
             tvName.text = gift.name
-            ivPhoto.load(gift.imageUrl){
+            tvDesc.text = gift.desc
+            ivPhoto.load(gift.imageUrl) {
                 crossfade(true)
                 placeholder(R.drawable.default_gift)
             }
