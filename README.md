@@ -3,7 +3,7 @@ A small educational project that will help you please your loved ones and will m
 User can make wishlists, look at the calendar of upcoming holidays and birthdays of his friends from VK, as well as choose gifts for them.
 
 ## Features
-- Theme changing(dark and light)
+- Theme changing (dark and light)
 - Loading friends list from VK, searching and filtration
 - Add friend to favorites
 - View friend's Wishlists and gifts
@@ -25,6 +25,7 @@ User can make wishlists, look at the calendar of upcoming holidays and birthdays
 - MVVM
 - Xml
 - Shared Element Animation
+- Work Manager
 - ViewModel
 - Flow
 - LiveData
